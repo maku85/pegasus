@@ -13,13 +13,12 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import ProductionCompanies from "@/components/widgets/ProductionCompanies";
 
 interface MoviePageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id } = await params;
 
-  // Fetch movie details with appended videos, credits, recommendations, reviews, watch providers, keywords, external_ids, and release_dates
   const movie = await tmdbFetch(`/movie/${id}?language=it-IT&append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates`);
 
   const trailer = movie.videos?.results?.find(
@@ -30,12 +29,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const cast = movie.credits?.cast?.slice(0, 15) || [];
   const recommendations = movie.recommendations?.results?.slice(0, 10) || [];
 
-  // Extract certification (IT)
   const certification = movie.release_dates?.results?.find((r: any) => r.iso_3166_1 === "IT")?.release_dates[0]?.certification || "";
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
-      {/* FIXED BACKGROUND */}
       <div
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
@@ -46,7 +43,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
 
-      {/* HERO SECTION */}
       <div className="relative w-full h-[70vh] md:h-[85vh] z-10">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

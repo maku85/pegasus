@@ -4,7 +4,7 @@ import { FaInstagram, FaTwitter, FaFacebook, FaImdb, FaGlobe, FaChevronLeft } fr
 import NewsSection from "@/components/widgets/NewsSection";
 
 interface PersonPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function PersonPage({ params }: PersonPageProps) {
