@@ -1,0 +1,165 @@
+"use client";
+
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import MovieCard from "@/components/media/MovieCard";
+import MovieFilters from "@/components/media/MovieFilters";
+
+interface Genre {
+  id: number;
+  name: string;
+}
+
+function TVListContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
+  const initialGenre = searchParams.get('genre') || '';
+  const [filter, setFilter] = useState<'popular' | 'trending' | 'top_rated'>(initialFilter);
+  const [genre, setGenre] = useState<string>(initialGenre);
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  // Aggiorna filtro e genere se cambia la query nell'URL
+  useEffect(() => {
+    const urlFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
+    setFilter(urlFilter);
+    setGenre(searchParams.get('genre') || '');
+  }, [searchParams]);
+
+  // Recupera la lista dei generi una sola volta
+  useEffect(() => {
+    fetch('/api/genres/tv')
+      .then((res) => res.json())
+      .then((data) => setGenres(data.genres || []));
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    async function fetchTV() {
+      setLoading(true);
+      setItems([]);
+      setPage(1);
+      setHasMore(true);
+      let url = `/api/tv-list?type=${filter}&page=1`;
+      if (genre) url += `&genre=${genre}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!ignore) {
+        setItems(data.results || []);
+        setHasMore(data.page < data.total_pages);
+        setLoading(false);
+      }
+    }
+    fetchTV();
+    return () => { ignore = true; };
+  }, [filter, genre]);
+
+  useEffect(() => {
+    if (!hasMore || loading) return;
+    const handleScroll = () => {
+      if (!hasMore || loading) return;
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight - 500;
+      if (scrollPosition >= threshold) {
+        loadMore();
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore, page, filter]);
+
+  async function loadMore() {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    const nextPage = page + 1;
+    let url = `/api/tv-list?type=${filter}&page=${nextPage}`;
+    if (genre) url += `&genre=${genre}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    setItems((prev: any[]) => [...prev, ...(data.results || [])]);
+    setPage(nextPage);
+    setHasMore(nextPage < data.total_pages);
+    setLoading(false);
+  }
+
+  const handleCategoryChange = (newCategory: 'popular' | 'trending' | 'top_rated') => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('category', newCategory);
+    params.delete('genre');
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleGenreChange = (newGenreId: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (newGenreId) {
+      params.set('genre', newGenreId);
+    } else {
+      params.delete('genre');
+    }
+    router.push(`?${params.toString()}`);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="text-center mb-10 pt-8">
+        <h1 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
+          Serie TV
+        </h1>
+        <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          Esplora le serie TV del momento, le novità e le più amate dal pubblico.
+        </p>
+      </div>
+
+      <MovieFilters
+        activeCategory={filter}
+        activeGenre={genre}
+        genres={genres}
+        onCategoryChange={handleCategoryChange}
+        onGenreChange={handleGenreChange}
+      />
+
+      <motion.div
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {items.map((tv: any, index: number) => (
+          <motion.div
+            key={`${tv.id}-${index}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <MovieCard
+              movie={tv}
+              media_type="tv"
+              className="h-full"
+            />
+          </motion.div>
+        ))}
+
+        {loading &&
+          Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="min-w-[150px] h-[300px] bg-gray-800/50 animate-pulse rounded-2xl"
+            ></div>
+          ))}
+      </motion.div>
+    </div>
+  );
+}
+
+export default function TVListPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-10">Caricamento...</div>}>
+      <TVListContent />
+    </Suspense>
+  );
+}
