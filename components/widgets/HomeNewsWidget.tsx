@@ -16,7 +16,7 @@ export default async function HomeNewsWidget() {
                 </h2>
                 <Link
                     href="/news"
-                    className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-wider"
+                    className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-wider"
                 >
                     Vedi tutte <FaArrowRight />
                 </Link>
@@ -39,7 +39,7 @@ export default async function HomeNewsWidget() {
                             <h3 className="font-bold text-white mb-3 line-clamp-3 group-hover:text-red-400 transition-colors flex-1">
                                 {item.title}
                             </h3>
-                            <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5">
+                            <div className="text-xs text-gray-400 mt-auto pt-4 border-t border-white/5">
                                 {new Date(item.pubDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}
                             </div>
                         </div>

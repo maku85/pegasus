@@ -22,8 +22,6 @@ export const viewport: Viewport = {
   themeColor: "#141414",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -34,7 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <div
           className="fixed inset-0 z-[-2] pointer-events-none"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop')",
+            backgroundImage: "url('/images/background.avif')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed',

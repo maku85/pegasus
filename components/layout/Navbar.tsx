@@ -14,7 +14,7 @@ export default function Navbar() {
       y: "-100%",
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
       }
     },
     open: {
@@ -22,7 +22,7 @@ export default function Navbar() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1]
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
       }
     }
   };
@@ -35,7 +35,7 @@ export default function Navbar() {
       transition: {
         delay: 0.1 + i * 0.1,
         duration: 0.4,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     })
   };

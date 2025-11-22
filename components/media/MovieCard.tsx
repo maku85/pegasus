@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 
 import { tmdbImage } from "@/lib/tmdb";
@@ -28,10 +29,12 @@ export default function MovieCard({ className, movie, media_type = "movie" }: Mo
       <Link href={link}>
         <div className="rounded-2xl group">
           <div className="relative w-full aspect-[2/3] rounded-2xl shadow overflow-hidden flex flex-col justify-end group-hover:scale-[1.02] transition-transform bg-gray-800">
-            <img
+            <Image
               src={tmdbImage(movie.poster_path, "w500")}
               alt={title}
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
