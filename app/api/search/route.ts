@@ -9,5 +9,11 @@ export async function GET(req: Request) {
   }
 
   const data = await tmdbFetch(`/search/multi?query=${encodeURIComponent(query)}&language=it-IT`);
-  return new Response(JSON.stringify(data), { status: 200 });
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      "Cache-Control": "public, max-age=600",
+      "Content-Type": "application/json",
+    },
+  });
 }

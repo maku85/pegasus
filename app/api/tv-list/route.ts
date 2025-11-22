@@ -18,5 +18,11 @@ export async function GET(req: Request) {
         endpoint = ENDPOINTS.discover + `&with_genres=${genre}`;
     }
     const data = await tmdbFetch(`${endpoint}&page=${page}`);
-    return new Response(JSON.stringify(data), { status: 200 });
+    return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: {
+            "Cache-Control": "public, max-age=3600",
+            "Content-Type": "application/json",
+        },
+    });
 }

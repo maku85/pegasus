@@ -6,5 +6,11 @@ export async function GET(req: Request) {
 
   // L'endpoint corretto per i film popolari
   const data = await tmdbFetch(`/movie/popular?language=it-IT&page=${page}`);
-  return new Response(JSON.stringify(data), { status: 200 });
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      "Cache-Control": "public, max-age=3600",
+      "Content-Type": "application/json",
+    },
+  });
 }
