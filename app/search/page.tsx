@@ -5,9 +5,14 @@ import Link from "next/link";
 import { tmdbImage } from "@/lib/tmdb";
 import { FaSearch, FaSpinner } from "react-icons/fa";
 import MovieCard from "@/components/media/MovieCard";
+import MovieCardSkeleton from "@/components/media/MovieCardSkeleton";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
+  const [type, setType] = useState("multi");
+  const [year, setYear] = useState("");
+  const [minRating, setMinRating] = useState("0");
+  const [showFilters, setShowFilters] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
@@ -19,7 +24,13 @@ export default function SearchPage() {
     setLoading(true);
     setHasSearched(true);
     try {
-      const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      const params = new URLSearchParams({
+        query,
+        type,
+        ...(year && { year }),
+        ...(minRating !== "0" && { minRating }),
+      });
+      const res = await fetch(`/api/search?${params.toString()}`);
       const data = await res.json();
       setResults(data.results || []);
     } catch (error) {
@@ -64,16 +75,69 @@ export default function SearchPage() {
               </button>
             </div>
           </form>
+
+          {/* Filters Toggle */}
+          <div className="mt-6">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
+            >
+              {showFilters ? "Nascondi Filtri" : "Mostra Filtri Avanzati"}
+            </button>
+
+            {showFilters && (
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/5 p-6 rounded-2xl border border-white/10 text-left animate-in fade-in slide-in-from-top-4">
+                <div>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">Tipo</label>
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="multi">Tutti</option>
+                    <option value="movie">Film</option>
+                    <option value="tv">Serie TV</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">Anno</label>
+                  <input
+                    type="number"
+                    placeholder="Es. 2023"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">Voto Minimo: {minRating}</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="10"
+                    step="1"
+                    value={minRating}
+                    onChange={(e) => setMinRating(e.target.value)}
+                    className="w-full accent-blue-500"
+                  />
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>0</span>
+                    <span>5</span>
+                    <span>10</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Results */}
         <div className="space-y-8">
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-400 animate-pulse">Sto cercando...</p>
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <MovieCardSkeleton key={i} />
+              ))}
             </div>
           ) : hasSearched ? (
             results.length > 0 ? (

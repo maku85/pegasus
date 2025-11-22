@@ -44,7 +44,7 @@ export default function Navbar() {
     { href: "/movies", label: "Film" },
     { href: "/tv", label: "Serie TV" },
     { href: "/news", label: "News" },
-    { href: "/watchlist", label: "Watchlist" },
+    { href: "/favorites", label: "Preferiti" },
     { href: "/movies/random", label: "Random" },
   ];
 

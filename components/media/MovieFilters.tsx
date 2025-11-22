@@ -36,8 +36,8 @@ export default function MovieFilters({
                         key={cat.id}
                         onClick={() => onCategoryChange(cat.id as any)}
                         className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${activeCategory === cat.id
-                                ? 'bg-yellow-500 text-black shadow-lg scale-105'
-                                : 'bg-white/10 text-white hover:bg-white/20'
+                            ? 'bg-yellow-500 text-black shadow-lg scale-105'
+                            : 'bg-white/10 text-white hover:bg-white/20'
                             }`}
                     >
                         {cat.label}
@@ -56,8 +56,8 @@ export default function MovieFilters({
                     <button
                         onClick={() => onGenreChange('')}
                         className={`whitespace-nowrap px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${!activeGenre
-                                ? 'bg-white text-black'
-                                : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                            ? 'bg-white text-black'
+                            : 'bg-white/5 text-gray-300 hover:bg-white/10'
                             }`}
                     >
                         Tutti
@@ -68,8 +68,8 @@ export default function MovieFilters({
                             key={g.id}
                             onClick={() => onGenreChange(String(g.id))}
                             className={`whitespace-nowrap px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeGenre === String(g.id)
-                                    ? 'bg-white text-black'
-                                    : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                                ? 'bg-white text-black'
+                                : 'bg-white/5 text-gray-300 hover:bg-white/10'
                                 }`}
                         >
                             {g.name}

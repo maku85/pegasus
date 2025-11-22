@@ -26,8 +26,8 @@ export default function WatchlistToggle({ id, title, poster_path, media_type }: 
     <button
       onClick={handleClick}
       className={`flex items-center gap-3 px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg ${inList
-          ? "bg-green-600 hover:bg-green-500 text-white shadow-green-600/20"
-          : "bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10"
+        ? "bg-green-600 hover:bg-green-500 text-white shadow-green-600/20"
+        : "bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10"
         }`}
     >
       {inList ? <FaCheck /> : <FaPlus />}

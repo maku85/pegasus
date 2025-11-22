@@ -106,7 +106,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
             </button>
 
             {/* Dots */}
-            <div className="absolute bottom-6 right-8 flex gap-2 z-20">
+            <div className="absolute bottom-0 md:bottom-6 right-8 flex gap-2 z-20">
                 {items.map((_, idx) => (
                     <button
                         key={idx}

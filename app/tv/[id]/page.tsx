@@ -1,16 +1,15 @@
 import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
 import Link from "next/link";
-import { FaPlay, FaStar, FaCalendar, FaClock, FaUser } from "react-icons/fa";
+import { FaStar, FaCalendar, FaClock, FaUser } from "react-icons/fa";
 import MovieCard from "@/components/media/MovieCard";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import SpotifyLink from "@/components/widgets/SpotifyLink";
 import NewsSection from "@/components/widgets/NewsSection";
 import ReviewsSection from "@/components/media/ReviewsSection";
 import RedditSection from "@/components/social/RedditSection";
 import WatchProviders from "@/components/media/WatchProviders";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
-import ProductionCompanies from "@/components/widgets/ProductionCompanies";
+import TrailerButton from "@/components/media/TrailerButton";
 
 interface TVPageProps {
   params: Promise<{ id: string }>;
@@ -48,7 +47,7 @@ export default async function TVPage({ params }: TVPageProps) {
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
 
       {/* HERO SECTION */}
-      <div className="relative w-full h-[70vh] md:h-[85vh] z-10">
+      <div className="relative w-full h-full md:h-[85vh] z-10">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -59,16 +58,19 @@ export default async function TVPage({ params }: TVPageProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/20 to-transparent" />
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
+        <div className="md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
             {/* Poster (Hidden on mobile, visible on desktop) */}
-            <div className="hidden md:block w-64 lg:w-80 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group">
-              <img
-                src={tmdbImage(tv.poster_path, "w780")}
-                alt={tv.name}
-                className="w-full h-auto object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="hidden md:flex flex-col items-center gap-4">
+              <div className="md:block w-64 lg:w-80 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group">
+                <img
+                  src={tmdbImage(tv.poster_path, "w780")}
+                  alt={tv.name}
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+              <SocialLinks external_ids={tv.external_ids} homepage={tv.homepage} />
             </div>
 
             {/* Info */}
@@ -105,15 +107,6 @@ export default async function TVPage({ params }: TVPageProps) {
                     {g.name}
                   </span>
                 ))}
-                {tv.keywords?.results?.slice(0, 5).map((k: any) => (
-                  <Link
-                    key={k.id}
-                    href={`/keyword/${k.id}`}
-                    className="px-4 py-1.5 rounded-full bg-purple-500/10 backdrop-blur-sm border border-purple-500/20 text-purple-400 text-xs md:text-sm hover:bg-purple-500/20 transition-all"
-                  >
-                    #{k.name}
-                  </Link>
-                ))}
               </div>
 
               <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
@@ -122,14 +115,9 @@ export default async function TVPage({ params }: TVPageProps) {
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
                 {trailer && (
-                  <a
-                    href={`#trailer`}
-                    className="flex items-center gap-3 bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/20"
-                  >
-                    <FaPlay /> Guarda Trailer
-                  </a>
+                  <TrailerButton trailerKey={trailer.key} />
                 )}
                 <WatchlistToggle
                   id={tv.id}
@@ -137,11 +125,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   poster_path={tv.poster_path}
                   media_type="tv"
                 />
-                <SpotifyLink title={tv.name} />
               </div>
-
-              <SocialLinks external_ids={tv.external_ids} homepage={tv.homepage} />
-              <ProductionCompanies companies={tv.production_companies} />
             </div>
           </div>
         </div>
@@ -251,26 +235,7 @@ export default async function TVPage({ params }: TVPageProps) {
           </section>
         )}
 
-        {/* TRAILER */}
-        {trailer && (
-          <section id="trailer" className="scroll-mt-32 bg-black/40 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl overflow-hidden">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              Trailer Ufficiale
-            </h2>
-            <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10">
-              <iframe
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${trailer.key}`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="border-0"
-              ></iframe>
-            </div>
-          </section>
-        )}
+
 
         {/* WATCH PROVIDERS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
