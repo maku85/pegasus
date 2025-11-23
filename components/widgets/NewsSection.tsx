@@ -1,12 +1,15 @@
 import { getNews } from "@/lib/news";
 import { FaNewspaper, FaExternalLinkAlt } from "react-icons/fa";
+import { getTranslations } from 'next-intl/server';
 
 interface NewsSectionProps {
     query: string;
+    locale?: string;
 }
 
-export default async function NewsSection({ query }: NewsSectionProps) {
-    const news = await getNews(query);
+export default async function NewsSection({ query, locale = 'it' }: NewsSectionProps) {
+    const t = await getTranslations({ locale, namespace: 'NewsSection' });
+    const news = await getNews(query, locale);
 
     if (news.length === 0) return null;
 
@@ -14,7 +17,7 @@ export default async function NewsSection({ query }: NewsSectionProps) {
         <section>
             <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
                 <span className="w-1 h-8 bg-red-500 rounded-full"></span>
-                Ultime Notizie
+                {t('title')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {news.map((item, index) => (

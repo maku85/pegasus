@@ -10,7 +10,10 @@ interface HeroSliderProps {
     items: any[];
 }
 
+import { useTranslations } from 'next-intl';
+
 export default function HeroSlider({ items }: HeroSliderProps) {
+    const t = useTranslations('HeroSlider');
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -63,7 +66,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
                             <FaStar /> {currentItem.vote_average?.toFixed(1)}
                         </span>
                         <span className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-md">
-                            {isMovie ? 'Film' : 'Serie TV'}
+                            {isMovie ? t('movie') : t('tvSeries')}
                         </span>
                         <span className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-md">
                             {(currentItem.release_date || currentItem.first_air_date)?.slice(0, 4)}
@@ -83,7 +86,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
                             href={`/${isMovie ? 'movies' : 'tv'}/${currentItem.id}`}
                             className="px-8 py-3 bg-white text-black rounded-xl font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors shadow-lg hover:scale-105 transform duration-200"
                         >
-                            <FaInfoCircle /> Altre info
+                            <FaInfoCircle /> {t('moreInfo')}
                         </Link>
                     </div>
                 </motion.div>

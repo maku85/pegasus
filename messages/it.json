@@ -1,0 +1,129 @@
+{
+    "Navbar": {
+        "home": "Home",
+        "movies": "Film",
+        "tvSeries": "Serie TV",
+        "search": "Cerca",
+        "watchlist": "Da vedere",
+        "favorites": "Preferiti"
+    },
+    "Footer": {
+        "rights": "© {year} My Movies. Tutti i diritti riservati.",
+        "privacy": "Privacy Policy",
+        "terms": "Termini di servizio"
+    },
+    "HomePage": {
+        "welcome": "Benvenuto su My Movies",
+        "trending": "Di tendenza",
+        "popular": "Popolari",
+        "newsQuery": "Cinema e Serie TV",
+        "popularMovies": "Film Popolari",
+        "popularTV": "Serie TV Popolari",
+        "upcoming": "In Arrivo"
+    },
+    "NewsPage": {
+        "title": "Notizie dal Mondo <span class='text-red-500'>Cinema</span>",
+        "description": "Rimani aggiornato con le ultime novità su film, serie TV e le tue star preferite.",
+        "cinema": "Cinema",
+        "cinemaQuery": "Cinema Film Nuove Uscite",
+        "tvSeries": "Serie TV",
+        "tvSeriesQuery": "Serie TV Netflix Prime Disney+",
+        "celebrities": "Celebrità",
+        "celebritiesQuery": "Attori Hollywood Gossip"
+    },
+    "Common": {
+        "untitled": "Senza titolo",
+        "movie": "Film",
+        "tvSeries": "Serie TV",
+        "movies": "Film",
+        "tv": "TV"
+    },
+    "MovieCard": {
+        "untitled": "Senza titolo"
+    },
+    "HeroSlider": {
+        "movie": "Film",
+        "tvSeries": "Serie TV",
+        "moreInfo": "Altre info"
+    },
+    "PersonPage": {
+        "back": "Torna indietro",
+        "birth": "Nascita",
+        "death": "Morte",
+        "years": "anni",
+        "knownFor": "Conosciuto per",
+        "biography": "Biografia",
+        "noBiography": "Nessuna biografia disponibile.",
+        "gallery": "Galleria",
+        "fullFilmography": "Filmografia Completa",
+        "unknownRole": "Ruolo sconosciuto"
+    },
+    "MediaPage": {
+        "seasons": "Stagioni",
+        "season": "Stagione",
+        "episodes": "Episodi",
+        "mainCast": "Cast Principale",
+        "creators": "Creato da",
+        "crew": "Regia & Crew",
+        "recommended": "Raccomandati per te",
+        "partOfCollection": "Parte della saga",
+        "viewCollection": "Visualizza Collezione"
+    },
+    "SearchPage": {
+        "title": "Cosa vuoi <span class='text-blue-500'>guardare</span> oggi?",
+        "placeholder": "Cerca film, serie TV, attori...",
+        "search": "Cerca",
+        "showFilters": "Mostra Filtri Avanzati",
+        "hideFilters": "Nascondi Filtri",
+        "type": "Tipo",
+        "all": "Tutti",
+        "movie": "Film",
+        "tv": "Serie TV",
+        "year": "Anno",
+        "minRating": "Voto Minimo",
+        "resultsFor": "Risultati per",
+        "noResults": "Nessun risultato trovato per",
+        "tryAgain": "Prova a cercare qualcos'altro.",
+        "startTyping": "Inizia a digitare per cercare..."
+    },
+    "WatchlistPage": {
+        "emptyTitle": "La tua Watchlist è vuota",
+        "emptyDescription": "Non hai ancora salvato nessun film o serie TV. Esplora il catalogo e aggiungi i tuoi preferiti!",
+        "explore": "Esplora Catalogo",
+        "title": "La tua Watchlist",
+        "itemsSaved": "{count} element{s} salvat{s}"
+    },
+    "FavoritesPage": {
+        "unavailableTitle": "Funzionalità non disponibile",
+        "unavailableDescription": "I preferiti e il profilo utente sono disabilitati perché Firebase non è stato configurato.",
+        "profileTitle": "Il tuo Profilo",
+        "anonymousUser": "Sei un utente anonimo.",
+        "loggedInAs": "Accesso effettuato come {email}",
+        "saveFavoritesPrompt": "Salva i tuoi preferiti e accedi da altri dispositivi inserendo la tua email. Ti invieremo un Magic Link per accedere senza password.",
+        "sendLink": "Invia Link",
+        "linkSent": "Link inviato! Controlla la tua casella di posta per completare l'accesso.",
+        "title": "I tuoi Preferiti",
+        "noFavorites": "Non hai ancora aggiunto nessun preferito."
+    },
+    "ReviewsSection": {
+        "title": "Recensioni"
+    },
+    "NewsSection": {
+        "title": "Ultime Notizie"
+    },
+    "HomeNewsWidget": {
+        "title": "Ultime Notizie",
+        "viewAll": "Vedi tutte",
+        "newsLabel": "News"
+    },
+    "MovieFilters": {
+        "popular": "Popolari",
+        "trending": "Di Tendenza",
+        "topRated": "I Più Votati",
+        "genres": "Generi:",
+        "all": "Tutti"
+    },
+    "TrailerButton": {
+        "watchTrailer": "Guarda Trailer"
+    }
+}

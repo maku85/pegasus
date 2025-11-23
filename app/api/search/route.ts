@@ -6,12 +6,13 @@ export async function GET(req: Request) {
   const type = searchParams.get("type") || "multi"; // multi, movie, tv
   const year = searchParams.get("year");
   const minRating = searchParams.get("minRating");
+  const lang = searchParams.get("lang") || "it";
 
   if (!query) {
     return new Response(JSON.stringify({ results: [] }), { status: 200 });
   }
 
-  let endpoint = `/search/${type}?query=${encodeURIComponent(query)}&language=it-IT`;
+  let endpoint = `/search/${type}?query=${encodeURIComponent(query)}`;
 
   // Add year filter if applicable
   if (year) {
@@ -25,7 +26,7 @@ export async function GET(req: Request) {
     // However, let's stick to type-specific for year filtering to be accurate.
   }
 
-  const data = await tmdbFetch(endpoint);
+  const data = await tmdbFetch(endpoint, lang);
 
   let results = data.results || [];
 

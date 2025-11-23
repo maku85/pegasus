@@ -2,8 +2,11 @@ import { getNews } from "@/lib/news";
 import Link from "next/link";
 import { FaNewspaper, FaArrowRight } from "react-icons/fa";
 
-export default async function HomeNewsWidget() {
-    const news = await getNews("Cinema e Serie TV");
+import { getTranslations } from 'next-intl/server';
+
+export default async function HomeNewsWidget({ locale = 'it' }: { locale?: string }) {
+    const t = await getTranslations({ locale, namespace: 'HomePage' });
+    const news = await getNews(t('newsQuery'), locale);
 
     if (news.length === 0) return null;
 

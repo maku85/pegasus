@@ -1,0 +1,129 @@
+{
+    "Navbar": {
+        "home": "Home",
+        "movies": "Movies",
+        "tvSeries": "TV Series",
+        "search": "Search",
+        "watchlist": "Watchlist",
+        "favorites": "Favorites"
+    },
+    "Footer": {
+        "rights": "© {year} My Movies. All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+    },
+    "HomePage": {
+        "welcome": "Welcome to My Movies",
+        "trending": "Trending Now",
+        "popular": "Popular",
+        "newsQuery": "Movies and TV Series",
+        "popularMovies": "Popular Movies",
+        "popularTV": "Popular TV Series",
+        "upcoming": "Upcoming"
+    },
+    "NewsPage": {
+        "title": "News from the World of <span class='text-red-500'>Cinema</span>",
+        "description": "Stay updated with the latest news on movies, TV series, and your favorite stars.",
+        "cinema": "Cinema",
+        "cinemaQuery": "Cinema Movies New Releases",
+        "tvSeries": "TV Series",
+        "tvSeriesQuery": "TV Series Netflix Prime Disney+",
+        "celebrities": "Celebrities",
+        "celebritiesQuery": "Actors Hollywood Gossip"
+    },
+    "Common": {
+        "untitled": "Untitled",
+        "movie": "Movie",
+        "tvSeries": "TV Series",
+        "movies": "Movies",
+        "tv": "TV"
+    },
+    "MovieCard": {
+        "untitled": "Untitled"
+    },
+    "HeroSlider": {
+        "movie": "Movie",
+        "tvSeries": "TV Series",
+        "moreInfo": "More Info"
+    },
+    "PersonPage": {
+        "back": "Go Back",
+        "birth": "Birth",
+        "death": "Death",
+        "years": "years",
+        "knownFor": "Known For",
+        "biography": "Biography",
+        "noBiography": "No biography available.",
+        "gallery": "Gallery",
+        "fullFilmography": "Full Filmography",
+        "unknownRole": "Unknown Role"
+    },
+    "MediaPage": {
+        "seasons": "Seasons",
+        "season": "Season",
+        "episodes": "Episodes",
+        "mainCast": "Main Cast",
+        "creators": "Created by",
+        "crew": "Crew",
+        "recommended": "Recommended for you",
+        "partOfCollection": "Part of the collection",
+        "viewCollection": "View Collection"
+    },
+    "SearchPage": {
+        "title": "What do you want to <span class='text-blue-500'>watch</span> today?",
+        "placeholder": "Search movies, TV series, actors...",
+        "search": "Search",
+        "showFilters": "Show Advanced Filters",
+        "hideFilters": "Hide Filters",
+        "type": "Type",
+        "all": "All",
+        "movie": "Movie",
+        "tv": "TV Series",
+        "year": "Year",
+        "minRating": "Min Rating",
+        "resultsFor": "Results for",
+        "noResults": "No results found for",
+        "tryAgain": "Try searching for something else.",
+        "startTyping": "Start typing to search..."
+    },
+    "WatchlistPage": {
+        "emptyTitle": "Your Watchlist is empty",
+        "emptyDescription": "You haven't saved any movies or TV series yet. Explore the catalog and add your favorites!",
+        "explore": "Explore Catalog",
+        "title": "Your Watchlist",
+        "itemsSaved": "{count} item{s} saved"
+    },
+    "FavoritesPage": {
+        "unavailableTitle": "Feature not available",
+        "unavailableDescription": "Favorites and user profile are disabled because Firebase has not been configured.",
+        "profileTitle": "Your Profile",
+        "anonymousUser": "You are an anonymous user.",
+        "loggedInAs": "Logged in as {email}",
+        "saveFavoritesPrompt": "Save your favorites and access them from other devices by entering your email. We'll send you a Magic Link to log in without a password.",
+        "sendLink": "Send Link",
+        "linkSent": "Link sent! Check your inbox to complete login.",
+        "title": "Your Favorites",
+        "noFavorites": "You haven't added any favorites yet."
+    },
+    "ReviewsSection": {
+        "title": "Reviews"
+    },
+    "NewsSection": {
+        "title": "Latest News"
+    },
+    "HomeNewsWidget": {
+        "title": "Latest News",
+        "viewAll": "View All",
+        "newsLabel": "News"
+    },
+    "MovieFilters": {
+        "popular": "Popular",
+        "trending": "Trending",
+        "topRated": "Top Rated",
+        "genres": "Genres:",
+        "all": "All"
+    },
+    "TrailerButton": {
+        "watchTrailer": "Watch Trailer"
+    }
+}

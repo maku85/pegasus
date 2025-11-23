@@ -21,9 +21,12 @@ interface MovieCardProps {
   media_type?: "movie" | "tv";
 }
 
+import { useTranslations } from 'next-intl';
+
 export default function MovieCard({ className, movie, media_type = "movie" }: MovieCardProps) {
+  const t = useTranslations('MovieCard');
   const link = media_type === "movie" ? `/movies/${movie.id}` : `/tv/${movie.id}`;
-  const title = movie.title || movie.name || "Senza titolo";
+  const title = movie.title || movie.name || t('untitled');
   const date = (media_type === "movie" ? movie.release_date : movie.first_air_date)?.slice(0, 4);
   const rating = movie.vote_average?.toFixed(1);
 

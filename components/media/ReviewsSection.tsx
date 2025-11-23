@@ -1,4 +1,5 @@
-import { FaUserCircle, FaStar, FaQuoteLeft } from "react-icons/fa";
+import { useTranslations } from 'next-intl';
+import { FaQuoteLeft, FaStar, FaUserCircle } from 'react-icons/fa';
 
 interface Review {
     id: string;
@@ -16,13 +17,15 @@ interface ReviewsSectionProps {
 }
 
 export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
+    const t = useTranslations('ReviewsSection');
+
     if (!reviews || reviews.length === 0) return null;
 
     return (
         <section>
             <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
                 <span className="w-1 h-8 bg-green-500 rounded-full"></span>
-                Recensioni
+                {t('title')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {reviews.slice(0, 4).map((review) => (

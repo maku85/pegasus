@@ -1,12 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState } from "react";
 import { RiMovie2Line, RiSearchLine, RiMenu4Line, RiCloseLine } from "react-icons/ri";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "../i18n/LanguageSwitcher";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations('Navbar');
 
   const menuVariants = {
     closed: {
@@ -41,11 +44,11 @@ export default function Navbar() {
   };
 
   const links = [
-    { href: "/movies", label: "Film" },
-    { href: "/tv", label: "Serie TV" },
-    { href: "/news", label: "News" },
-    { href: "/favorites", label: "Preferiti" },
-    { href: "/movies/random", label: "Random" },
+    { href: "/movies", label: t('movies') },
+    { href: "/tv", label: t('tvSeries') },
+    { href: "/news", label: "News" }, // Missing translation key, keeping as is or adding later
+    { href: "/favorites", label: t('favorites') },
+    { href: "/movies/random", label: "Random" }, // Missing translation key
   ];
 
   return (
@@ -78,10 +81,14 @@ export default function Navbar() {
             <Link
               href="/search"
               className="p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
-              aria-label="Cerca"
+              aria-label={t('search')}
             >
               <RiSearchLine className="text-xl" />
             </Link>
+
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
 
             {/* Mobile Menu Button */}
             <button

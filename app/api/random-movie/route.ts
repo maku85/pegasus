@@ -6,13 +6,14 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get("type") === "tv" ? "tv" : "movie";
   const genre = searchParams.get("genre");
   const year = searchParams.get("year");
+  const lang = searchParams.get("lang") || "it";
 
   const cookieName = `random_seen_${type}s`;
   const cookie = req.cookies.get(cookieName)?.value || "";
   const seenIds = cookie ? cookie.split(",").map(Number) : [];
 
   // Costruisci query base
-  let query = `/${type === "tv" ? "discover/tv" : "discover/movie"}?language=it-IT&include_adult=false&vote_count.gte=100`;
+  let query = `/${type === "tv" ? "discover/tv" : "discover/movie"}?include_adult=false&vote_count.gte=100`;
 
   if (genre) query += `&with_genres=${genre}`;
   if (year) {
@@ -21,7 +22,7 @@ export async function GET(req: NextRequest) {
   }
 
   // 1. Ottieni il numero totale di pagine
-  const initialFetch = await tmdbFetch(`${query}&page=1`);
+  const initialFetch = await tmdbFetch(`${query}&page=1`, lang);
   const totalPages = Math.min(initialFetch.total_pages, 500); // TMDB limita a 500 pagine
 
   let randomResult = null;
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest) {
 
   while (attempts < maxAttempts && !randomResult) {
     const randomPage = Math.floor(Math.random() * totalPages) + 1;
-    const pageData = await tmdbFetch(`${query}&page=${randomPage}`);
+    const pageData = await tmdbFetch(`${query}&page=${randomPage}`, lang);
 
     // Filtra quelli già visti
     const results = pageData.results?.filter((item: any) => !seenIds.includes(item.id));

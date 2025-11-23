@@ -9,9 +9,13 @@ export interface NewsItem {
     source: string;
 }
 
-export async function getNews(query: string): Promise<NewsItem[]> {
+export async function getNews(query: string, locale: string = 'it'): Promise<NewsItem[]> {
     try {
-        const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=it&gl=IT&ceid=IT:it`;
+        const hl = locale === 'en' ? 'en-US' : 'it';
+        const gl = locale === 'en' ? 'US' : 'IT';
+        const ceid = locale === 'en' ? 'US:en' : 'IT:it';
+
+        const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=${hl}&gl=${gl}&ceid=${ceid}`;
         const feed = await parser.parseURL(feedUrl);
 
         return feed.items.slice(0, 6).map((item) => ({

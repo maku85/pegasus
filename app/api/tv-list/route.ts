@@ -1,10 +1,10 @@
 import { tmdbFetch } from "@/lib/tmdb";
 
 const ENDPOINTS: Record<string, string> = {
-    popular: "/tv/popular?language=it-IT",
-    trending: "/trending/tv/week?language=it-IT",
-    top_rated: "/tv/top_rated?language=it-IT",
-    discover: "/discover/tv?language=it-IT",
+    popular: "/tv/popular",
+    trending: "/trending/tv/week",
+    top_rated: "/tv/top_rated",
+    discover: "/discover/tv",
 };
 
 export async function GET(req: Request) {
@@ -12,12 +12,16 @@ export async function GET(req: Request) {
     const type = searchParams.get("type") || "popular";
     const page = searchParams.get("page") || "1";
     const genre = searchParams.get("genre");
+    const lang = searchParams.get("lang") || "it";
     let endpoint = ENDPOINTS[type] || ENDPOINTS.popular;
     // Se è selezionato un genere, usa discover
     if (genre) {
         endpoint = ENDPOINTS.discover + `&with_genres=${genre}`;
     }
-    const data = await tmdbFetch(`${endpoint}&page=${page}`);
+    // Rimuovi language hardcoded
+    endpoint = endpoint.replace(/[?&]language=[a-zA-Z-]+/g, "");
+
+    const data = await tmdbFetch(`${endpoint}&page=${page}`, lang);
     return new Response(JSON.stringify(data), {
         status: 200,
         headers: {

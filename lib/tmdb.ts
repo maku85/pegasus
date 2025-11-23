@@ -2,12 +2,19 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 /**
  * Funzione per fare fetch sicuri verso TMDB.
- * @param path - endpoint TMDB, es. "/movie/popular?language=it-IT&page=1"
+ * @param path - endpoint TMDB, es. "/movie/popular?page=1"
+ * @param locale - lingua richiesta (es. "it", "en"), default "it"
  * @returns JSON dei dati TMDB
  */
-export async function tmdbFetch(path: string) {
+export async function tmdbFetch(path: string, locale: string = "it") {
   const separator = path.includes("?") ? "&" : "?";
-  const res = await fetch(`${TMDB_BASE_URL}${path}${separator}api_key=${process.env.TMDB_TOKEN}`, {
+  const tmdbLocale = locale === "en" ? "en-US" : "it-IT";
+
+  // Rimuovi language=... se presente nel path per evitare duplicati
+  const cleanPath = path.replace(/[?&]language=[a-zA-Z-]+/g, "");
+  const finalSeparator = cleanPath.includes("?") ? "&" : "?";
+
+  const res = await fetch(`${TMDB_BASE_URL}${cleanPath}${finalSeparator}api_key=${process.env.TMDB_TOKEN}&language=${tmdbLocale}`, {
     headers: {
       //Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
       "Content-Type": "application/json"

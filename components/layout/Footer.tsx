@@ -1,6 +1,12 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations('Footer');
+  const tNav = useTranslations('Navbar');
+
   return (
     <footer className="mt-auto border-t border-white/5 bg-black/30 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -15,10 +21,10 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold text-white mb-4">Link Rapidi</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="/movies" className="hover:text-yellow-400 transition-colors">Film</Link></li>
-              <li><Link href="/tv" className="hover:text-yellow-400 transition-colors">Serie TV</Link></li>
+              <li><Link href="/movies" className="hover:text-yellow-400 transition-colors">{tNav('movies')}</Link></li>
+              <li><Link href="/tv" className="hover:text-yellow-400 transition-colors">{tNav('tvSeries')}</Link></li>
               <li><Link href="/news" className="hover:text-yellow-400 transition-colors">News</Link></li>
-              <li><Link href="/watchlist" className="hover:text-yellow-400 transition-colors">Watchlist</Link></li>
+              <li><Link href="/watchlist" className="hover:text-yellow-400 transition-colors">{tNav('watchlist')}</Link></li>
             </ul>
           </div>
           <div>
@@ -29,7 +35,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-white/5 pt-8 text-center text-sm text-gray-400">
-          &copy; {new Date().getFullYear()} CineSphere. Tutti i diritti riservati.
+          {t.rich('rights', {
+            year: () => new Date().getFullYear()
+          })}
         </div>
       </div>
     </footer>

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withPWAInit from "@ducanh2912/next-pwa";
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -11,6 +12,8 @@ const withPWA = withPWAInit({
     disableDevLogs: true,
   },
 });
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -25,4 +28,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default withNextIntl(withPWA(nextConfig));
