@@ -218,12 +218,12 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
         {/* REDDIT */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <RedditSection query={movie.title} />
+          <RedditSection query={`${movie.title} movie`} />
         </div>
 
         {/* NEWS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <NewsSection query={movie.title} locale={locale} />
+          <NewsSection query={`${movie.title} ${locale === 'it' ? 'film' : 'movie'}`} locale={locale} />
         </div>
 
         {/* COLLECTION */}

@@ -253,12 +253,12 @@ export default async function TVPage({ params }: TVPageProps) {
 
         {/* REDDIT */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <RedditSection query={tv.name} />
+          <RedditSection query={`${tv.name} tv series`} />
         </div>
 
         {/* NEWS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <NewsSection query={tv.name} locale={locale} />
+          <NewsSection query={`${tv.name} ${locale === 'it' ? 'serie tv' : 'tv series'}`} locale={locale} />
         </div>
 
         {/* RECOMMENDATIONS */}

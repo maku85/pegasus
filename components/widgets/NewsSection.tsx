@@ -1,5 +1,5 @@
 import { getNews } from "@/lib/news";
-import { FaNewspaper, FaExternalLinkAlt } from "react-icons/fa";
+
 import { getTranslations } from 'next-intl/server';
 
 interface NewsSectionProps {
@@ -26,18 +26,21 @@ export default async function NewsSection({ query, locale = 'it' }: NewsSectionP
                         href={item.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block bg-white/5 hover:bg-white/10 p-6 rounded-xl transition-all group border border-white/5 hover:border-white/20"
+                        className="group block bg-[#1a1a1a] rounded-2xl overflow-hidden transition-all duration-300 shadow hover:scale-[1.02] h-full flex flex-col"
                     >
-                        <div className="flex items-start justify-between gap-4 mb-4">
-                            <FaNewspaper className="text-2xl text-red-500 flex-shrink-0" />
-                            <FaExternalLinkAlt className="text-gray-500 group-hover:text-white transition-colors text-sm" />
-                        </div>
-                        <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-red-400 transition-colors">
-                            {item.title}
-                        </h3>
-                        <div className="flex justify-between items-center text-xs text-gray-400 mt-4">
-                            <span>{new Date(item.pubDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                            {/* <span>{item.source}</span> */}
+                        <div className="p-6 flex-1 flex flex-col">
+                            <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-red-500 transition-colors text-lg">
+                                {item.title}
+                            </h3>
+                            {item.contentSnippet && (
+                                <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-1">
+                                    {item.contentSnippet}
+                                </p>
+                            )}
+                            <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+                                <span>{new Date(item.pubDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                <span className="text-red-500 font-medium text-[10px] uppercase tracking-wider">{item.source}</span>
+                            </div>
                         </div>
                     </a>
                 ))}

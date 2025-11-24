@@ -14,14 +14,19 @@ export async function GET(req: Request) {
     const genre = searchParams.get("genre");
     const lang = searchParams.get("lang") || "it";
     let endpoint = ENDPOINTS[type] || ENDPOINTS.popular;
+
     // Se è selezionato un genere, usa discover
     if (genre) {
-        endpoint = ENDPOINTS.discover + `&with_genres=${genre}`;
+        endpoint = ENDPOINTS.discover;
+        const separator = endpoint.includes("?") ? "&" : "?";
+        endpoint += `${separator}with_genres=${genre}`;
     }
+
     // Rimuovi language hardcoded
     endpoint = endpoint.replace(/[?&]language=[a-zA-Z-]+/g, "");
 
-    const data = await tmdbFetch(`${endpoint}&page=${page}`, lang);
+    const separator = endpoint.includes("?") ? "&" : "?";
+    const data = await tmdbFetch(`${endpoint}${separator}page=${page}`, lang);
     return new Response(JSON.stringify(data), {
         status: 200,
         headers: {

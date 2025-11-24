@@ -1,6 +1,6 @@
 import { getNews } from "@/lib/news";
-import Link from "next/link";
-import { FaNewspaper, FaArrowRight } from "react-icons/fa";
+import { Link } from "@/i18n/routing";
+import { FaArrowRight } from "react-icons/fa";
 
 import { getTranslations } from 'next-intl/server';
 
@@ -32,18 +32,20 @@ export default async function HomeNewsWidget({ locale = 'it' }: { locale?: strin
                         href={item.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group block bg-[#1a1a1a] hover:bg-[#252525] rounded-xl overflow-hidden transition-all duration-300 border border-white/5 hover:border-white/20 h-full flex flex-col"
+                        className="group block bg-[#1a1a1a] rounded-2xl overflow-hidden transition-all duration-300 shadow hover:scale-[1.02] h-full flex flex-col"
                     >
                         <div className="p-6 flex-1 flex flex-col">
-                            <div className="flex items-center gap-2 text-red-500 mb-3">
-                                <FaNewspaper />
-                                <span className="text-xs font-bold uppercase tracking-wider">News</span>
-                            </div>
-                            <h3 className="font-bold text-white mb-3 line-clamp-3 group-hover:text-red-400 transition-colors flex-1">
+                            <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-red-500 transition-colors text-lg">
                                 {item.title}
                             </h3>
-                            <div className="text-xs text-gray-400 mt-auto pt-4 border-t border-white/5">
-                                {new Date(item.pubDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}
+                            {item.contentSnippet && (
+                                <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-1">
+                                    {item.contentSnippet}
+                                </p>
+                            )}
+                            <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+                                <span>{new Date(item.pubDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                                <span className="text-red-500 font-medium text-[10px] uppercase tracking-wider">{item.source}</span>
                             </div>
                         </div>
                     </a>
