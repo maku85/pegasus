@@ -1,16 +1,14 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import Link from "next/link";
-import { tmdbImage } from "@/lib/tmdb";
 import { FaSearch, FaSpinner } from "react-icons/fa";
+
 import MovieCard from "@/components/media/MovieCard";
 import MovieCardSkeleton from "@/components/media/MovieCardSkeleton";
-import { useTranslations } from "next-intl";
 
 export default function SearchPage() {
-  const t = useTranslations('SearchPage');
-  const tCommon = useTranslations('Common');
+  const t = useTranslations("SearchPage");
   const [query, setQuery] = useState("");
   const [type, setType] = useState("multi");
   const [year, setYear] = useState("");
@@ -50,10 +48,12 @@ export default function SearchPage() {
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-blue-900/20 to-black pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-
         {/* Search Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-3xl md:text-5xl font-black mb-8 tracking-tight" dangerouslySetInnerHTML={{ __html: t.raw('title') }} />
+          <h1
+            className="text-3xl md:text-5xl font-black mb-8 tracking-tight"
+            dangerouslySetInnerHTML={{ __html: t.raw("title") }}
+          />
 
           <form onSubmit={handleSearch} className="relative group">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 transition-all duration-500" />
@@ -63,7 +63,7 @@ export default function SearchPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={t('placeholder')}
+                placeholder={t("placeholder")}
                 className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 px-4 py-2 md:py-3 text-base md:text-lg font-medium w-full"
                 autoFocus
               />
@@ -72,36 +72,46 @@ export default function SearchPage() {
                 disabled={loading || !query.trim()}
                 className="bg-blue-600 hover:bg-blue-500 text-white px-6 md:px-8 py-2 md:py-3 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
               >
-                {loading ? <FaSpinner className="animate-spin" /> : <><span className="hidden md:inline">{t('search')}</span><FaSearch className="md:hidden" /></>}
+                {loading ? (
+                  <FaSpinner className="animate-spin" />
+                ) : (
+                  <>
+                    <span className="hidden md:inline">{t("search")}</span>
+                    <FaSearch className="md:hidden" />
+                  </>
+                )}
               </button>
             </div>
           </form>
 
-          {/* Filters Toggle */}
           <div className="mt-6">
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
             >
-              {showFilters ? t('hideFilters') : t('showFilters')}
+              {showFilters ? t("hideFilters") : t("showFilters")}
             </button>
 
             {showFilters && (
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/5 p-6 rounded-2xl border border-white/10 text-left animate-in fade-in slide-in-from-top-4">
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">{t('type')}</label>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                    {t("type")}
+                  </label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
                   >
-                    <option value="multi">{t('all')}</option>
-                    <option value="movie">{t('movie')}</option>
-                    <option value="tv">{t('tv')}</option>
+                    <option value="multi">{t("all")}</option>
+                    <option value="movie">{t("movie")}</option>
+                    <option value="tv">{t("tv")}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">{t('year')}</label>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                    {t("year")}
+                  </label>
                   <input
                     type="number"
                     placeholder="Es. 2023"
@@ -111,7 +121,9 @@ export default function SearchPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">{t('minRating')}: {minRating}</label>
+                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                    {t("minRating")}: {minRating}
+                  </label>
                   <input
                     type="range"
                     min="0"
@@ -132,7 +144,6 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Results */}
         <div className="space-y-8">
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
@@ -144,14 +155,18 @@ export default function SearchPage() {
             results.length > 0 ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-300 mb-8 px-2">
-                  {t('resultsFor')} <span className="text-white">"{query}"</span>
+                  {t("resultsFor")}{" "}
+                  <span className="text-white">"{query}"</span>
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {results.map((item: any) => (
                     <MovieCard
                       key={item.id}
                       movie={item}
-                      media_type={item.media_type || (item.first_air_date ? "tv" : "movie")}
+                      media_type={
+                        item.media_type ||
+                        (item.first_air_date ? "tv" : "movie")
+                      }
                     />
                   ))}
                 </div>
@@ -159,14 +174,14 @@ export default function SearchPage() {
             ) : (
               <div className="text-center py-20">
                 <p className="text-2xl text-gray-400 font-medium">
-                  {t('noResults')} "{query}"
+                  {t("noResults")} "{query}"
                 </p>
-                <p className="text-gray-500 mt-2">{t('tryAgain')}</p>
+                <p className="text-gray-500 mt-2">{t("tryAgain")}</p>
               </div>
             )
           ) : (
             <div className="text-center py-20 opacity-50">
-              <p className="text-xl text-gray-500">{t('startTyping')}</p>
+              <p className="text-xl text-gray-500">{t("startTyping")}</p>
             </div>
           )}
         </div>

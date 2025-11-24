@@ -1,16 +1,18 @@
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
 import Link from "next/link";
-import { FaStar, FaCalendar, FaClock, FaPlay, FaUser } from "react-icons/fa";
+import { getTranslations } from "next-intl/server";
+import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
+
 import MovieCard from "@/components/media/MovieCard";
-import WatchlistToggle from "@/components/widgets/WatchlistToggle";
 import NewsSection from "@/components/widgets/NewsSection";
 import ReviewsSection from "@/components/media/ReviewsSection";
-import RedditSection from "@/components/social/RedditSection";
-import WatchProviders from "@/components/media/WatchProviders";
-import SocialLinks from "@/components/widgets/SocialLinks";
-import CertificationBadge from "@/components/widgets/CertificationBadge";
+import SoundtrackSection from "@/components/media/SoundtrackSection";
 import TrailerButton from "@/components/media/TrailerButton";
-import { getTranslations } from "next-intl/server";
+import WatchProviders from "@/components/media/WatchProviders";
+import RedditSection from "@/components/social/RedditSection";
+import CertificationBadge from "@/components/widgets/CertificationBadge";
+import SocialLinks from "@/components/widgets/SocialLinks";
+import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface MoviePageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -18,21 +20,28 @@ interface MoviePageProps {
 
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id, locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'MediaPage' });
-  const tCommon = await getTranslations({ locale, namespace: 'Common' });
-
-  const movie = await tmdbFetch(`/movie/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates,belongs_to_collection`, locale);
-
-  const trailer = movie.videos?.results?.find(
-    (v: any) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
+  const t = await getTranslations({ locale, namespace: "MediaPage" });
+  const tCommon = await getTranslations({ locale, namespace: "Common" });
+  const movie = await tmdbFetch(
+    `/movie/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates,belongs_to_collection`,
+    locale
   );
 
-  const directors = movie.credits?.crew?.filter((p: any) => p.job === "Director") || [];
+  const trailer = movie.videos?.results?.find(
+    (v: any) =>
+      v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
+  );
+
+  const directors =
+    movie.credits?.crew?.filter((p: any) => p.job === "Director") || [];
   const cast = movie.credits?.cast?.slice(0, 15) || [];
   const recommendations = movie.recommendations?.results?.slice(0, 10) || [];
 
-  const releaseDates = movie.release_dates?.results?.find((r: any) => r.iso_3166_1 === "IT")?.release_dates || [];
-  const certification = releaseDates.length > 0 ? releaseDates[0].certification : "";
+  const releaseDates =
+    movie.release_dates?.results?.find((r: any) => r.iso_3166_1 === "IT")
+      ?.release_dates || [];
+  const certification =
+    releaseDates.length > 0 ? releaseDates[0].certification : "";
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
@@ -40,8 +49,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
           backgroundImage: `url(${tmdbImage(movie.backdrop_path, "original")})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
@@ -50,7 +59,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${tmdbImage(movie.backdrop_path, "original")})`,
+            backgroundImage: `url(${tmdbImage(
+              movie.backdrop_path,
+              "original"
+            )})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
@@ -68,11 +80,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <SocialLinks external_ids={movie.external_ids} homepage={movie.homepage} />
+              <SocialLinks
+                external_ids={movie.external_ids}
+                homepage={movie.homepage}
+              />
             </div>
 
-            {/* Info */}
-            <div className="flex-1 space-y-6">
+            <div className="flex-1 py-8 space-y-6">
               <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
                 {movie.title}
               </h1>
@@ -84,7 +98,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     <span>{movie.release_date.slice(0, 4)}</span>
                   </div>
                 )}
-                {certification && <CertificationBadge certification={certification} />}
+                {certification && (
+                  <CertificationBadge certification={certification} />
+                )}
                 {movie.vote_average > 0 && (
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
@@ -94,38 +110,32 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 {movie.runtime > 0 && (
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
-                    <span>{Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m</span>
+                    <span>
+                      {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
+                    </span>
                   </div>
                 )}
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {movie.genres?.map((g: any) => (
-                  <span key={g.id} className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default">
+                  <span
+                    key={g.id}
+                    className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
+                  >
                     {g.name}
                   </span>
-                ))}
-                {movie.keywords?.keywords?.slice(0, 5).map((k: any) => (
-                  <Link
-                    key={k.id}
-                    href={`/keyword/${k.id}`}
-                    className="px-4 py-1.5 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 text-blue-400 text-xs md:text-sm hover:bg-blue-500/20 transition-all"
-                  >
-                    #{k.name}
-                  </Link>
                 ))}
               </div>
 
               <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
-                <p className="text-lg md:text-xl text-gray-200 leading-relaxed line-clamp-4 md:line-clamp-none">
+                <p className="md:text-lg text-gray-200 leading-relaxed line-clamp-4 md:line-clamp-none">
                   {movie.overview}
                 </p>
               </div>
 
               <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
-                {trailer && (
-                  <TrailerButton trailerKey={trailer.key} />
-                )}
+                {trailer && <TrailerButton trailerKey={trailer.key} />}
                 <WatchlistToggle
                   id={movie.id}
                   title={movie.title}
@@ -143,9 +153,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('mainCast')}
+              {t("mainCast")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
               {cast.map((person: any) => (
                 <Link
                   key={person.id}
@@ -164,22 +174,25 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">{person.name}</h3>
-                  <p className="text-sm text-gray-400 truncate">{person.character}</p>
+                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
+                    {person.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {person.character}
+                  </p>
                 </Link>
               ))}
             </div>
           </section>
         )}
 
-        {/* CREW */}
         {directors.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('crew')}
+              {t("crew")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
               {directors.map((person: any) => (
                 <Link
                   key={person.credit_id}
@@ -198,7 +211,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">{person.name}</h3>
+                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
+                    {person.name}
+                  </h3>
                   <p className="text-sm text-gray-400 truncate">{person.job}</p>
                 </Link>
               ))}
@@ -206,27 +221,31 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </section>
         )}
 
-        {/* WATCH PROVIDERS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <WatchProviders providers={movie["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]} />
+          <WatchProviders
+            providers={
+              movie["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]
+            }
+          />
         </div>
 
-        {/* REVIEWS */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <ReviewsSection reviews={movie.reviews?.results} />
-        </div>
+        {movie.reviews?.results.length > 0 && (
+          <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <ReviewsSection reviews={movie.reviews?.results} />
+          </div>
+        )}
 
-        {/* REDDIT */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
           <RedditSection query={`${movie.title} movie`} />
         </div>
 
-        {/* NEWS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <NewsSection query={`${movie.title} ${locale === 'it' ? 'film' : 'movie'}`} locale={locale} />
+          <NewsSection
+            query={`${movie.title} ${locale === "it" ? "film" : "movie"}`}
+            locale={locale}
+          />
         </div>
 
-        {/* COLLECTION */}
         {movie.belongs_to_collection && (
           <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 backdrop-blur-md border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden group">
             <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay" />
@@ -235,14 +254,19 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
               <div className="w-48 md:w-64 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
                 <img
-                  src={tmdbImage(movie.belongs_to_collection.poster_path, "w500")}
+                  src={tmdbImage(
+                    movie.belongs_to_collection.poster_path,
+                    "w500"
+                  )}
                   alt={movie.belongs_to_collection.name}
                   className="w-full h-auto"
                 />
               </div>
 
               <div className="flex-1 text-center md:text-left space-y-4">
-                <h3 className="text-xl text-gray-300 font-medium uppercase tracking-widest">{t('partOfCollection')}</h3>
+                <h3 className="text-xl text-gray-300 font-medium uppercase tracking-widest">
+                  {t("partOfCollection")}
+                </h3>
                 <h2 className="text-3xl md:text-4xl font-black text-white drop-shadow-lg">
                   {movie.belongs_to_collection.name}
                 </h2>
@@ -250,19 +274,18 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   href={`/collection/${movie.belongs_to_collection.id}`}
                   className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors shadow-lg shadow-white/10"
                 >
-                  {t('viewCollection')}
+                  {t("viewCollection")}
                 </Link>
               </div>
             </div>
           </section>
         )}
 
-        {/* RECOMMENDATIONS */}
         {recommendations.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('recommended')}
+              {t("recommended")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {recommendations.map((m: any) => (
@@ -271,7 +294,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
             </div>
           </section>
         )}
-
       </div>
     </div>
   );

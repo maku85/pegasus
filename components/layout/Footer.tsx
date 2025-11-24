@@ -1,11 +1,12 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 
+import { Link } from "@/i18n/routing";
+
 export default function Footer() {
-  const t = useTranslations('Footer');
-  const tNav = useTranslations('Navbar');
+  const t = useTranslations("Footer");
+  const tNav = useTranslations("Navbar");
 
   return (
     <footer className="mt-auto border-t border-white/5 bg-black/30 backdrop-blur-lg">
@@ -14,29 +15,58 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold text-white mb-4">CineSphere</h3>
             <p className="text-gray-300 text-sm leading-relaxed">
-              La tua destinazione principale per scoprire film, serie TV e celebrità.
-              Powered by TMDB.
+              La tua destinazione principale per scoprire film, serie TV e
+              celebrità. Powered by TMDB.
             </p>
           </div>
           <div>
             <h4 className="text-lg font-bold text-white mb-4">Link Rapidi</h4>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="/movies" className="hover:text-yellow-400 transition-colors">{tNav('movies')}</Link></li>
-              <li><Link href="/tv" className="hover:text-yellow-400 transition-colors">{tNav('tvSeries')}</Link></li>
-              <li><Link href="/news" className="hover:text-yellow-400 transition-colors">News</Link></li>
-              <li><Link href="/watchlist" className="hover:text-yellow-400 transition-colors">{tNav('watchlist')}</Link></li>
+              <li>
+                <Link
+                  href="/movies"
+                  className="hover:text-yellow-400 transition-colors"
+                >
+                  {tNav("movies")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tv"
+                  className="hover:text-yellow-400 transition-colors"
+                >
+                  {tNav("tvSeries")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/news"
+                  className="hover:text-yellow-400 transition-colors"
+                >
+                  News
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/watchlist"
+                  className="hover:text-yellow-400 transition-colors"
+                >
+                  {tNav("watchlist")}
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <h4 className="text-lg font-bold text-white mb-4">Note Legali</h4>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Questo prodotto utilizza l'API di TMDB ma non è approvato o certificato da TMDB.
+              Questo prodotto utilizza l'API di TMDB ma non è approvato o
+              certificato da TMDB.
             </p>
           </div>
         </div>
         <div className="border-t border-white/5 pt-8 text-center text-sm text-gray-400">
-          {t.rich('rights', {
-            year: () => new Date().getFullYear()
+          {t.rich("rights", {
+            year: () => new Date().getFullYear(),
           })}
         </div>
       </div>

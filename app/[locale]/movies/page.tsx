@@ -1,15 +1,16 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 import MovieCard from "@/components/media/MovieCard";
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import MovieFilters from "@/components/media/MovieFilters";
 
 interface Genre {
   id: number;
   name: string;
 }
-
 
 const ENDPOINTS = {
   popular: "/movie/popular?language=it-IT",
@@ -17,17 +18,16 @@ const ENDPOINTS = {
   top_rated: "/movie/top_rated?language=it-IT",
 };
 
-import { Suspense } from "react";
-
-import { motion } from "framer-motion";
-import MovieFilters from "@/components/media/MovieFilters";
-
 function MoviesListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
-  const initialGenre = searchParams.get('genre') || '';
-  const [filter, setFilter] = useState<'popular' | 'trending' | 'top_rated'>(initialFilter);
+  const initialFilter =
+    (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
+    "popular";
+  const initialGenre = searchParams.get("genre") || "";
+  const [filter, setFilter] = useState<"popular" | "trending" | "top_rated">(
+    initialFilter
+  );
   const [genre, setGenre] = useState<string>(initialGenre);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -35,16 +35,16 @@ function MoviesListContent() {
   const [hasMore, setHasMore] = useState(true);
   const [genres, setGenres] = useState<Genre[]>([]);
 
-  // Aggiorna filtro e genere se cambia la query nell'URL
   useEffect(() => {
-    const urlFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
+    const urlFilter =
+      (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
+      "popular";
     setFilter(urlFilter);
-    setGenre(searchParams.get('genre') || '');
+    setGenre(searchParams.get("genre") || "");
   }, [searchParams]);
 
-  // Recupera la lista dei generi una sola volta
   useEffect(() => {
-    fetch('/api/genres')
+    fetch("/api/genres")
       .then((res) => res.json())
       .then((data) => setGenres(data.genres || []));
   }, []);
@@ -67,7 +67,9 @@ function MoviesListContent() {
       }
     }
     fetchMovies();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [filter, genre]);
 
   useEffect(() => {
@@ -98,19 +100,21 @@ function MoviesListContent() {
     setLoading(false);
   }
 
-  const handleCategoryChange = (newCategory: 'popular' | 'trending' | 'top_rated') => {
+  const handleCategoryChange = (
+    newCategory: "popular" | "trending" | "top_rated"
+  ) => {
     const params = new URLSearchParams(window.location.search);
-    params.set('category', newCategory);
-    params.delete('genre');
+    params.set("category", newCategory);
+    params.delete("genre");
     router.push(`?${params.toString()}`);
   };
 
   const handleGenreChange = (newGenreId: string) => {
     const params = new URLSearchParams(window.location.search);
     if (newGenreId) {
-      params.set('genre', newGenreId);
+      params.set("genre", newGenreId);
     } else {
-      params.delete('genre');
+      params.delete("genre");
     }
     router.push(`?${params.toString()}`);
   };
@@ -122,7 +126,8 @@ function MoviesListContent() {
           Esplora il Catalogo
         </h1>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          Scopri i film più popolari, le ultime uscite e i capolavori acclamati dalla critica.
+          Scopri i film più popolari, le ultime uscite e i capolavori acclamati
+          dalla critica.
         </p>
       </div>
 
@@ -147,11 +152,7 @@ function MoviesListContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <MovieCard
-              movie={movie}
-              media_type="movie"
-              className="h-full"
-            />
+            <MovieCard movie={movie} media_type="movie" className="h-full" />
           </motion.div>
         ))}
 
@@ -169,7 +170,9 @@ function MoviesListContent() {
 
 export default function MoviesListPage() {
   return (
-    <Suspense fallback={<div className="text-center py-10">Caricamento...</div>}>
+    <Suspense
+      fallback={<div className="text-center py-10">Caricamento...</div>}
+    >
       <MoviesListContent />
     </Suspense>
   );

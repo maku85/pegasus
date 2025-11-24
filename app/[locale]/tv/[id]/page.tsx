@@ -1,16 +1,17 @@
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
 import Link from "next/link";
-import { FaStar, FaCalendar, FaClock, FaUser } from "react-icons/fa";
-import MovieCard from "@/components/media/MovieCard";
-import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import NewsSection from "@/components/widgets/NewsSection";
-import ReviewsSection from "@/components/media/ReviewsSection";
-import RedditSection from "@/components/social/RedditSection";
-import WatchProviders from "@/components/media/WatchProviders";
-import SocialLinks from "@/components/widgets/SocialLinks";
-import CertificationBadge from "@/components/widgets/CertificationBadge";
-import TrailerButton from "@/components/media/TrailerButton";
 import { getTranslations } from "next-intl/server";
+
+import MovieCard from "@/components/media/MovieCard";
+import ReviewsSection from "@/components/media/ReviewsSection";
+import TrailerButton from "@/components/media/TrailerButton";
+import WatchProviders from "@/components/media/WatchProviders";
+import RedditSection from "@/components/social/RedditSection";
+import CertificationBadge from "@/components/widgets/CertificationBadge";
+import NewsSection from "@/components/widgets/NewsSection";
+import SocialLinks from "@/components/widgets/SocialLinks";
+import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface TVPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -18,19 +19,24 @@ interface TVPageProps {
 
 export default async function TVPage({ params }: TVPageProps) {
   const { id, locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'MediaPage' });
-
-  const tv = await tmdbFetch(`/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`, locale);
+  const t = await getTranslations({ locale, namespace: "MediaPage" });
+  const tv = await tmdbFetch(
+    `/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
+    locale
+  );
 
   const trailer = tv.videos?.results?.find(
-    (v: any) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
+    (v: any) =>
+      v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
   );
 
   const creators = tv.created_by || [];
   const cast = tv.credits?.cast?.slice(0, 15) || [];
   const recommendations = tv.recommendations?.results?.slice(0, 10) || [];
 
-  const certification = tv.content_ratings?.results?.find((r: any) => r.iso_3166_1 === "IT")?.rating || "";
+  const certification =
+    tv.content_ratings?.results?.find((r: any) => r.iso_3166_1 === "IT")
+      ?.rating || "";
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
@@ -38,8 +44,8 @@ export default async function TVPage({ params }: TVPageProps) {
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
           backgroundImage: `url(${tmdbImage(tv.backdrop_path, "original")})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
@@ -66,10 +72,12 @@ export default async function TVPage({ params }: TVPageProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
-              <SocialLinks external_ids={tv.external_ids} homepage={tv.homepage} />
+              <SocialLinks
+                external_ids={tv.external_ids}
+                homepage={tv.homepage}
+              />
             </div>
 
-            {/* Info */}
             <div className="flex-1 space-y-6">
               <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
                 {tv.name}
@@ -82,7 +90,9 @@ export default async function TVPage({ params }: TVPageProps) {
                     <span>{tv.first_air_date.slice(0, 4)}</span>
                   </div>
                 )}
-                {certification && <CertificationBadge certification={certification} />}
+                {certification && (
+                  <CertificationBadge certification={certification} />
+                )}
                 {tv.vote_average > 0 && (
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
@@ -92,14 +102,19 @@ export default async function TVPage({ params }: TVPageProps) {
                 {tv.number_of_seasons > 0 && (
                   <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
-                    <span>{tv.number_of_seasons} {t('seasons')}</span>
+                    <span>
+                      {tv.number_of_seasons} {t("seasons")}
+                    </span>
                   </div>
                 )}
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {tv.genres?.map((g: any) => (
-                  <span key={g.id} className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default">
+                  <span
+                    key={g.id}
+                    className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
+                  >
                     {g.name}
                   </span>
                 ))}
@@ -121,9 +136,7 @@ export default async function TVPage({ params }: TVPageProps) {
               </div>
 
               <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
-                {trailer && (
-                  <TrailerButton trailerKey={trailer.key} />
-                )}
+                {trailer && <TrailerButton trailerKey={trailer.key} />}
                 <WatchlistToggle
                   id={tv.id}
                   title={tv.name}
@@ -141,7 +154,7 @@ export default async function TVPage({ params }: TVPageProps) {
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('mainCast')}
+              {t("mainCast")}
             </h2>
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {cast.map((person: any) => (
@@ -162,20 +175,23 @@ export default async function TVPage({ params }: TVPageProps) {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">{person.name}</h3>
-                  <p className="text-sm text-gray-400 truncate">{person.character}</p>
+                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
+                    {person.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {person.character}
+                  </p>
                 </Link>
               ))}
             </div>
           </section>
         )}
 
-        {/* SEASONS */}
         {tv.seasons && tv.seasons.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-green-500 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></span>
-              {t('seasons')}
+              {t("seasons")}
             </h2>
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {tv.seasons.map((season: any) => (
@@ -193,26 +209,33 @@ export default async function TVPage({ params }: TVPageProps) {
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center text-gray-500">
-                        <span className="text-4xl font-bold text-gray-700 mb-2">{season.season_number}</span>
-                        <span className="text-xs uppercase tracking-widest">{t('season')}</span>
+                        <span className="text-4xl font-bold text-gray-700 mb-2">
+                          {season.season_number}
+                        </span>
+                        <span className="text-xs uppercase tracking-widest">
+                          {t("season")}
+                        </span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-green-400 transition-colors text-lg">{season.name}</h3>
-                  <p className="text-sm text-gray-400 truncate">{season.episode_count} {t('episodes')}</p>
+                  <h3 className="font-bold text-white truncate group-hover:text-green-400 transition-colors text-lg">
+                    {season.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {season.episode_count} {t("episodes")}
+                  </p>
                 </Link>
               ))}
             </div>
           </section>
         )}
 
-        {/* CREATORS */}
         {creators.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('creators')}
+              {t("creators")}
             </h2>
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {creators.map((person: any) => (
@@ -233,7 +256,9 @@ export default async function TVPage({ params }: TVPageProps) {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">{person.name}</h3>
+                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
+                    {person.name}
+                  </h3>
                   <p className="text-sm text-gray-400 truncate">Creatore</p>
                 </Link>
               ))}
@@ -241,32 +266,34 @@ export default async function TVPage({ params }: TVPageProps) {
           </section>
         )}
 
-        {/* WATCH PROVIDERS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <WatchProviders providers={tv["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]} />
+          <WatchProviders
+            providers={
+              tv["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]
+            }
+          />
         </div>
 
-        {/* REVIEWS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
           <ReviewsSection reviews={tv.reviews?.results} />
         </div>
 
-        {/* REDDIT */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
           <RedditSection query={`${tv.name} tv series`} />
         </div>
 
-        {/* NEWS */}
         <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <NewsSection query={`${tv.name} ${locale === 'it' ? 'serie tv' : 'tv series'}`} locale={locale} />
+          <NewsSection
+            query={`${tv.name} ${locale === "it" ? "serie tv" : "tv series"}`}
+            locale={locale}
+          />
         </div>
 
-        {/* RECOMMENDATIONS */}
         {recommendations.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t('recommended')}
+              {t("recommended")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
               {recommendations.map((tv: any) => (
@@ -275,7 +302,6 @@ export default async function TVPage({ params }: TVPageProps) {
             </div>
           </section>
         )}
-
       </div>
     </div>
   );

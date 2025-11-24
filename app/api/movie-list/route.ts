@@ -15,14 +15,12 @@ export async function GET(req: Request) {
   const lang = searchParams.get("lang") || "it";
   let endpoint = ENDPOINTS[type] || ENDPOINTS.popular;
 
-  // Se è selezionato un genere, usa discover
   if (genre) {
     endpoint = ENDPOINTS.discover;
     const separator = endpoint.includes("?") ? "&" : "?";
     endpoint += `${separator}with_genres=${genre}`;
   }
 
-  // Rimuovi language hardcoded dagli endpoint se presente, anche se tmdbFetch lo gestisce
   endpoint = endpoint.replace(/[?&]language=[a-zA-Z-]+/g, "");
 
   const separator = endpoint.includes("?") ? "&" : "?";

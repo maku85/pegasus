@@ -1,15 +1,21 @@
 "use client";
 
-import { Link } from "@/i18n/routing";
-import { useState } from "react";
-import { RiMovie2Line, RiSearchLine, RiMenu4Line, RiCloseLine } from "react-icons/ri";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import LanguageSwitcher from "../i18n/LanguageSwitcher";
+import { useState } from "react";
+import {
+  RiMovie2Line,
+  RiSearchLine,
+  RiMenu4Line,
+  RiCloseLine,
+} from "react-icons/ri";
+
+import { Link } from "@/i18n/routing";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const t = useTranslations('Navbar');
+  const t = useTranslations("Navbar");
 
   const menuVariants = {
     closed: {
@@ -17,17 +23,17 @@ export default function Navbar() {
       y: "-100%",
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
-      }
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
     },
     open: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
-      }
-    }
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
   };
 
   const linkVariants = {
@@ -38,24 +44,27 @@ export default function Navbar() {
       transition: {
         delay: 0.1 + i * 0.1,
         duration: 0.4,
-        ease: "easeOut" as const
-      }
-    })
+        ease: "easeOut" as const,
+      },
+    }),
   };
 
   const links = [
-    { href: "/movies", label: t('movies') },
-    { href: "/tv", label: t('tvSeries') },
-    { href: "/news", label: "News" }, // Missing translation key, keeping as is or adding later
-    { href: "/favorites", label: t('favorites') },
-    { href: "/movies/random", label: "Random" }, // Missing translation key
+    { href: "/movies", label: t("movies") },
+    { href: "/tv", label: t("tvSeries") },
+    { href: "/news", label: "News" },
+    { href: "/favorites", label: t("favorites") },
+    { href: "/movies/random", label: "Random" },
   ];
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 transition-all duration-300 bg-black/50 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2 group z-50 relative">
+          <Link
+            href="/"
+            className="flex items-center gap-2 group z-50 relative"
+          >
             <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
               <RiMovie2Line className="text-white text-2xl" />
             </div>
@@ -64,7 +73,6 @@ export default function Navbar() {
             </h1>
           </Link>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1.5 shadow-2xl">
             {links.map((link) => (
               <Link
@@ -81,7 +89,7 @@ export default function Navbar() {
             <Link
               href="/search"
               className="p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
-              aria-label={t('search')}
+              aria-label={t("search")}
             >
               <RiSearchLine className="text-xl" />
             </Link>
@@ -90,7 +98,6 @@ export default function Navbar() {
               <LanguageSwitcher />
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
@@ -106,7 +113,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -118,11 +124,7 @@ export default function Navbar() {
           >
             <div className="flex flex-col items-center gap-8">
               {links.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  custom={i}
-                  variants={linkVariants}
-                >
+                <motion.div key={link.href} custom={i} variants={linkVariants}>
                   <Link
                     href={link.href}
                     onClick={() => setIsOpen(false)}

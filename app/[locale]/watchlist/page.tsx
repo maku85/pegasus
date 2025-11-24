@@ -1,14 +1,15 @@
 "use client";
 
-import { useLocalWatchlist } from "@/hooks/useLocalWatchlist";
-import MovieCard from "@/components/media/MovieCard";
-import Link from "next/link";
-import { FaFilm, FaSearch } from "react-icons/fa";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { FaFilm, FaSearch } from "react-icons/fa";
+
+import MovieCard from "@/components/media/MovieCard";
+import { useLocalWatchlist } from "@/hooks/useLocalWatchlist";
 
 export default function WatchlistPage() {
-  const t = useTranslations('WatchlistPage');
+  const t = useTranslations("WatchlistPage");
   const { watchlist } = useLocalWatchlist();
 
   if (watchlist.length === 0) {
@@ -17,15 +18,17 @@ export default function WatchlistPage() {
         <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6">
           <FaFilm className="text-4xl text-gray-500" />
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('emptyTitle')}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          {t("emptyTitle")}
+        </h2>
         <p className="text-gray-400 text-lg max-w-md mb-8">
-          {t('emptyDescription')}
+          {t("emptyDescription")}
         </p>
         <Link
           href="/movies"
           className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/20"
         >
-          <FaSearch /> {t('explore')}
+          <FaSearch /> {t("explore")}
         </Link>
       </div>
     );
@@ -36,9 +39,14 @@ export default function WatchlistPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-12">
           <div>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-2">{t('title')}</h1>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-2">
+              {t("title")}
+            </h1>
             <p className="text-gray-400 text-lg">
-              {t('itemsSaved', { count: watchlist.length, s: watchlist.length !== 1 ? 's' : '' })}
+              {t("itemsSaved", {
+                count: watchlist.length,
+                s: watchlist.length !== 1 ? "s" : "",
+              })}
             </p>
           </div>
         </div>
@@ -51,10 +59,7 @@ export default function WatchlistPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <MovieCard
-                movie={item}
-                media_type={item.media_type}
-              />
+              <MovieCard movie={item} media_type={item.media_type} />
             </motion.div>
           ))}
         </div>

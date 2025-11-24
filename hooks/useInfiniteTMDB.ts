@@ -14,7 +14,7 @@ export function useInfiniteMovies() {
 
     const res = await fetch(`/api/movie?page=${page}`);
     const data = await res.json();
-    console.log('API /api/movie response', data);
+    console.log("API /api/movie response", data);
 
     if (Array.isArray(data.results)) {
       setItems((prev) => [...prev, ...data.results]);
@@ -47,7 +47,6 @@ export function useInfiniteMovies() {
 
   return { items, loading, hasMore };
 }
-
 
 export function useInfiniteTV() {
   const [items, setItems] = useState<any[]>([]);

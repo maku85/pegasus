@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+
 import MovieCard from "@/components/media/MovieCard";
 import MovieFilters from "@/components/media/MovieFilters";
 
@@ -14,9 +15,13 @@ interface Genre {
 function TVListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
-  const initialGenre = searchParams.get('genre') || '';
-  const [filter, setFilter] = useState<'popular' | 'trending' | 'top_rated'>(initialFilter);
+  const initialFilter =
+    (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
+    "popular";
+  const initialGenre = searchParams.get("genre") || "";
+  const [filter, setFilter] = useState<"popular" | "trending" | "top_rated">(
+    initialFilter
+  );
   const [genre, setGenre] = useState<string>(initialGenre);
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -24,16 +29,16 @@ function TVListContent() {
   const [hasMore, setHasMore] = useState(true);
   const [genres, setGenres] = useState<Genre[]>([]);
 
-  // Aggiorna filtro e genere se cambia la query nell'URL
   useEffect(() => {
-    const urlFilter = (searchParams.get('category') as 'popular' | 'trending' | 'top_rated') || 'popular';
+    const urlFilter =
+      (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
+      "popular";
     setFilter(urlFilter);
-    setGenre(searchParams.get('genre') || '');
+    setGenre(searchParams.get("genre") || "");
   }, [searchParams]);
 
-  // Recupera la lista dei generi una sola volta
   useEffect(() => {
-    fetch('/api/genres/tv')
+    fetch("/api/genres/tv")
       .then((res) => res.json())
       .then((data) => setGenres(data.genres || []));
   }, []);
@@ -56,7 +61,9 @@ function TVListContent() {
       }
     }
     fetchTV();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [filter, genre]);
 
   useEffect(() => {
@@ -87,19 +94,21 @@ function TVListContent() {
     setLoading(false);
   }
 
-  const handleCategoryChange = (newCategory: 'popular' | 'trending' | 'top_rated') => {
+  const handleCategoryChange = (
+    newCategory: "popular" | "trending" | "top_rated"
+  ) => {
     const params = new URLSearchParams(window.location.search);
-    params.set('category', newCategory);
-    params.delete('genre');
+    params.set("category", newCategory);
+    params.delete("genre");
     router.push(`?${params.toString()}`);
   };
 
   const handleGenreChange = (newGenreId: string) => {
     const params = new URLSearchParams(window.location.search);
     if (newGenreId) {
-      params.set('genre', newGenreId);
+      params.set("genre", newGenreId);
     } else {
-      params.delete('genre');
+      params.delete("genre");
     }
     router.push(`?${params.toString()}`);
   };
@@ -111,7 +120,8 @@ function TVListContent() {
           Serie TV
         </h1>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          Esplora le serie TV del momento, le novità e le più amate dal pubblico.
+          Esplora le serie TV del momento, le novità e le più amate dal
+          pubblico.
         </p>
       </div>
 
@@ -136,11 +146,7 @@ function TVListContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
-            <MovieCard
-              movie={tv}
-              media_type="tv"
-              className="h-full"
-            />
+            <MovieCard movie={tv} media_type="tv" className="h-full" />
           </motion.div>
         ))}
 
@@ -158,7 +164,9 @@ function TVListContent() {
 
 export default function TVListPage() {
   return (
-    <Suspense fallback={<div className="text-center py-10">Caricamento...</div>}>
+    <Suspense
+      fallback={<div className="text-center py-10">Caricamento...</div>}
+    >
       <TVListContent />
     </Suspense>
   );
