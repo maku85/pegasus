@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState, useEffect } from "react";
 import {
   FaStar,
@@ -107,6 +107,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
       </div>
 
       <button
+        type="button"
         onClick={prevSlide}
         aria-label="Previous slide"
         className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/30 border border-white/10 text-white rounded-full hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-20"
@@ -114,6 +115,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
         <FaChevronLeft size={24} />
       </button>
       <button
+        type="button"
         onClick={nextSlide}
         aria-label="Next slide"
         className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/30 border border-white/10 text-white rounded-full hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-20"
@@ -122,9 +124,10 @@ export default function HeroSlider({ items }: HeroSliderProps) {
       </button>
 
       <div className="absolute bottom-0 md:bottom-6 right-8 flex gap-2 z-20">
-        {items.map((_, idx) => (
+        {items.map((item, idx) => (
           <button
-            key={idx}
+            type="button"
+            key={`${item.media_type}-${item.id}`}
             onClick={() => setCurrentIndex(idx)}
             aria-label={`Go to slide ${idx + 1}`}
             className={`h-2 rounded-full transition-all duration-300 ${

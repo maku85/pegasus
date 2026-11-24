@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { FaStar } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
@@ -9,6 +10,7 @@ interface CollectionPageProps {
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
   const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "CollectionPage" });
 
   const collection = await tmdbFetch(`/collection/${id}`, locale);
 
@@ -48,7 +50,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
           <div className="flex-1 space-y-4 text-center md:text-left">
             <h2 className="text-xl text-yellow-500 font-medium uppercase tracking-widest">
-              Collezione
+              {t("label")}
             </h2>
             <h1 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl leading-tight">
               {collection.name}
@@ -57,7 +59,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm md:text-base font-medium text-gray-200">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                 <FaStar className="text-yellow-400" />
-                <span>{parts.length} Film</span>
+                <span>{t("count", { count: parts.length })}</span>
               </div>
             </div>
 
@@ -75,7 +77,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-6 relative z-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
           <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-          Film della Saga
+          {t("parts")}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {parts.map((movie: any) => (

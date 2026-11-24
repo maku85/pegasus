@@ -22,9 +22,9 @@ export default async function NewsSection({
         {t("title")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {news.map((item, index) => (
+        {news.map((item) => (
           <a
-            key={index}
+            key={item.link}
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
@@ -41,7 +41,7 @@ export default async function NewsSection({
               )}
               <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
                 <span>
-                  {new Date(item.pubDate).toLocaleDateString("it-IT", {
+                  {new Date(item.pubDate).toLocaleDateString(locale, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",

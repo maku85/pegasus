@@ -53,7 +53,7 @@ export default function Navbar() {
     { href: "/movies", label: t("movies") },
     { href: "/tv", label: t("tvSeries") },
     { href: "/news", label: "News" },
-    { href: "/favorites", label: t("favorites") },
+    { href: "/watchlist", label: t("watchlist") },
     { href: "/movies/random", label: "Random" },
   ];
 
@@ -99,6 +99,7 @@ export default function Navbar() {
             </div>
 
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
               aria-label="Menu"
@@ -134,6 +135,7 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
               ))}
+              <LanguageSwitcher />
             </div>
           </motion.div>
         )}

@@ -15,12 +15,11 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold text-white mb-4">CineSphere</h3>
             <p className="text-gray-300 text-sm leading-relaxed">
-              La tua destinazione principale per scoprire film, serie TV e
-              celebrità. Powered by TMDB.
+              {t("tagline")}
             </p>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-white mb-4">Link Rapidi</h4>
+            <h4 className="text-lg font-bold text-white mb-4">{t("quickLinks")}</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
                 <Link
@@ -57,17 +56,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-white mb-4">Note Legali</h4>
+            <h4 className="text-lg font-bold text-white mb-4">{t("legal")}</h4>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Questo prodotto utilizza l'API di TMDB ma non è approvato o
-              certificato da TMDB.
+              {t("disclaimer")}
             </p>
           </div>
         </div>
         <div className="border-t border-white/5 pt-8 text-center text-sm text-gray-400">
-          {t.rich("rights", {
-            year: () => new Date().getFullYear(),
-          })}
+          {t("rights", { year: String(new Date().getFullYear()) })}
         </div>
       </div>
     </footer>

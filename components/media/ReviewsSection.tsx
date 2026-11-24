@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FaQuoteLeft, FaStar, FaUserCircle } from "react-icons/fa";
 
 interface Review {
@@ -18,6 +18,7 @@ interface ReviewsSectionProps {
 
 export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
   const t = useTranslations("ReviewsSection");
+  const locale = useLocale();
 
   if (!reviews || reviews.length === 0) return null;
 
@@ -51,7 +52,7 @@ export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
                     {review.author}
                   </h3>
                   <p className="text-xs text-gray-400">
-                    {new Date(review.created_at).toLocaleDateString("it-IT", {
+                    {new Date(review.created_at).toLocaleDateString(locale, {
                       day: "numeric",
                       month: "long",
                       year: "numeric",

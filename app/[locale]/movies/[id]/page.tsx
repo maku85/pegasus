@@ -1,14 +1,12 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
 import NewsSection from "@/components/widgets/NewsSection";
 import ReviewsSection from "@/components/media/ReviewsSection";
-import SoundtrackSection from "@/components/media/SoundtrackSection";
 import TrailerButton from "@/components/media/TrailerButton";
 import WatchProviders from "@/components/media/WatchProviders";
-import RedditSection from "@/components/social/RedditSection";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
@@ -21,7 +19,7 @@ interface MoviePageProps {
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const tCommon = await getTranslations({ locale, namespace: "Common" });
+  const region = locale === "en" ? "US" : "IT";
   const movie = await tmdbFetch(
     `/movie/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates,belongs_to_collection`,
     locale
@@ -38,10 +36,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const recommendations = movie.recommendations?.results?.slice(0, 10) || [];
 
   const releaseDates =
-    movie.release_dates?.results?.find((r: any) => r.iso_3166_1 === "IT")
+    movie.release_dates?.results?.find((r: any) => r.iso_3166_1 === region)
       ?.release_dates || [];
   const certification =
-    releaseDates.length > 0 ? releaseDates[0].certification : "";
+    releaseDates.find((r: any) => r.certification)?.certification || "";
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
@@ -141,6 +139,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   title={movie.title}
                   poster_path={movie.poster_path}
                   media_type="movie"
+                  vote_average={movie.vote_average}
+                  release_date={movie.release_date}
                 />
               </div>
             </div>
@@ -221,25 +221,19 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <WatchProviders
-            providers={
-              movie["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]
-            }
+            providers={movie["watch/providers"]?.results?.[region]}
           />
         </div>
 
         {movie.reviews?.results.length > 0 && (
-          <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+          <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
             <ReviewsSection reviews={movie.reviews?.results} />
           </div>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <RedditSection query={`${movie.title} movie`} />
-        </div>
-
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <NewsSection
             query={`${movie.title} ${locale === "it" ? "film" : "movie"}`}
             locale={locale}
@@ -248,7 +242,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
         {movie.belongs_to_collection && (
           <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 backdrop-blur-md border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden group">
-            <div className="absolute inset-0 bg-[url('/images/noise.png')] opacity-10 mix-blend-overlay" />
             <div className="absolute -right-20 -top-20 w-96 h-96 bg-blue-500/20 blur-[100px] rounded-full group-hover:bg-blue-500/30 transition-colors duration-500" />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">

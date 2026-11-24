@@ -4,13 +4,16 @@
         "movies": "Film",
         "tvSeries": "Serie TV",
         "search": "Cerca",
-        "watchlist": "Da vedere",
-        "favorites": "Preferiti"
+        "watchlist": "Da vedere"
     },
     "Footer": {
         "rights": "© {year} My Movies. Tutti i diritti riservati.",
         "privacy": "Privacy Policy",
-        "terms": "Termini di servizio"
+        "terms": "Termini di servizio",
+        "tagline": "La tua destinazione principale per scoprire film, serie TV e celebrità. Powered by TMDB.",
+        "quickLinks": "Link Rapidi",
+        "legal": "Note Legali",
+        "disclaimer": "Questo prodotto utilizza l’API di TMDB ma non è approvato o certificato da TMDB."
     },
     "HomePage": {
         "welcome": "Benvenuto su My Movies",
@@ -22,7 +25,7 @@
         "upcoming": "In Arrivo"
     },
     "NewsPage": {
-        "title": "Notizie dal Mondo <span class='text-red-500'>Cinema</span>",
+        "title": "Notizie dal Mondo <highlight>Cinema</highlight>",
         "description": "Rimani aggiornato con le ultime novità su film, serie TV e le tue star preferite.",
         "cinema": "Cinema",
         "cinemaQuery": "Cinema Film Nuove Uscite",
@@ -38,8 +41,14 @@
         "movies": "Film",
         "tv": "TV"
     },
+    "NotFound": {
+        "title": "Contenuto non trovato",
+        "backHome": "Torna alla home"
+    },
     "MovieCard": {
-        "untitled": "Senza titolo"
+        "untitled": "Senza titolo",
+        "addToList": "Aggiungi alla Watchlist",
+        "removeFromList": "Rimuovi dalla Watchlist"
     },
     "HeroSlider": {
         "movie": "Film",
@@ -56,7 +65,8 @@
         "noBiography": "Nessuna biografia disponibile.",
         "gallery": "Galleria",
         "fullFilmography": "Filmografia Completa",
-        "unknownRole": "Ruolo sconosciuto"
+        "unknownRole": "Ruolo sconosciuto",
+        "bornIn": "a"
     },
     "MediaPage": {
         "seasons": "Stagioni",
@@ -67,10 +77,11 @@
         "crew": "Regia & Crew",
         "recommended": "Raccomandati per te",
         "partOfCollection": "Parte della saga",
-        "viewCollection": "Visualizza Collezione"
+        "viewCollection": "Visualizza Collezione",
+        "creator": "Creatore"
     },
     "SearchPage": {
-        "title": "Cosa vuoi <span class='text-blue-500'>guardare</span> oggi?",
+        "title": "Cosa vuoi <highlight>guardare</highlight> oggi?",
         "placeholder": "Cerca film, serie TV, attori...",
         "search": "Cerca",
         "showFilters": "Mostra Filtri Avanzati",
@@ -84,26 +95,15 @@
         "resultsFor": "Risultati per",
         "noResults": "Nessun risultato trovato per",
         "tryAgain": "Prova a cercare qualcos'altro.",
-        "startTyping": "Inizia a digitare per cercare..."
+        "startTyping": "Inizia a digitare per cercare...",
+        "yearExample": "Es. 2023"
     },
     "WatchlistPage": {
         "emptyTitle": "La tua Watchlist è vuota",
         "emptyDescription": "Non hai ancora salvato nessun film o serie TV. Esplora il catalogo e aggiungi i tuoi preferiti!",
         "explore": "Esplora Catalogo",
         "title": "La tua Watchlist",
-        "itemsSaved": "{count} element{s} salvat{s}"
-    },
-    "FavoritesPage": {
-        "unavailableTitle": "Funzionalità non disponibile",
-        "unavailableDescription": "I preferiti e il profilo utente sono disabilitati perché Firebase non è stato configurato.",
-        "profileTitle": "Il tuo Profilo",
-        "anonymousUser": "Sei un utente anonimo.",
-        "loggedInAs": "Accesso effettuato come {email}",
-        "saveFavoritesPrompt": "Salva i tuoi preferiti e accedi da altri dispositivi inserendo la tua email. Ti invieremo un Magic Link per accedere senza password.",
-        "sendLink": "Invia Link",
-        "linkSent": "Link inviato! Controlla la tua casella di posta per completare l'accesso.",
-        "title": "I tuoi Preferiti",
-        "noFavorites": "Non hai ancora aggiunto nessun preferito."
+        "itemsSaved": "{count, plural, one {# elemento salvato} other {# elementi salvati}}"
     },
     "ReviewsSection": {
         "title": "Recensioni"
@@ -125,5 +125,57 @@
     },
     "TrailerButton": {
         "watchTrailer": "Guarda Trailer"
+    },
+    "WatchlistToggle": {
+        "add": "Aggiungi alla Watchlist",
+        "inList": "Nella Watchlist"
+    },
+    "ListPage": {
+        "moviesTitle": "Esplora il Catalogo",
+        "moviesDescription": "Scopri i film più popolari, le ultime uscite e i capolavori acclamati dalla critica.",
+        "tvTitle": "Serie TV",
+        "tvDescription": "Esplora le serie TV del momento, le novità e le più amate dal pubblico.",
+        "error": "Impossibile caricare i contenuti. Ricarica la pagina."
+    },
+    "RandomPage": {
+        "ready": "Pronto?",
+        "searching": "Cercando {genre}...",
+        "found": "Trovato!",
+        "noResults": "Nessun risultato trovato con questi filtri.",
+        "error": "Errore durante la ricerca.",
+        "title": "Cosa guardiamo oggi?",
+        "spin": "Gira la Ruota!",
+        "openFilters": "Imposta Filtri",
+        "closeFilters": "Chiudi Filtri",
+        "filters": "Filtri di Ricerca",
+        "type": "Tipo",
+        "movie": "Film",
+        "tv": "Serie TV",
+        "genre": "Genere",
+        "any": "Qualsiasi",
+        "year": "Anno (Opzionale)",
+        "yearExample": "Es. 2023"
+    },
+    "WatchProviders": {
+        "title": "Dove Guardarlo",
+        "rent": "Noleggio",
+        "buy": "Acquisto",
+        "justWatch": "Dati forniti da JustWatch"
+    },
+    "EpisodeCard": {
+        "noOverview": "Nessuna trama disponibile per questo episodio."
+    },
+    "SocialLinks": {
+        "officialSite": "Sito Ufficiale"
+    },
+    "CollectionPage": {
+        "label": "Collezione",
+        "count": "{count} Film",
+        "parts": "Film della Saga"
+    },
+    "KeywordPage": {
+        "movies": "Film Correlati",
+        "tv": "Serie TV Correlate",
+        "empty": "Nessun contenuto trovato per questa keyword."
     }
 }

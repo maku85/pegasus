@@ -15,7 +15,7 @@ export default function Loading() {
         <div className="space-y-4">
           <div className="h-8 w-48 bg-gray-800 rounded animate-pulse"></div>
           <div className="flex gap-4 overflow-hidden">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {[...Array(6).keys()].map((i) => (
               <div key={i} className="min-w-[160px] md:min-w-[200px]">
                 <MovieCardSkeleton />
               </div>
@@ -26,7 +26,7 @@ export default function Loading() {
         <div className="space-y-4">
           <div className="h-8 w-48 bg-gray-800 rounded animate-pulse"></div>
           <div className="flex gap-4 overflow-hidden">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {[...Array(6).keys()].map((i) => (
               <div key={i} className="min-w-[160px] md:min-w-[200px]">
                 <MovieCardSkeleton />
               </div>

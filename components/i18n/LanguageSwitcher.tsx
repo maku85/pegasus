@@ -29,6 +29,7 @@ export default function LanguageSwitcher() {
   return (
     <div className="relative">
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-bold text-gray-200 hover:bg-white/10 hover:text-white transition-all duration-300"
         aria-label="Change language"
@@ -52,6 +53,7 @@ export default function LanguageSwitcher() {
           >
             {languages.map((lang) => (
               <button
+                type="button"
                 key={lang.code}
                 onClick={() => onSelectChange(lang.code)}
                 disabled={isPending}

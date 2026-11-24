@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import { tmdbImage } from "@/lib/tmdb";
 
 interface Provider {
@@ -16,6 +18,8 @@ interface WatchProvidersProps {
 }
 
 export default function WatchProviders({ providers }: WatchProvidersProps) {
+  const t = useTranslations("WatchProviders");
+
   if (!providers) return null;
 
   const { flatrate, rent, buy, link } = providers;
@@ -25,7 +29,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
     <section>
       <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
         <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
-        Dove Guardarlo
+        {t("title")}
       </h2>
 
       <div className="bg-white/5 rounded-2xl p-6 backdrop-blur-sm border border-white/5 space-y-8">
@@ -57,7 +61,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
         {rent && rent.length > 0 && (
           <div>
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-              Noleggio
+              {t("rent")}
             </h3>
             <div className="flex flex-wrap gap-4">
               {rent.map((provider) => (
@@ -82,7 +86,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
         {buy && buy.length > 0 && (
           <div>
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-              Acquisto
+              {t("buy")}
             </h3>
             <div className="flex flex-wrap gap-4">
               {buy.map((provider) => (
@@ -112,7 +116,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-white transition-colors"
             >
-              Dati forniti da JustWatch
+              {t("justWatch")}
             </a>
           </div>
         )}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
@@ -79,11 +79,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
             <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-purple-500/20 blur-2xl rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 aspect-[2/3]">
               <img
-                src={
-                  person.profile_path
-                    ? tmdbImage(person.profile_path, "h632")
-                    : "/images/placeholders/person-placeholder.jpg"
-                }
+                src={tmdbImage(person.profile_path, "h632")}
                 alt={person.name}
                 className="w-full h-full object-cover"
               />
@@ -112,7 +108,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
                   </span>
                   <span className="font-medium text-white">
                     {formatDate(person.birthday)}
-                    {person.place_of_birth && ` a ${person.place_of_birth}`}
+                    {person.place_of_birth && ` ${t("bornIn")} ${person.place_of_birth}`}
                     {!person.deathday &&
                       ` (${getAge(person.birthday)} ${t("years")})`}
                   </span>
@@ -178,11 +174,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
                   <div className="w-40 h-60 rounded-2xl overflow-hidden mb-4 relative shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                     <img
-                      src={
-                        item.poster_path
-                          ? tmdbImage(item.poster_path, "w342")
-                          : "/images/placeholders/poster-placeholder.jpg"
-                      }
+                      src={tmdbImage(item.poster_path, "w342")}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                     />
@@ -212,12 +204,12 @@ export default async function PersonPage({ params }: PersonPageProps) {
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {images.profiles.slice(1, 15).map((img: any, index: number) => (
                 <div
-                  key={index}
+                  key={img.file_path}
                   className="flex-shrink-0 w-48 h-72 rounded-2xl overflow-hidden bg-gray-800 shadow-lg border border-white/5 hover:border-purple-500/50 transition-all duration-300"
                 >
                   <img
                     src={tmdbImage(img.file_path, "w500")}
-                    alt={`${person.name} photo ${index + 1}`}
+                    alt={`${person.name} ${index + 1}`}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
                 </div>
@@ -226,7 +218,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <NewsSection query={person.name} locale={locale} />
         </div>
 
@@ -237,14 +229,14 @@ export default async function PersonPage({ params }: PersonPageProps) {
           </h2>
           <div className="bg-black/20 rounded-2xl p-2 backdrop-blur-sm border border-white/5">
             <div className="space-y-1">
-              {filmography.map((item: any, index: number) => (
+              {filmography.map((item: any) => (
                 <Link
                   href={
                     item.media_type === "tv"
                       ? `/tv/${item.id}`
                       : `/movies/${item.id}`
                   }
-                  key={`${item.id}-${index}`}
+                  key={item.credit_id}
                   className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/10 transition-colors group border border-transparent hover:border-white/5"
                 >
                   <div className="w-14 h-14 flex-shrink-0 text-gray-400 font-mono text-sm flex items-center justify-center bg-white/5 rounded-lg border border-white/5 group-hover:border-blue-500/30 group-hover:text-blue-400 transition-colors">

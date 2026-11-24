@@ -18,13 +18,15 @@ export async function GET(req: Request) {
   if (genre) {
     endpoint = ENDPOINTS.discover;
     const separator = endpoint.includes("?") ? "&" : "?";
-    endpoint += `${separator}with_genres=${genre}`;
+    endpoint += `${separator}with_genres=${encodeURIComponent(genre)}`;
   }
 
   endpoint = endpoint.replace(/[?&]language=[a-zA-Z-]+/g, "");
 
   const separator = endpoint.includes("?") ? "&" : "?";
-  const data = await tmdbFetch(`${endpoint}${separator}page=${page}`, lang);
+  const data = await tmdbFetch(`${endpoint}${separator}page=${encodeURIComponent(page)}`, lang);
+  // TMDB rejects pages above 500
+  data.total_pages = Math.min(data.total_pages, 500);
   return new Response(JSON.stringify(data), {
     status: 200,
     headers: {

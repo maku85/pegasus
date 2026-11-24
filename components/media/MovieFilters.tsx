@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FaFilter } from "react-icons/fa";
 
 interface Genre {
@@ -22,16 +23,19 @@ export default function MovieFilters({
   onCategoryChange,
   onGenreChange,
 }: MovieFiltersProps) {
+  const t = useTranslations("MovieFilters");
+
   return (
     <div className="mb-8 space-y-6">
       {/* Categories */}
       <div className="flex flex-wrap justify-center gap-4">
         {[
-          { id: "popular", label: "Popolari" },
-          { id: "trending", label: "Di Tendenza" },
-          { id: "top_rated", label: "I Più Votati" },
+          { id: "popular", label: t("popular") },
+          { id: "trending", label: t("trending") },
+          { id: "top_rated", label: t("topRated") },
         ].map((cat) => (
           <button
+            type="button"
             key={cat.id}
             onClick={() => onCategoryChange(cat.id as any)}
             className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
@@ -49,10 +53,11 @@ export default function MovieFilters({
         <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar w-full md:w-auto">
           <div className="flex items-center gap-2 text-gray-400 px-2">
             <FaFilter />
-            <span className="font-medium">Generi:</span>
+            <span className="font-medium">{t("genres")}</span>
           </div>
 
           <button
+            type="button"
             onClick={() => onGenreChange("")}
             className={`whitespace-nowrap px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               !activeGenre
@@ -60,11 +65,12 @@ export default function MovieFilters({
                 : "bg-white/5 text-gray-300 hover:bg-white/10"
             }`}
           >
-            Tutti
+            {t("all")}
           </button>
 
           {genres.map((g) => (
             <button
+              type="button"
               key={g.id}
               onClick={() => onGenreChange(String(g.id))}
               className={`whitespace-nowrap px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${

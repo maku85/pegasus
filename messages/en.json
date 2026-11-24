@@ -4,13 +4,16 @@
         "movies": "Movies",
         "tvSeries": "TV Series",
         "search": "Search",
-        "watchlist": "Watchlist",
-        "favorites": "Favorites"
+        "watchlist": "Watchlist"
     },
     "Footer": {
         "rights": "© {year} My Movies. All rights reserved.",
         "privacy": "Privacy Policy",
-        "terms": "Terms of Service"
+        "terms": "Terms of Service",
+        "tagline": "Your main destination for discovering movies, TV series and celebrities. Powered by TMDB.",
+        "quickLinks": "Quick Links",
+        "legal": "Legal",
+        "disclaimer": "This product uses the TMDB API but is not endorsed or certified by TMDB."
     },
     "HomePage": {
         "welcome": "Welcome to My Movies",
@@ -22,7 +25,7 @@
         "upcoming": "Upcoming"
     },
     "NewsPage": {
-        "title": "News from the World of <span class='text-red-500'>Cinema</span>",
+        "title": "News from the World of <highlight>Cinema</highlight>",
         "description": "Stay updated with the latest news on movies, TV series, and your favorite stars.",
         "cinema": "Cinema",
         "cinemaQuery": "Cinema Movies New Releases",
@@ -38,8 +41,14 @@
         "movies": "Movies",
         "tv": "TV"
     },
+    "NotFound": {
+        "title": "Content not found",
+        "backHome": "Back to home"
+    },
     "MovieCard": {
-        "untitled": "Untitled"
+        "untitled": "Untitled",
+        "addToList": "Add to Watchlist",
+        "removeFromList": "Remove from Watchlist"
     },
     "HeroSlider": {
         "movie": "Movie",
@@ -56,7 +65,8 @@
         "noBiography": "No biography available.",
         "gallery": "Gallery",
         "fullFilmography": "Full Filmography",
-        "unknownRole": "Unknown Role"
+        "unknownRole": "Unknown Role",
+        "bornIn": "in"
     },
     "MediaPage": {
         "seasons": "Seasons",
@@ -67,10 +77,11 @@
         "crew": "Crew",
         "recommended": "Recommended for you",
         "partOfCollection": "Part of the collection",
-        "viewCollection": "View Collection"
+        "viewCollection": "View Collection",
+        "creator": "Creator"
     },
     "SearchPage": {
-        "title": "What do you want to <span class='text-blue-500'>watch</span> today?",
+        "title": "What do you want to <highlight>watch</highlight> today?",
         "placeholder": "Search movies, TV series, actors...",
         "search": "Search",
         "showFilters": "Show Advanced Filters",
@@ -84,26 +95,15 @@
         "resultsFor": "Results for",
         "noResults": "No results found for",
         "tryAgain": "Try searching for something else.",
-        "startTyping": "Start typing to search..."
+        "startTyping": "Start typing to search...",
+        "yearExample": "E.g. 2023"
     },
     "WatchlistPage": {
         "emptyTitle": "Your Watchlist is empty",
         "emptyDescription": "You haven't saved any movies or TV series yet. Explore the catalog and add your favorites!",
         "explore": "Explore Catalog",
         "title": "Your Watchlist",
-        "itemsSaved": "{count} item{s} saved"
-    },
-    "FavoritesPage": {
-        "unavailableTitle": "Feature not available",
-        "unavailableDescription": "Favorites and user profile are disabled because Firebase has not been configured.",
-        "profileTitle": "Your Profile",
-        "anonymousUser": "You are an anonymous user.",
-        "loggedInAs": "Logged in as {email}",
-        "saveFavoritesPrompt": "Save your favorites and access them from other devices by entering your email. We'll send you a Magic Link to log in without a password.",
-        "sendLink": "Send Link",
-        "linkSent": "Link sent! Check your inbox to complete login.",
-        "title": "Your Favorites",
-        "noFavorites": "You haven't added any favorites yet."
+        "itemsSaved": "{count, plural, one {# item saved} other {# items saved}}"
     },
     "ReviewsSection": {
         "title": "Reviews"
@@ -125,5 +125,57 @@
     },
     "TrailerButton": {
         "watchTrailer": "Watch Trailer"
+    },
+    "WatchlistToggle": {
+        "add": "Add to Watchlist",
+        "inList": "In Watchlist"
+    },
+    "ListPage": {
+        "moviesTitle": "Explore the Catalog",
+        "moviesDescription": "Discover the most popular movies, the latest releases and critically acclaimed masterpieces.",
+        "tvTitle": "TV Series",
+        "tvDescription": "Explore the TV series of the moment, the newest ones and the audience favorites.",
+        "error": "Could not load the content. Reload the page."
+    },
+    "RandomPage": {
+        "ready": "Ready?",
+        "searching": "Searching {genre}...",
+        "found": "Found it!",
+        "noResults": "No results found with these filters.",
+        "error": "Something went wrong while searching.",
+        "title": "What are we watching today?",
+        "spin": "Spin the Wheel!",
+        "openFilters": "Set Filters",
+        "closeFilters": "Close Filters",
+        "filters": "Search Filters",
+        "type": "Type",
+        "movie": "Movie",
+        "tv": "TV Series",
+        "genre": "Genre",
+        "any": "Any",
+        "year": "Year (Optional)",
+        "yearExample": "E.g. 2023"
+    },
+    "WatchProviders": {
+        "title": "Where to Watch",
+        "rent": "Rent",
+        "buy": "Buy",
+        "justWatch": "Data provided by JustWatch"
+    },
+    "EpisodeCard": {
+        "noOverview": "No overview available for this episode."
+    },
+    "SocialLinks": {
+        "officialSite": "Official Website"
+    },
+    "CollectionPage": {
+        "label": "Collection",
+        "count": "{count, plural, one {# Movie} other {# Movies}}",
+        "parts": "Movies in the Collection"
+    },
+    "KeywordPage": {
+        "movies": "Related Movies",
+        "tv": "Related TV Series",
+        "empty": "No content found for this keyword."
     }
 }

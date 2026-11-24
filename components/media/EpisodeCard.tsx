@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from "next-intl";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
 import { tmdbImage } from "@/lib/tmdb";
@@ -7,6 +8,9 @@ interface EpisodeCardProps {
 }
 
 export default function EpisodeCard({ episode }: EpisodeCardProps) {
+  const t = useTranslations("EpisodeCard");
+  const locale = useLocale();
+
   return (
     <div className="flex flex-col md:flex-row gap-6 bg-white/5 backdrop-blur-md border border-white/5 rounded-2xl p-4 md:p-6 shadow-lg hover:bg-white/10 transition-colors group">
       {/* Image */}
@@ -33,7 +37,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
                 <div className="flex items-center gap-1.5">
                   <FaCalendar className="text-gray-500" />
                   <span>
-                    {new Date(episode.air_date).toLocaleDateString("it-IT")}
+                    {new Date(episode.air_date).toLocaleDateString(locale)}
                   </span>
                 </div>
               )}
@@ -49,7 +53,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
         </div>
 
         <p className="text-gray-300 text-sm leading-relaxed line-clamp-3 md:line-clamp-none">
-          {episode.overview || "Nessuna trama disponibile per questo episodio."}
+          {episode.overview || t("noOverview")}
         </p>
       </div>
     </div>

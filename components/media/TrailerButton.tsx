@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { FaPlay, FaTimes } from "react-icons/fa";
@@ -10,6 +11,7 @@ interface TrailerButtonProps {
 }
 
 export default function TrailerButton({ trailerKey }: TrailerButtonProps) {
+  const t = useTranslations("TrailerButton");
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -28,10 +30,11 @@ export default function TrailerButton({ trailerKey }: TrailerButtonProps) {
   return (
     <>
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-3 bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg shadow-yellow-500/20"
       >
-        <FaPlay /> Guarda Trailer
+        <FaPlay /> {t("watchTrailer")}
       </button>
 
       {mounted &&
@@ -53,6 +56,7 @@ export default function TrailerButton({ trailerKey }: TrailerButtonProps) {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
+                    type="button"
                     onClick={() => setIsOpen(false)}
                     className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full transition-colors"
                   >

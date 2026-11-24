@@ -2,10 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useEffect, useState } from "react";
 
 import MovieCard from "@/components/media/MovieCard";
 import MovieFilters from "@/components/media/MovieFilters";
+import { useInfiniteList } from "@/hooks/useInfiniteList";
+
+type Category = "popular" | "trending" | "top_rated";
 
 interface Genre {
   id: number;
@@ -14,89 +18,24 @@ interface Genre {
 
 function TVListContent() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("ListPage");
   const searchParams = useSearchParams();
-  const initialFilter =
-    (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
-    "popular";
-  const initialGenre = searchParams.get("genre") || "";
-  const [filter, setFilter] = useState<"popular" | "trending" | "top_rated">(
-    initialFilter
+  const filter = (searchParams.get("category") as Category) || "popular";
+  const genre = searchParams.get("genre") || "";
+  const { items, loading, error } = useInfiniteList(
+    `/api/tv-list?lang=${locale}&type=${filter}&genre=${encodeURIComponent(genre)}`
   );
-  const [genre, setGenre] = useState<string>(initialGenre);
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    const urlFilter =
-      (searchParams.get("category") as "popular" | "trending" | "top_rated") ||
-      "popular";
-    setFilter(urlFilter);
-    setGenre(searchParams.get("genre") || "");
-  }, [searchParams]);
-
-  useEffect(() => {
-    fetch("/api/genres/tv")
+    fetch(`/api/genres/tv?lang=${locale}`)
       .then((res) => res.json())
-      .then((data) => setGenres(data.genres || []));
-  }, []);
+      .then((data) => setGenres(data.genres || []))
+      .catch((err) => console.error("Error loading genres:", err));
+  }, [locale]);
 
-  useEffect(() => {
-    let ignore = false;
-    async function fetchTV() {
-      setLoading(true);
-      setItems([]);
-      setPage(1);
-      setHasMore(true);
-      let url = `/api/tv-list?type=${filter}&page=1`;
-      if (genre) url += `&genre=${genre}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (!ignore) {
-        setItems(data.results || []);
-        setHasMore(data.page < data.total_pages);
-        setLoading(false);
-      }
-    }
-    fetchTV();
-    return () => {
-      ignore = true;
-    };
-  }, [filter, genre]);
-
-  useEffect(() => {
-    if (!hasMore || loading) return;
-    const handleScroll = () => {
-      if (!hasMore || loading) return;
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const threshold = document.body.offsetHeight - 500;
-      if (scrollPosition >= threshold) {
-        loadMore();
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore, page, filter]);
-
-  async function loadMore() {
-    if (loading || !hasMore) return;
-    setLoading(true);
-    const nextPage = page + 1;
-    let url = `/api/tv-list?type=${filter}&page=${nextPage}`;
-    if (genre) url += `&genre=${genre}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    setItems((prev: any[]) => [...prev, ...(data.results || [])]);
-    setPage(nextPage);
-    setHasMore(nextPage < data.total_pages);
-    setLoading(false);
-  }
-
-  const handleCategoryChange = (
-    newCategory: "popular" | "trending" | "top_rated"
-  ) => {
+  const handleCategoryChange = (newCategory: Category) => {
     const params = new URLSearchParams(window.location.search);
     params.set("category", newCategory);
     params.delete("genre");
@@ -117,11 +56,10 @@ function TVListContent() {
     <div className="max-w-7xl mx-auto px-4">
       <div className="text-center mb-10 pt-8">
         <h1 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
-          Serie TV
+          {t("tvTitle")}
         </h1>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          Esplora le serie TV del momento, le novità e le più amate dal
-          pubblico.
+          {t("tvDescription")}
         </p>
       </div>
 
@@ -139,9 +77,9 @@ function TVListContent() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {items.map((tv: any, index: number) => (
+        {items.map((tv, index) => (
           <motion.div
-            key={`${tv.id}-${index}`}
+            key={tv.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -151,22 +89,26 @@ function TVListContent() {
         ))}
 
         {loading &&
-          Array.from({ length: 6 }).map((_, i) => (
+          [...Array(6).keys()].map((i) => (
             <div
               key={i}
               className="min-w-[150px] h-[300px] bg-gray-800/50 animate-pulse rounded-2xl"
             ></div>
           ))}
       </motion.div>
+
+      {error && (
+        <p role="alert" className="text-center text-red-400 py-10">
+          {t("error")}
+        </p>
+      )}
     </div>
   );
 }
 
 export default function TVListPage() {
   return (
-    <Suspense
-      fallback={<div className="text-center py-10">Caricamento...</div>}
-    >
+    <Suspense>
       <TVListContent />
     </Suspense>
   );

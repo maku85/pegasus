@@ -1,12 +1,11 @@
 import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 
 import MovieCard from "@/components/media/MovieCard";
 import ReviewsSection from "@/components/media/ReviewsSection";
 import TrailerButton from "@/components/media/TrailerButton";
 import WatchProviders from "@/components/media/WatchProviders";
-import RedditSection from "@/components/social/RedditSection";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
@@ -20,6 +19,7 @@ interface TVPageProps {
 export default async function TVPage({ params }: TVPageProps) {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: "MediaPage" });
+  const region = locale === "en" ? "US" : "IT";
   const tv = await tmdbFetch(
     `/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
     locale
@@ -35,7 +35,7 @@ export default async function TVPage({ params }: TVPageProps) {
   const recommendations = tv.recommendations?.results?.slice(0, 10) || [];
 
   const certification =
-    tv.content_ratings?.results?.find((r: any) => r.iso_3166_1 === "IT")
+    tv.content_ratings?.results?.find((r: any) => r.iso_3166_1 === region)
       ?.rating || "";
 
   return (
@@ -142,6 +142,8 @@ export default async function TVPage({ params }: TVPageProps) {
                   title={tv.name}
                   poster_path={tv.poster_path}
                   media_type="tv"
+                  vote_average={tv.vote_average}
+                  release_date={tv.first_air_date}
                 />
               </div>
             </div>
@@ -259,30 +261,24 @@ export default async function TVPage({ params }: TVPageProps) {
                   <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
                     {person.name}
                   </h3>
-                  <p className="text-sm text-gray-400 truncate">Creatore</p>
+                  <p className="text-sm text-gray-400 truncate">{t("creator")}</p>
                 </Link>
               ))}
             </div>
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <WatchProviders
-            providers={
-              tv["watch/providers"]?.results?.[locale === "en" ? "US" : "IT"]
-            }
+            providers={tv["watch/providers"]?.results?.[region]}
           />
         </div>
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <ReviewsSection reviews={tv.reviews?.results} />
         </div>
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
-          <RedditSection query={`${tv.name} tv series`} />
-        </div>
-
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
           <NewsSection
             query={`${tv.name} ${locale === "it" ? "serie tv" : "tv series"}`}
             locale={locale}

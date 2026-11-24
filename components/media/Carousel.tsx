@@ -37,7 +37,7 @@ export default function Carousel({ children, title, loading = false, skeletonCou
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {loading
-          ? Array.from({ length: skeletonCount }).map((_, i) => <MovieCardSkeleton key={i} />)
+          ? [...Array(skeletonCount).keys()].map((i) => <MovieCardSkeleton key={i} />)
           : children
         }
       </div>

@@ -1,54 +1,22 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { FaDice, FaFilter, FaTimes } from "react-icons/fa";
 
-const GENRES_MOVIE = [
-  { id: 28, name: "Azione" },
-  { id: 12, name: "Avventura" },
-  { id: 16, name: "Animazione" },
-  { id: 35, name: "Commedia" },
-  { id: 80, name: "Crime" },
-  { id: 99, name: "Documentario" },
-  { id: 18, name: "Drammatico" },
-  { id: 10751, name: "Famiglia" },
-  { id: 14, name: "Fantasy" },
-  { id: 36, name: "Storia" },
-  { id: 27, name: "Horror" },
-  { id: 10402, name: "Musica" },
-  { id: 9648, name: "Mistero" },
-  { id: 10749, name: "Romance" },
-  { id: 878, name: "Fantascienza" },
-  { id: 10770, name: "TV Movie" },
-  { id: 53, name: "Thriller" },
-  { id: 10752, name: "Guerra" },
-  { id: 37, name: "Western" },
-];
+import { useRouter } from "@/i18n/routing";
 
-const GENRES_TV = [
-  { id: 10759, name: "Action & Adventure" },
-  { id: 16, name: "Animazione" },
-  { id: 35, name: "Commedia" },
-  { id: 80, name: "Crime" },
-  { id: 99, name: "Documentario" },
-  { id: 18, name: "Drammatico" },
-  { id: 10751, name: "Famiglia" },
-  { id: 10762, name: "Kids" },
-  { id: 9648, name: "Mistero" },
-  { id: 10763, name: "News" },
-  { id: 10764, name: "Reality" },
-  { id: 10765, name: "Sci-Fi & Fantasy" },
-  { id: 10766, name: "Soap" },
-  { id: 10767, name: "Talk" },
-  { id: 10768, name: "War & Politics" },
-  { id: 37, name: "Western" },
-];
+interface Genre {
+  id: number;
+  name: string;
+}
 
 export default function RandomMoviePage() {
   const router = useRouter();
-  const [currentText, setCurrentText] = useState("Pronto?");
+  const locale = useLocale();
+  const t = useTranslations("RandomPage");
+  const [currentText, setCurrentText] = useState(t("ready"));
   const [isFound, setIsFound] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -58,7 +26,20 @@ export default function RandomMoviePage() {
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [year, setYear] = useState<string>("");
 
-  const genres = type === "movie" ? GENRES_MOVIE : GENRES_TV;
+  const [genres, setGenres] = useState<Genre[]>([]);
+
+  useEffect(() => {
+    let ignore = false;
+    fetch(`/api/genres${type === "tv" ? "/tv" : ""}?lang=${locale}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!ignore) setGenres(data.genres || []);
+      })
+      .catch((error) => console.error("Error fetching genres:", error));
+    return () => {
+      ignore = true;
+    };
+  }, [type, locale]);
 
   const startSearch = async () => {
     setIsSearching(true);
@@ -68,13 +49,14 @@ export default function RandomMoviePage() {
     // Shuffle effect
     const interval = setInterval(() => {
       const randomGenre =
-        genres[Math.floor(Math.random() * genres.length)].name;
-      setCurrentText(`Cercando ${randomGenre}...`);
+        genres[Math.floor(Math.random() * genres.length)]?.name ?? "";
+      setCurrentText(t("searching", { genre: randomGenre }));
     }, 100);
 
     try {
       // Build query params
       const params = new URLSearchParams();
+      params.append("lang", locale);
       params.append("type", type);
       if (selectedGenre) params.append("genre", selectedGenre);
       if (year) params.append("year", year);
@@ -89,7 +71,7 @@ export default function RandomMoviePage() {
 
       if (data.id) {
         setIsFound(true);
-        setCurrentText("Trovato!");
+        setCurrentText(t("found"));
         setTimeout(() => {
           router.replace(
             data.type === "tv" ? `/tv/${data.id}` : `/movies/${data.id}`
@@ -97,13 +79,13 @@ export default function RandomMoviePage() {
         }, 500);
       } else {
         setIsSearching(false);
-        setCurrentText("Nessun risultato trovato con questi filtri.");
+        setCurrentText(t("noResults"));
       }
     } catch (error) {
       console.error("Error fetching random movie:", error);
       clearInterval(interval);
       setIsSearching(false);
-      setCurrentText("Errore durante la ricerca.");
+      setCurrentText(t("error"));
     }
   };
 
@@ -129,7 +111,7 @@ export default function RandomMoviePage() {
           </div>
 
           <h1 className="text-3xl font-black mb-2 tracking-tight">
-            {isFound ? "Trovato!" : "Cosa guardiamo oggi?"}
+            {isFound ? t("found") : t("title")}
           </h1>
 
           <div className="h-8 mb-8 text-gray-400 font-medium">
@@ -139,17 +121,19 @@ export default function RandomMoviePage() {
           {!isSearching && (
             <div className="flex flex-col gap-4">
               <button
+                type="button"
                 onClick={startSearch}
                 className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-black font-bold py-4 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg"
               >
-                Gira la Ruota! 🎲
+                {t("spin")} 🎲
               </button>
 
               <button
+                type="button"
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
               >
-                <FaFilter /> {showFilters ? "Chiudi Filtri" : "Imposta Filtri"}
+                <FaFilter /> {showFilters ? t("closeFilters") : t("openFilters")}
               </button>
             </div>
           )}
@@ -164,8 +148,9 @@ export default function RandomMoviePage() {
               className="mt-4 bg-gray-900/90 backdrop-blur-md p-6 rounded-2xl border border-white/10"
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-lg">Filtri di Ricerca</h3>
+                <h3 className="font-bold text-lg">{t("filters")}</h3>
                 <button
+                  type="button"
                   onClick={() => setShowFilters(false)}
                   className="text-gray-400 hover:text-white"
                 >
@@ -174,44 +159,55 @@ export default function RandomMoviePage() {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    Tipo
-                  </label>
+                <fieldset>
+                  <legend className="block text-xs text-gray-400 mb-1 uppercase font-bold">
+                    {t("type")}
+                  </legend>
                   <div className="flex bg-black/50 rounded-lg p-1">
                     <button
-                      onClick={() => setType("movie")}
+                      type="button"
+                      aria-pressed={type === "movie"}
+                      onClick={() => {
+                        setType("movie");
+                        setSelectedGenre("");
+                      }}
                       className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
                         type === "movie"
                           ? "bg-gray-700 text-white"
                           : "text-gray-400 hover:text-white"
                       }`}
                     >
-                      Film
+                      {t("movie")}
                     </button>
                     <button
-                      onClick={() => setType("tv")}
+                      type="button"
+                      aria-pressed={type === "tv"}
+                      onClick={() => {
+                        setType("tv");
+                        setSelectedGenre("");
+                      }}
                       className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
                         type === "tv"
                           ? "bg-gray-700 text-white"
                           : "text-gray-400 hover:text-white"
                       }`}
                     >
-                      Serie TV
+                      {t("tv")}
                     </button>
                   </div>
-                </div>
+                </fieldset>
 
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    Genere
+                  <label htmlFor="random-genre" className="block text-xs text-gray-400 mb-1 uppercase font-bold">
+                    {t("genre")}
                   </label>
                   <select
+                    id="random-genre"
                     value={selectedGenre}
                     onChange={(e) => setSelectedGenre(e.target.value)}
                     className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-yellow-500"
                   >
-                    <option value="">Qualsiasi</option>
+                    <option value="">{t("any")}</option>
                     {genres.map((g) => (
                       <option key={g.id} value={g.id}>
                         {g.name}
@@ -221,12 +217,13 @@ export default function RandomMoviePage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    Anno (Opzionale)
+                  <label htmlFor="random-year" className="block text-xs text-gray-400 mb-1 uppercase font-bold">
+                    {t("year")}
                   </label>
                   <input
+                    id="random-year"
                     type="number"
-                    placeholder="Es. 2023"
+                    placeholder={t("yearExample")}
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-yellow-500"

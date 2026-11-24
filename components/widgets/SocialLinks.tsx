@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import {
   FaInstagram,
   FaTwitter,
@@ -20,6 +21,8 @@ export default function SocialLinks({
   external_ids,
   homepage,
 }: SocialLinksProps) {
+  const t = useTranslations("SocialLinks");
+
   if (!external_ids && !homepage) return null;
 
   return (
@@ -74,7 +77,7 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-white transition-colors text-2xl"
-          title="Sito Ufficiale"
+          title={t("officialSite")}
         >
           <FaGlobe />
         </a>

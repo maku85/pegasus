@@ -3,7 +3,8 @@ import { tmdbFetch } from "@/lib/tmdb";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query");
-  const type = searchParams.get("type") || "multi"; // multi, movie, tv
+  const typeParam = searchParams.get("type") || "";
+  const type = ["movie", "tv"].includes(typeParam) ? typeParam : "multi";
   const year = searchParams.get("year");
   const minRating = searchParams.get("minRating");
   const lang = searchParams.get("lang") || "it";
@@ -15,9 +16,9 @@ export async function GET(req: Request) {
 
   if (year) {
     if (type === "movie") {
-      endpoint += `&primary_release_year=${year}`;
+      endpoint += `&primary_release_year=${encodeURIComponent(year)}`;
     } else if (type === "tv") {
-      endpoint += `&first_air_date_year=${year}`;
+      endpoint += `&first_air_date_year=${encodeURIComponent(year)}`;
     }
   }
 

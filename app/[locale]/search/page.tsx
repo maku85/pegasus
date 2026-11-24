@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { FaSearch, FaSpinner } from "react-icons/fa";
 
@@ -9,6 +9,7 @@ import MovieCardSkeleton from "@/components/media/MovieCardSkeleton";
 
 export default function SearchPage() {
   const t = useTranslations("SearchPage");
+  const locale = useLocale();
   const [query, setQuery] = useState("");
   const [type, setType] = useState("multi");
   const [year, setYear] = useState("");
@@ -28,6 +29,7 @@ export default function SearchPage() {
       const params = new URLSearchParams({
         query,
         type,
+        lang: locale,
         ...(year && { year }),
         ...(minRating !== "0" && { minRating }),
       });
@@ -50,10 +52,13 @@ export default function SearchPage() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Search Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1
-            className="text-3xl md:text-5xl font-black mb-8 tracking-tight"
-            dangerouslySetInnerHTML={{ __html: t.raw("title") }}
-          />
+          <h1 className="text-3xl md:text-5xl font-black mb-8 tracking-tight">
+            {t.rich("title", {
+              highlight: (chunks) => (
+                <span className="text-blue-500">{chunks}</span>
+              ),
+            })}
+          </h1>
 
           <form onSubmit={handleSearch} className="relative group">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 transition-all duration-500" />
@@ -65,6 +70,7 @@ export default function SearchPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t("placeholder")}
                 className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 px-4 py-2 md:py-3 text-base md:text-lg font-medium w-full"
+                // biome-ignore lint/a11y/noAutofocus: searching is the only purpose of this page
                 autoFocus
               />
               <button
@@ -86,6 +92,7 @@ export default function SearchPage() {
 
           <div className="mt-6">
             <button
+              type="button"
               onClick={() => setShowFilters(!showFilters)}
               className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
             >
@@ -95,10 +102,11 @@ export default function SearchPage() {
             {showFilters && (
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-white/5 p-6 rounded-2xl border border-white/10 text-left animate-in fade-in slide-in-from-top-4">
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                  <label htmlFor="search-type" className="block text-xs text-gray-400 mb-2 uppercase font-bold">
                     {t("type")}
                   </label>
                   <select
+                    id="search-type"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
@@ -109,22 +117,24 @@ export default function SearchPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                  <label htmlFor="search-year" className="block text-xs text-gray-400 mb-2 uppercase font-bold">
                     {t("year")}
                   </label>
                   <input
+                    id="search-year"
                     type="number"
-                    placeholder="Es. 2023"
+                    placeholder={t("yearExample")}
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-400 mb-2 uppercase font-bold">
+                  <label htmlFor="search-min-rating" className="block text-xs text-gray-400 mb-2 uppercase font-bold">
                     {t("minRating")}: {minRating}
                   </label>
                   <input
+                    id="search-min-rating"
                     type="range"
                     min="0"
                     max="10"
@@ -147,7 +157,7 @@ export default function SearchPage() {
         <div className="space-y-8">
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {Array.from({ length: 10 }).map((_, i) => (
+              {[...Array(10).keys()].map((i) => (
                 <MovieCardSkeleton key={i} />
               ))}
             </div>
@@ -161,11 +171,11 @@ export default function SearchPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {results.map((item: any) => (
                     <MovieCard
-                      key={item.id}
+                      key={`${item.media_type}-${item.id}`}
                       movie={item}
                       media_type={
                         item.media_type ||
-                        (item.first_air_date ? "tv" : "movie")
+                        (item.title ? "movie" : "tv")
                       }
                     />
                   ))}

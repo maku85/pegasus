@@ -10,6 +10,10 @@ export default async function HomeNewsWidget({
   locale?: string;
 }) {
   const t = await getTranslations({ locale, namespace: "HomePage" });
+  const tWidget = await getTranslations({
+    locale,
+    namespace: "HomeNewsWidget",
+  });
   const news = await getNews(t("newsQuery"), locale);
   if (news.length === 0) return null;
 
@@ -18,20 +22,20 @@ export default async function HomeNewsWidget({
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-white">
           <span className="w-1 h-8 bg-red-500 rounded-full"></span>
-          Ultime Notizie
+          {tWidget("title")}
         </h2>
         <Link
           href="/news"
           className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-wider"
         >
-          Vedi tutte <FaArrowRight />
+          {tWidget("viewAll")} <FaArrowRight />
         </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {news.slice(0, 4).map((item, index) => (
+        {news.slice(0, 4).map((item) => (
           <a
-            key={index}
+            key={item.link}
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
@@ -48,7 +52,7 @@ export default async function HomeNewsWidget({
               )}
               <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
                 <span>
-                  {new Date(item.pubDate).toLocaleDateString("it-IT", {
+                  {new Date(item.pubDate).toLocaleDateString(locale, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",

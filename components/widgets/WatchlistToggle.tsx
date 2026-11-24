@@ -1,37 +1,20 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FaPlus, FaCheck } from "react-icons/fa";
 
-import { useLocalWatchlist } from "@/hooks/useLocalWatchlist";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import type { WatchlistItem } from "@/lib/watchlist";
 
-interface WatchlistToggleProps {
-  id: number;
-  title: string;
-  poster_path: string | null;
-  media_type: "movie" | "tv";
-}
-
-export default function WatchlistToggle({
-  id,
-  title,
-  poster_path,
-  media_type,
-}: WatchlistToggleProps) {
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist } =
-    useLocalWatchlist();
-  const inList = isInWatchlist(id, media_type);
-
-  const handleClick = () => {
-    if (inList) {
-      removeFromWatchlist(id, media_type);
-    } else {
-      addToWatchlist({ id, title, poster_path, media_type });
-    }
-  };
+export default function WatchlistToggle(item: WatchlistItem) {
+  const t = useTranslations("WatchlistToggle");
+  const { isInWatchlist, toggleWatchlist } = useWatchlist();
+  const inList = isInWatchlist(item);
 
   return (
     <button
-      onClick={handleClick}
+      type="button"
+      onClick={() => toggleWatchlist(item)}
       className={`flex items-center gap-3 px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg ${
         inList
           ? "bg-green-600 hover:bg-green-500 text-white shadow-green-600/20"
@@ -39,7 +22,7 @@ export default function WatchlistToggle({
       }`}
     >
       {inList ? <FaCheck /> : <FaPlus />}
-      {inList ? "Nella Watchlist" : "Aggiungi alla Watchlist"}
+      {inList ? t("inList") : t("add")}
     </button>
   );
 }

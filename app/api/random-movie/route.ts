@@ -16,10 +16,10 @@ export async function GET(req: NextRequest) {
     type === "tv" ? "discover/tv" : "discover/movie"
   }?include_adult=false&vote_count.gte=100`;
 
-  if (genre) query += `&with_genres=${genre}`;
+  if (genre) query += `&with_genres=${encodeURIComponent(genre)}`;
   if (year) {
-    if (type === "movie") query += `&primary_release_year=${year}`;
-    else query += `&first_air_date_year=${year}`;
+    if (type === "movie") query += `&primary_release_year=${encodeURIComponent(year)}`;
+    else query += `&first_air_date_year=${encodeURIComponent(year)}`;
   }
 
   const initialFetch = await tmdbFetch(`${query}&page=1`, lang);

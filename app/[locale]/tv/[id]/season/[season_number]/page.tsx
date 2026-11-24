@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
 import EpisodeCard from "@/components/media/EpisodeCard";
@@ -9,6 +10,7 @@ interface SeasonPageProps {
 
 export default async function SeasonPage({ params }: SeasonPageProps) {
   const { id, season_number, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "MediaPage" });
   const season = await tmdbFetch(`/tv/${id}/season/${season_number}`, locale);
   const show = await tmdbFetch(`/tv/${id}`, locale);
 
@@ -49,7 +51,7 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
               )}
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
                 <FaStar className="text-yellow-400" />
-                <span>{season.episodes?.length || 0} Episodi</span>
+                <span>{season.episodes?.length || 0} {t("episodes")}</span>
               </div>
             </div>
 
@@ -67,7 +69,7 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-6 relative z-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
           <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-          Episodi
+          {t("episodes")}
         </h2>
         <div className="space-y-4">
           {season.episodes?.map((episode: any) => (

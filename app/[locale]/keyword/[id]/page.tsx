@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 import { FaChevronLeft, FaHashtag } from "react-icons/fa";
 
 import Carousel from "@/components/media/Carousel";
@@ -11,6 +12,7 @@ interface KeywordPageProps {
 
 export default async function KeywordPage({ params }: KeywordPageProps) {
   const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "KeywordPage" });
   const keyword = await tmdbFetch(`/keyword/${id}`, locale);
 
   const [movies, tvShows] = await Promise.all([
@@ -40,7 +42,7 @@ export default async function KeywordPage({ params }: KeywordPageProps) {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-16 relative z-10">
         {movies.results.length > 0 && (
-          <Carousel title="Film Correlati" accentColor="blue">
+          <Carousel title={t("movies")} accentColor="blue">
             {movies.results.map((m: any) => (
               <MovieCard key={m.id} movie={m} media_type="movie" />
             ))}
@@ -48,7 +50,7 @@ export default async function KeywordPage({ params }: KeywordPageProps) {
         )}
 
         {tvShows.results.length > 0 && (
-          <Carousel title="Serie TV Correlate" accentColor="purple">
+          <Carousel title={t("tv")} accentColor="purple">
             {tvShows.results.map((tv: any) => (
               <MovieCard key={tv.id} movie={tv} media_type="tv" />
             ))}
@@ -57,7 +59,7 @@ export default async function KeywordPage({ params }: KeywordPageProps) {
 
         {movies.results.length === 0 && tvShows.results.length === 0 && (
           <div className="text-center py-20 text-gray-500">
-            Nessun contenuto trovato per questa keyword.
+            {t("empty")}
           </div>
         )}
       </div>
