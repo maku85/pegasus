@@ -10,7 +10,7 @@ import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface MoviePageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -18,11 +18,13 @@ interface MoviePageProps {
 
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id, locale } = await params;
+  requireIds(id);
   const t = await getTranslations({ locale, namespace: "MediaPage" });
   const region = locale === "en" ? "US" : "IT";
   const movie = await tmdbFetch(
     `/movie/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates,belongs_to_collection`,
-    locale
+    locale,
+    7 * DAY
   );
 
   const trailer = movie.videos?.results?.find(
@@ -158,6 +160,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
               {cast.map((person: any) => (
                 <Link
+                  prefetch={false}
                   key={person.id}
                   href={`/person/${person.id}`}
                   className="flex-shrink-0 w-36 md:w-44 group"
@@ -195,6 +198,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
               {directors.map((person: any) => (
                 <Link
+                  prefetch={false}
                   key={person.credit_id}
                   href={`/person/${person.id}`}
                   className="flex-shrink-0 w-36 md:w-44 group"
@@ -264,6 +268,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   {movie.belongs_to_collection.name}
                 </h2>
                 <Link
+                  prefetch={false}
                   href={`/collection/${movie.belongs_to_collection.id}`}
                   className="inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors shadow-lg shadow-white/10"
                 >

@@ -1,8 +1,20 @@
 import { notFound } from "next/navigation";
 
+import { isId } from "./params";
+
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
-export async function tmdbFetch(path: string, locale: string = "it") {
+export const DAY = 86400;
+
+export function requireIds(...values: string[]) {
+  if (!values.every(isId)) notFound();
+}
+
+export async function tmdbFetch(
+  path: string,
+  locale: string = "it",
+  revalidate: number = DAY
+) {
   const tmdbLocale = locale === "en" ? "en-US" : "it-IT";
 
   // Rimuovi language=... se presente nel path per evitare duplicati
@@ -22,7 +34,7 @@ export async function tmdbFetch(path: string, locale: string = "it") {
         "Content-Type": "application/json",
         ...(isV4 && { Authorization: `Bearer ${token}` }),
       },
-      next: { revalidate: 86400 }, // cache server-side per 24 ore
+      next: { revalidate },
     }
   );
   if (res.status === 404) notFound();

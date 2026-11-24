@@ -4,7 +4,7 @@ import { FaChevronLeft, FaHashtag } from "react-icons/fa";
 
 import Carousel from "@/components/media/Carousel";
 import MovieCard from "@/components/media/MovieCard";
-import { tmdbFetch } from "@/lib/tmdb";
+import { requireIds, tmdbFetch } from "@/lib/tmdb";
 
 interface KeywordPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -12,6 +12,7 @@ interface KeywordPageProps {
 
 export default async function KeywordPage({ params }: KeywordPageProps) {
   const { id, locale } = await params;
+  requireIds(id);
   const t = await getTranslations({ locale, namespace: "KeywordPage" });
   const keyword = await tmdbFetch(`/keyword/${id}`, locale);
 

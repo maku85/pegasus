@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { FaStar } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface CollectionPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -10,9 +10,10 @@ interface CollectionPageProps {
 
 export default async function CollectionPage({ params }: CollectionPageProps) {
   const { id, locale } = await params;
+  requireIds(id);
   const t = await getTranslations({ locale, namespace: "CollectionPage" });
 
-  const collection = await tmdbFetch(`/collection/${id}`, locale);
+  const collection = await tmdbFetch(`/collection/${id}`, locale, 7 * DAY);
 
   const parts =
     collection.parts?.sort((a: any, b: any) => {

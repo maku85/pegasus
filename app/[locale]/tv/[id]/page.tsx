@@ -10,7 +10,7 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface TVPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -18,11 +18,13 @@ interface TVPageProps {
 
 export default async function TVPage({ params }: TVPageProps) {
   const { id, locale } = await params;
+  requireIds(id);
   const t = await getTranslations({ locale, namespace: "MediaPage" });
   const region = locale === "en" ? "US" : "IT";
   const tv = await tmdbFetch(
     `/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
-    locale
+    locale,
+    7 * DAY
   );
 
   const trailer = tv.videos?.results?.find(
@@ -120,6 +122,7 @@ export default async function TVPage({ params }: TVPageProps) {
                 ))}
                 {tv.keywords?.results?.slice(0, 5).map((k: any) => (
                   <Link
+                    prefetch={false}
                     key={k.id}
                     href={`/keyword/${k.id}`}
                     className="px-4 py-1.5 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 text-blue-400 text-xs md:text-sm hover:bg-blue-500/20 transition-all"
@@ -161,6 +164,7 @@ export default async function TVPage({ params }: TVPageProps) {
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {cast.map((person: any) => (
                 <Link
+                  prefetch={false}
                   key={person.id}
                   href={`/person/${person.id}`}
                   className="flex-shrink-0 w-36 md:w-44 group"
@@ -198,6 +202,7 @@ export default async function TVPage({ params }: TVPageProps) {
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {tv.seasons.map((season: any) => (
                 <Link
+                  prefetch={false}
                   key={season.id}
                   href={`/tv/${tv.id}/season/${season.season_number}`}
                   className="flex-shrink-0 w-40 md:w-48 group"
@@ -242,6 +247,7 @@ export default async function TVPage({ params }: TVPageProps) {
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {creators.map((person: any) => (
                 <Link
+                  prefetch={false}
                   key={person.id}
                   href={`/person/${person.id}`}
                   className="flex-shrink-0 w-36 md:w-44 group"

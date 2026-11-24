@@ -97,6 +97,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
 
           <div className="flex gap-4">
             <Link
+              prefetch={false}
               href={`/${isMovie ? "movies" : "tv"}/${currentItem.id}`}
               className="px-8 py-3 bg-white text-black rounded-xl font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors shadow-lg hover:scale-105 transform duration-200"
             >

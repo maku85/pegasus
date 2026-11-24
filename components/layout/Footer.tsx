@@ -57,6 +57,14 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="text-lg font-bold text-white mb-4">{t("legal")}</h4>
+            <a
+              href="https://www.themoviedb.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mb-4"
+            >
+              <img src="/images/tmdb.svg" alt="TMDB" className="h-4 w-auto" />
+            </a>
             <p className="text-gray-300 text-sm leading-relaxed">
               {t("disclaimer")}
             </p>

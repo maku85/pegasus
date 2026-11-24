@@ -40,7 +40,7 @@ export default function MovieCard({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Link href={link}>
+      <Link href={link} prefetch={false}>
         <div className="rounded-2xl group">
           <div className="relative w-full aspect-[2/3] rounded-2xl shadow overflow-hidden flex flex-col justify-end group-hover:scale-[1.02] transition-transform bg-gray-800">
             <Image

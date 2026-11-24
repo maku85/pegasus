@@ -56,7 +56,6 @@ export default function RandomMoviePage() {
     try {
       // Build query params
       const params = new URLSearchParams();
-      params.append("lang", locale);
       params.append("type", type);
       if (selectedGenre) params.append("genre", selectedGenre);
       if (year) params.append("year", year);
@@ -65,6 +64,7 @@ export default function RandomMoviePage() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const res = await fetch(`/api/random-movie?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
       clearInterval(interval);

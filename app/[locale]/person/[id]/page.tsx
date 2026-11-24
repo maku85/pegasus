@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
 import NewsSection from "@/components/widgets/NewsSection";
-import { tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface PersonPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -11,11 +11,13 @@ interface PersonPageProps {
 
 export default async function PersonPage({ params }: PersonPageProps) {
   const { id, locale } = await params;
+  requireIds(id);
   const t = await getTranslations({ locale, namespace: "PersonPage" });
   const tCommon = await getTranslations({ locale, namespace: "Common" });
   const person = await tmdbFetch(
     `/person/${id}?append_to_response=combined_credits,images,external_ids`,
-    locale
+    locale,
+    7 * DAY
   );
 
   const knownFor =
@@ -163,6 +165,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
             <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
               {knownFor.map((item: any) => (
                 <Link
+                  prefetch={false}
                   href={
                     item.media_type === "tv"
                       ? `/tv/${item.id}`
@@ -231,6 +234,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
             <div className="space-y-1">
               {filmography.map((item: any) => (
                 <Link
+                  prefetch={false}
                   href={
                     item.media_type === "tv"
                       ? `/tv/${item.id}`

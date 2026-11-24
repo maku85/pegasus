@@ -17,6 +17,7 @@ export default function SearchPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
   async function handleSearch(e: React.FormEvent) {
@@ -24,6 +25,7 @@ export default function SearchPage() {
     if (!query.trim()) return;
 
     setLoading(true);
+    setError(false);
     setHasSearched(true);
     try {
       const params = new URLSearchParams({
@@ -34,11 +36,13 @@ export default function SearchPage() {
         ...(minRating !== "0" && { minRating }),
       });
       const res = await fetch(`/api/search?${params.toString()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setResults(data.results || []);
     } catch (error) {
       console.error("Search error:", error);
       setResults([]);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -161,6 +165,10 @@ export default function SearchPage() {
                 <MovieCardSkeleton key={i} />
               ))}
             </div>
+          ) : error ? (
+            <p role="alert" className="text-center text-red-400 py-20">
+              {t("error")}
+            </p>
           ) : hasSearched ? (
             results.length > 0 ? (
               <>

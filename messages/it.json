@@ -10,19 +10,19 @@
         "rights": "© {year} My Movies. Tutti i diritti riservati.",
         "privacy": "Privacy Policy",
         "terms": "Termini di servizio",
-        "tagline": "La tua destinazione principale per scoprire film, serie TV e celebrità. Powered by TMDB.",
         "quickLinks": "Link Rapidi",
         "legal": "Note Legali",
-        "disclaimer": "Questo prodotto utilizza l’API di TMDB ma non è approvato o certificato da TMDB."
+        "disclaimer": "Questo sito utilizza TMDB e le API di TMDB ma non è sostenuto, certificato o altrimenti approvato da TMDB.",
+        "tagline": "La tua destinazione principale per scoprire film, serie TV e celebrità. Powered by TMDB."
     },
     "HomePage": {
-        "welcome": "Benvenuto su My Movies",
         "trending": "Di tendenza",
         "popular": "Popolari",
         "newsQuery": "Cinema e Serie TV",
         "popularMovies": "Film Popolari",
         "popularTV": "Serie TV Popolari",
-        "upcoming": "In Arrivo"
+        "upcoming": "In Arrivo",
+        "welcome": "Benvenuto su My Movies"
     },
     "NewsPage": {
         "title": "Notizie dal Mondo <highlight>Cinema</highlight>",
@@ -96,7 +96,8 @@
         "noResults": "Nessun risultato trovato per",
         "tryAgain": "Prova a cercare qualcos'altro.",
         "startTyping": "Inizia a digitare per cercare...",
-        "yearExample": "Es. 2023"
+        "yearExample": "Es. 2023",
+        "error": "Impossibile caricare i contenuti. Riprova tra poco."
     },
     "WatchlistPage": {
         "emptyTitle": "La tua Watchlist è vuota",
@@ -135,7 +136,7 @@
         "moviesDescription": "Scopri i film più popolari, le ultime uscite e i capolavori acclamati dalla critica.",
         "tvTitle": "Serie TV",
         "tvDescription": "Esplora le serie TV del momento, le novità e le più amate dal pubblico.",
-        "error": "Impossibile caricare i contenuti. Ricarica la pagina."
+        "error": "Impossibile caricare i contenuti. Riprova tra poco."
     },
     "RandomPage": {
         "ready": "Pronto?",
@@ -177,5 +178,9 @@
         "movies": "Film Correlati",
         "tv": "Serie TV Correlate",
         "empty": "Nessun contenuto trovato per questa keyword."
+    },
+    "ErrorPage": {
+        "title": "Servizio momentaneamente non disponibile",
+        "retry": "Riprova"
     }
 }
