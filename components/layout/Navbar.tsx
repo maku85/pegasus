@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
-  RiMovie2Line,
   RiSearchLine,
   RiMenu4Line,
   RiCloseLine,
@@ -16,6 +15,7 @@ import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("Navbar");
+  const tBrand = useTranslations("Brand");
 
   const menuVariants = {
     closed: {
@@ -65,12 +65,19 @@ export default function Navbar() {
             href="/"
             className="flex items-center gap-2 group z-50 relative"
           >
-            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <RiMovie2Line className="text-white text-2xl" />
+            <img
+              src="/icon.svg"
+              alt=""
+              className="w-10 h-10 rounded-xl ring-1 ring-white/10 shadow-lg group-hover:scale-110 transition-transform duration-300"
+            />
+            <div>
+              <h1 className="text-2xl leading-none font-black tracking-tight text-white drop-shadow-md">
+                Row<span className="text-yellow-400">Seven</span>
+              </h1>
+              <p className="text-[11px] mt-1 text-gray-300 md:hidden lg:block">
+                {tBrand("payoff")}
+              </p>
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-white drop-shadow-md">
-              Cine<span className="text-yellow-400">Sphere</span>
-            </h1>
           </Link>
 
           <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1.5 shadow-2xl">

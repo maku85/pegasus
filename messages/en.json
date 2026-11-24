@@ -1,4 +1,8 @@
 {
+    "Brand": {
+        "payoff": "The best seat for movies and TV",
+        "description": "Discover movies, TV series and celebrities, and save what you want to watch."
+    },
     "Navbar": {
         "home": "Home",
         "movies": "Movies",
@@ -7,13 +11,12 @@
         "watchlist": "Watchlist"
     },
     "Footer": {
-        "rights": "© {year} My Movies. All rights reserved.",
+        "rights": "© {year} Row Seven. All rights reserved.",
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
         "quickLinks": "Quick Links",
         "legal": "Legal",
-        "disclaimer": "This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.",
-        "tagline": "Your main destination for discovering movies, TV series and celebrities. Powered by TMDB."
+        "disclaimer": "This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB."
     },
     "HomePage": {
         "trending": "Trending Now",
@@ -21,8 +24,7 @@
         "newsQuery": "Movies and TV Series",
         "popularMovies": "Popular Movies",
         "popularTV": "Popular TV Series",
-        "upcoming": "Upcoming",
-        "welcome": "Welcome to My Movies"
+        "upcoming": "Upcoming"
     },
     "NewsPage": {
         "title": "News from the World of <highlight>Cinema</highlight>",

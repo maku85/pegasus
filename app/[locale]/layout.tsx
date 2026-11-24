@@ -1,10 +1,10 @@
 import "../globals.css";
 
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { ReactNode } from "react";
 
 import Footer from "@/components/layout/Footer";
@@ -12,15 +12,24 @@ import Navbar from "@/components/layout/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "My Movies",
-  description: "Your personal movie database",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "My Movies",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Brand" });
+
+  return {
+    title: `Row Seven – ${t("payoff")}`,
+    description: t("description"),
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent" as const,
+      title: "Row Seven",
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#141414",

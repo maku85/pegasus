@@ -1,4 +1,8 @@
 {
+    "Brand": {
+        "payoff": "Il posto migliore per film e serie TV",
+        "description": "Scopri film, serie TV e celebrità, e salva quello che vuoi vedere."
+    },
     "Navbar": {
         "home": "Home",
         "movies": "Film",
@@ -7,13 +11,12 @@
         "watchlist": "Da vedere"
     },
     "Footer": {
-        "rights": "© {year} My Movies. Tutti i diritti riservati.",
+        "rights": "© {year} Row Seven. Tutti i diritti riservati.",
         "privacy": "Privacy Policy",
         "terms": "Termini di servizio",
         "quickLinks": "Link Rapidi",
         "legal": "Note Legali",
-        "disclaimer": "Questo sito utilizza TMDB e le API di TMDB ma non è sostenuto, certificato o altrimenti approvato da TMDB.",
-        "tagline": "La tua destinazione principale per scoprire film, serie TV e celebrità. Powered by TMDB."
+        "disclaimer": "Questo sito utilizza TMDB e le API di TMDB ma non è sostenuto, certificato o altrimenti approvato da TMDB."
     },
     "HomePage": {
         "trending": "Di tendenza",
@@ -21,8 +24,7 @@
         "newsQuery": "Cinema e Serie TV",
         "popularMovies": "Film Popolari",
         "popularTV": "Serie TV Popolari",
-        "upcoming": "In Arrivo",
-        "welcome": "Benvenuto su My Movies"
+        "upcoming": "In Arrivo"
     },
     "NewsPage": {
         "title": "Notizie dal Mondo <highlight>Cinema</highlight>",

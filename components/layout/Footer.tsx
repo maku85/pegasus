@@ -7,15 +7,16 @@ import { Link } from "@/i18n/routing";
 export default function Footer() {
   const t = useTranslations("Footer");
   const tNav = useTranslations("Navbar");
+  const tBrand = useTranslations("Brand");
 
   return (
     <footer className="mt-auto border-t border-white/5 bg-black/30 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">CineSphere</h3>
+            <h3 className="text-xl font-bold text-white mb-4">Row Seven</h3>
             <p className="text-gray-300 text-sm leading-relaxed">
-              {t("tagline")}
+              {tBrand("description")}
             </p>
           </div>
           <div>
