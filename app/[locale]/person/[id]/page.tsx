@@ -3,22 +3,33 @@ import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
 import NewsSection from "@/components/widgets/NewsSection";
+import { pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface PersonPageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
-export default async function PersonPage({ params }: PersonPageProps) {
-  const { id, locale } = await params;
+function getPerson(id: string, locale: string) {
   requireIds(id);
-  const t = await getTranslations({ locale, namespace: "PersonPage" });
-  const tCommon = await getTranslations({ locale, namespace: "Common" });
-  const person = await tmdbFetch(
+  return tmdbFetch(
     `/person/${id}?append_to_response=combined_credits,images,external_ids`,
     locale,
     7 * DAY
   );
+}
+
+export async function generateMetadata({ params }: PersonPageProps) {
+  const { id, locale } = await params;
+  const person = await getPerson(id, locale);
+  return { title: pageTitle(person.name) };
+}
+
+export default async function PersonPage({ params }: PersonPageProps) {
+  const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "PersonPage" });
+  const tCommon = await getTranslations({ locale, namespace: "Common" });
+  const person = await getPerson(id, locale);
 
   const knownFor =
     person.combined_credits?.cast

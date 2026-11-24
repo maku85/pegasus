@@ -2,18 +2,32 @@ import { getTranslations } from "next-intl/server";
 import { FaStar } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
+import { pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface CollectionPageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
+function getCollection(id: string, locale: string) {
+  requireIds(id);
+  return tmdbFetch(`/collection/${id}`, locale, 7 * DAY);
+}
+
+export async function generateMetadata({ params }: CollectionPageProps) {
+  const { id, locale } = await params;
+  const collection = await getCollection(id, locale);
+  return {
+    title: pageTitle(collection.name),
+    description: collection.overview || undefined,
+  };
+}
+
 export default async function CollectionPage({ params }: CollectionPageProps) {
   const { id, locale } = await params;
-  requireIds(id);
   const t = await getTranslations({ locale, namespace: "CollectionPage" });
 
-  const collection = await tmdbFetch(`/collection/${id}`, locale, 7 * DAY);
+  const collection = await getCollection(id, locale);
 
   const parts =
     collection.parts?.sort((a: any, b: any) => {

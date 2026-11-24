@@ -1,9 +1,16 @@
 import { getTranslations } from "next-intl/server";
 
 import NewsSection from "@/components/widgets/NewsSection";
+import { pageTitle } from "@/lib/metadata";
 
 interface NewsPageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: NewsPageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "NewsPage" });
+  return { title: pageTitle("News"), description: t("description") };
 }
 
 export default async function NewsPage({ params }: NewsPageProps) {

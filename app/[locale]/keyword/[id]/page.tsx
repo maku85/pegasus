@@ -4,17 +4,28 @@ import { FaChevronLeft, FaHashtag } from "react-icons/fa";
 
 import Carousel from "@/components/media/Carousel";
 import MovieCard from "@/components/media/MovieCard";
+import { pageTitle } from "@/lib/metadata";
 import { requireIds, tmdbFetch } from "@/lib/tmdb";
 
 interface KeywordPageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
+function getKeyword(id: string, locale: string) {
+  requireIds(id);
+  return tmdbFetch(`/keyword/${id}`, locale);
+}
+
+export async function generateMetadata({ params }: KeywordPageProps) {
+  const { id, locale } = await params;
+  const keyword = await getKeyword(id, locale);
+  return { title: pageTitle(`#${keyword.name}`) };
+}
+
 export default async function KeywordPage({ params }: KeywordPageProps) {
   const { id, locale } = await params;
-  requireIds(id);
   const t = await getTranslations({ locale, namespace: "KeywordPage" });
-  const keyword = await tmdbFetch(`/keyword/${id}`, locale);
+  const keyword = await getKeyword(id, locale);
 
   const [movies, tvShows] = await Promise.all([
     tmdbFetch(

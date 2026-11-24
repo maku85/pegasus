@@ -10,22 +10,36 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface TVPageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
-export default async function TVPage({ params }: TVPageProps) {
-  const { id, locale } = await params;
+function getTV(id: string, locale: string) {
   requireIds(id);
-  const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const region = locale === "en" ? "US" : "IT";
-  const tv = await tmdbFetch(
+  return tmdbFetch(
     `/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
     locale,
     7 * DAY
   );
+}
+
+export async function generateMetadata({ params }: TVPageProps) {
+  const { id, locale } = await params;
+  const tv = await getTV(id, locale);
+  return {
+    title: pageTitle(tv.name + yearSuffix(tv.first_air_date)),
+    description: tv.overview || undefined,
+  };
+}
+
+export default async function TVPage({ params }: TVPageProps) {
+  const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "MediaPage" });
+  const region = locale === "en" ? "US" : "IT";
+  const tv = await getTV(id, locale);
 
   const trailer = tv.videos?.results?.find(
     (v: any) =>

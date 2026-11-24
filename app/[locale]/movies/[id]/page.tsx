@@ -10,22 +10,36 @@ import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface MoviePageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
-export default async function MoviePage({ params }: MoviePageProps) {
-  const { id, locale } = await params;
+function getMovie(id: string, locale: string) {
   requireIds(id);
-  const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const region = locale === "en" ? "US" : "IT";
-  const movie = await tmdbFetch(
+  return tmdbFetch(
     `/movie/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,release_dates,belongs_to_collection`,
     locale,
     7 * DAY
   );
+}
+
+export async function generateMetadata({ params }: MoviePageProps) {
+  const { id, locale } = await params;
+  const movie = await getMovie(id, locale);
+  return {
+    title: pageTitle(movie.title + yearSuffix(movie.release_date)),
+    description: movie.overview || undefined,
+  };
+}
+
+export default async function MoviePage({ params }: MoviePageProps) {
+  const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "MediaPage" });
+  const region = locale === "en" ? "US" : "IT";
+  const movie = await getMovie(id, locale);
 
   const trailer = movie.videos?.results?.find(
     (v: any) =>

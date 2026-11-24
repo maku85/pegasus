@@ -74,13 +74,13 @@ export default function Navbar() {
               <h1 className="text-2xl leading-none font-black tracking-tight text-white drop-shadow-md">
                 Row<span className="text-yellow-400">Seven</span>
               </h1>
-              <p className="text-[11px] mt-1 text-gray-300 md:hidden lg:block">
+              <p className="text-[11px] mt-1 text-gray-300">
                 {tBrand("payoff")}
               </p>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1.5 shadow-2xl">
+          <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1.5 shadow-2xl">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -101,14 +101,14 @@ export default function Navbar() {
               <RiSearchLine className="text-xl" />
             </Link>
 
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <LanguageSwitcher />
             </div>
 
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
+              className="lg:hidden p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
               aria-label="Menu"
             >
               {isOpen ? (
@@ -128,7 +128,7 @@ export default function Navbar() {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center md:hidden"
+            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center lg:hidden"
           >
             <div className="flex flex-col items-center gap-8">
               {links.map((link, i) => (

@@ -2,18 +2,31 @@ import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
 import EpisodeCard from "@/components/media/EpisodeCard";
+import { pageTitle } from "@/lib/metadata";
 import { requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface SeasonPageProps {
   params: Promise<{ id: string; season_number: string; locale: string }>;
 }
 
+function getSeason(id: string, seasonNumber: string, locale: string) {
+  requireIds(id, seasonNumber);
+  return Promise.all([
+    tmdbFetch(`/tv/${id}/season/${seasonNumber}`, locale),
+    tmdbFetch(`/tv/${id}`, locale),
+  ]);
+}
+
+export async function generateMetadata({ params }: SeasonPageProps) {
+  const { id, season_number, locale } = await params;
+  const [season, show] = await getSeason(id, season_number, locale);
+  return { title: pageTitle(`${show.name}: ${season.name}`) };
+}
+
 export default async function SeasonPage({ params }: SeasonPageProps) {
   const { id, season_number, locale } = await params;
-  requireIds(id, season_number);
   const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const season = await tmdbFetch(`/tv/${id}/season/${season_number}`, locale);
-  const show = await tmdbFetch(`/tv/${id}`, locale);
+  const [season, show] = await getSeason(id, season_number, locale);
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
