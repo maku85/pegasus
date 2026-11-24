@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { FaFilm, FaSearch } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
+import WatchlistBackup from "@/components/widgets/WatchlistBackup";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Link } from "@/i18n/routing";
 
@@ -62,6 +63,10 @@ export default function WatchlistPage() {
             </div>
           </>
         )}
+
+        <div className="mt-12 flex justify-center">
+          <WatchlistBackup />
+        </div>
       </div>
     </div>
   );

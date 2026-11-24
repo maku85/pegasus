@@ -184,5 +184,11 @@
     "ErrorPage": {
         "title": "Servizio momentaneamente non disponibile",
         "retry": "Riprova"
+    },
+    "WatchlistBackup": {
+        "export": "Esporta la lista",
+        "import": "Importa una lista",
+        "imported": "{count, plural, =0 {Nessun titolo nuovo: li avevi già tutti} one {Aggiunto # titolo} other {Aggiunti # titoli}}",
+        "invalid": "Nessun titolo valido in questo file."
     }
 }

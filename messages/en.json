@@ -184,5 +184,11 @@
     "ErrorPage": {
         "title": "Service temporarily unavailable",
         "retry": "Try again"
+    },
+    "WatchlistBackup": {
+        "export": "Export list",
+        "import": "Import a list",
+        "imported": "{count, plural, =0 {No new titles: you already had them all} one {# title added} other {# titles added}}",
+        "invalid": "No valid titles in this file."
     }
 }
