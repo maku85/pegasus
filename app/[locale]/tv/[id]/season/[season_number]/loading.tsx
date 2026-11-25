@@ -3,6 +3,10 @@ import PosterPageSkeleton from "@/components/skeletons/PosterPageSkeleton";
 export default function Loading() {
   return (
     <PosterPageSkeleton>
+      <div className="flex justify-between gap-4">
+        <div className="h-[50px] w-40 rounded-xl bg-white/15" />
+        <div className="h-[50px] w-40 rounded-xl bg-white/15" />
+      </div>
       <div className="space-y-4">
         {[...Array(4).keys()].map((i) => (
           <div

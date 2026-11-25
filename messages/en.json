@@ -92,7 +92,9 @@
         "partOfCollection": "Part of the collection",
         "viewCollection": "View Collection",
         "creator": "Creator",
-        "director": "Director"
+        "director": "Director",
+        "otherSeasons": "Other seasons",
+        "otherSeasonsEnd": "Other seasons, end of page"
     },
     "SearchPage": {
         "title": "What do you want to <highlight>watch</highlight> today?",

@@ -2,7 +2,10 @@ import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
 import EpisodeCard from "@/components/media/EpisodeCard";
+import SeasonNav from "@/components/media/SeasonNav";
+import { Link } from "@/i18n/routing";
 import { openGraph, pageTitle } from "@/lib/metadata";
+import { adjacentSeasons } from "@/lib/seasons";
 import { requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface SeasonPageProps {
@@ -30,6 +33,10 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
   const { id, season_number, locale } = await params;
   const t = await getTranslations({ locale, namespace: "MediaPage" });
   const [season, show] = await getSeason(id, season_number, locale);
+  const neighbours = adjacentSeasons(
+    show.seasons ?? [],
+    Number(season_number)
+  );
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
@@ -54,7 +61,15 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
-            <p className="text-xl text-gray-300 font-medium">{show.name}</p>
+            <p className="text-xl text-gray-300 font-medium">
+              <Link
+                href={`/tv/${id}`}
+                prefetch={false}
+                className="underline decoration-gray-500 underline-offset-4 hover:text-yellow-400 hover:decoration-yellow-400 transition-colors"
+              >
+                {show.name}
+              </Link>
+            </p>
             <h1 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl leading-tight">
               {season.name}
             </h1>
@@ -88,11 +103,17 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
           <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
           {t("episodes")}
         </h2>
+        <SeasonNav showId={id} {...neighbours} label={t("otherSeasons")} />
         <div className="space-y-4">
           {season.episodes?.map((episode: any) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>
+        <SeasonNav
+          showId={id}
+          {...neighbours}
+          label={t("otherSeasonsEnd")}
+        />
       </div>
     </div>
   );

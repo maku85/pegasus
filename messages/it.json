@@ -107,7 +107,9 @@
         "partOfCollection": "Parte della saga",
         "viewCollection": "Visualizza Collezione",
         "creator": "Creatore",
-        "director": "Regia"
+        "director": "Regia",
+        "otherSeasons": "Altre stagioni",
+        "otherSeasonsEnd": "Altre stagioni, fine pagina"
     },
     "SearchPage": {
         "title": "Cosa vuoi <highlight>guardare</highlight> oggi?",
