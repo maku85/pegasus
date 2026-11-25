@@ -54,7 +54,8 @@
     "MovieCard": {
         "untitled": "Untitled",
         "addToList": "Add to Watchlist",
-        "removeFromList": "Remove from Watchlist"
+        "removeFromList": "Remove from Watchlist",
+        "votes": "{count, plural, one {# vote} other {# votes}}"
     },
     "HeroSlider": {
         "movie": "Movie",

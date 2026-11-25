@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { FaCheck, FaPlus, FaStar } from "react-icons/fa";
 
 import { useWatchlist } from "@/hooks/useWatchlist";
@@ -17,6 +18,8 @@ interface MovieCardProps {
     poster_path?: string | null;
     profile_path?: string | null;
     vote_average?: number;
+    vote_count?: number;
+    overview?: string;
     first_air_date?: string;
     release_date?: string;
   };
@@ -29,6 +32,8 @@ export default function MovieCard({
   media_type = "movie",
 }: MovieCardProps) {
   const t = useTranslations("MovieCard");
+  // Created on first use: touch screens never need the text in the page
+  const [hasDetails, setHasDetails] = useState(false);
   const link = `/${media_type === "movie" ? "movies" : media_type}/${movie.id}`;
   const title = movie.title || movie.name || t("untitled");
   const date = (movie.release_date || movie.first_air_date)?.slice(0, 4);
@@ -41,8 +46,14 @@ export default function MovieCard({
 
   return (
     <div className={`relative w-full ${className}`}>
-      <Link href={link} prefetch={false}>
-        <div className="rounded-2xl group">
+      <Link
+        href={link}
+        prefetch={false}
+        onPointerEnter={(e) => e.pointerType === "mouse" && setHasDetails(true)}
+        onFocus={() => setHasDetails(true)}
+        className="block rounded-2xl group"
+      >
+        <div>
           <div className="relative w-full aspect-[2/3] rounded-2xl shadow overflow-hidden flex flex-col justify-end group-hover:scale-[1.02] transition-transform bg-gray-800">
             <Image
               src={tmdbImage(movie.poster_path ?? movie.profile_path ?? null, "w500")}
@@ -53,6 +64,22 @@ export default function MovieCard({
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+            {/* Extra for mouse and keyboard; the same text is on the title's page */}
+            {hasDetails && movie.overview && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pt-14 p-4 bg-black/85 text-white flex flex-col justify-end gap-2 opacity-0 starting:group-hover:opacity-0 starting:group-focus-visible:opacity-0 transition-opacity duration-200 motion-reduce:transition-none group-hover:opacity-100 group-hover:delay-200 group-focus-visible:opacity-100"
+              >
+                <p className="text-xs md:text-sm leading-snug line-clamp-8">
+                  {movie.overview}
+                </p>
+                {rating && movie.vote_count ? (
+                  <p className="text-xs text-gray-300">
+                    {t("votes", { count: movie.vote_count })}
+                  </p>
+                ) : null}
+              </div>
+            )}
           </div>
           <div className="py-2">
             <p
