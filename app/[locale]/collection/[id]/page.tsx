@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { FaStar } from "react-icons/fa";
 
+import AmbientBackground from "@/components/media/AmbientBackground";
 import MovieCard from "@/components/media/MovieCard";
 import { openGraph, pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
@@ -41,18 +42,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
-      <div
-        className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
-        style={{
-          backgroundImage: `url(${tmdbImage(
-            collection.backdrop_path,
-            "w300"
-          )})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
+      <AmbientBackground path={collection.backdrop_path ?? collection.poster_path} />
 
       <div className="relative w-full z-10 pt-8 md:pt-16 pb-12 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">

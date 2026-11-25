@@ -1,8 +1,11 @@
-import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
+import { FaCalendar, FaClock, FaStar } from "react-icons/fa";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 
+import AmbientBackground from "@/components/media/AmbientBackground";
+import Backdrop from "@/components/media/Backdrop";
 import MovieCard from "@/components/media/MovieCard";
+import Overview from "@/components/media/Overview";
 import ReviewsSection from "@/components/media/ReviewsSection";
 import ScrollRow from "@/components/media/ScrollRow";
 import TrailerButton from "@/components/media/TrailerButton";
@@ -14,7 +17,14 @@ import WatchlistToggle from "@/components/widgets/WatchlistToggle";
 import { regionOf } from "@/lib/providers";
 import { formatRating } from "@/lib/rating";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
-import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import {
+  DAY,
+  requireIds,
+  tmdbFetch,
+  tmdbImage,
+  withEnglishOverview,
+} from "@/lib/tmdb";
+import { pickTrailer } from "@/lib/trailer";
 
 interface TVPageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -23,7 +33,7 @@ interface TVPageProps {
 function getTV(id: string, locale: string) {
   requireIds(id);
   return tmdbFetch(
-    `/tv/${id}?append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
+    `/tv/${id}?include_video_language=${locale},en,null&append_to_response=videos,credits,recommendations,reviews,watch/providers,keywords,external_ids,content_ratings`,
     locale,
     7 * DAY
   );
@@ -46,9 +56,12 @@ export default async function TVPage({ params }: TVPageProps) {
   const tv = await getTV(id, locale);
   const rating = formatRating(tv.vote_average, tv.vote_count);
 
-  const trailer = tv.videos?.results?.find(
-    (v: any) =>
-      v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")
+  const trailer = pickTrailer(tv.videos?.results, locale);
+  const overview = await withEnglishOverview(
+    tv.overview,
+    `/tv/${id}`,
+    locale,
+    7 * DAY
   );
 
   const creators = tv.created_by || [];
@@ -61,27 +74,17 @@ export default async function TVPage({ params }: TVPageProps) {
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
-      <div
-        className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
-        style={{
-          backgroundImage: `url(${tmdbImage(tv.backdrop_path, "w300")})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
+      <AmbientBackground path={tv.backdrop_path ?? tv.poster_path} />
 
       <div className="relative w-full h-full md:h-[85vh] z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${tmdbImage(tv.backdrop_path, "w1280")})`,
-          }}
+        <Backdrop
+          backdrop={tv.backdrop_path}
+          poster={tv.poster_path}
         >
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/20 to-transparent" />
-        </div>
+        </Backdrop>
 
         <div className="relative md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
@@ -132,7 +135,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
                     <span>
-                      {tv.number_of_seasons} {t("seasons")}
+                      {t("seasonCount", { count: tv.number_of_seasons })}
                     </span>
                   </div>
                 )}
@@ -159,11 +162,7 @@ export default async function TVPage({ params }: TVPageProps) {
                 ))}
               </div>
 
-              <div className="order-last md:order-none bg-black/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
-                <p className="text-lg md:text-xl text-gray-200 leading-relaxed line-clamp-4 md:line-clamp-none">
-                  {tv.overview}
-                </p>
-              </div>
+              <Overview {...overview} className="order-last md:order-none" />
 
               <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
                 {trailer && <TrailerButton trailerKey={trailer.key} />}
@@ -204,15 +203,12 @@ export default async function TVPage({ params }: TVPageProps) {
                   className="flex-shrink-0 w-36 md:w-44 group"
                 >
                   <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden mb-4 bg-gray-800 relative flex items-center justify-center shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
-                    {person.profile_path ? (
-                      <img
-                        src={tmdbImage(person.profile_path, "w300")}
-                        alt={person.name}
+                    <img
+                      src={tmdbImage(person.profile_path, "w300", "person")}
+                      alt=""
+                      loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <FaUser className="text-4xl text-gray-600 group-hover:text-yellow-500 transition-colors" />
-                    )}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
@@ -242,29 +238,19 @@ export default async function TVPage({ params }: TVPageProps) {
                   className="flex-shrink-0 w-40 md:w-48 group"
                 >
                   <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden mb-4 bg-gray-800 relative flex items-center justify-center shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
-                    {season.poster_path ? (
-                      <img
-                        src={tmdbImage(season.poster_path, "w300")}
-                        alt={season.name}
+                    <img
+                        src={tmdbImage(season.poster_path ?? tv.poster_path, "w300")}
+                        alt=""
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center text-gray-400">
-                        <span className="text-4xl font-bold text-gray-400 mb-2">
-                          {season.season_number}
-                        </span>
-                        <span className="text-xs uppercase tracking-widest">
-                          {t("season")}
-                        </span>
-                      </div>
-                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
                     {season.name}
                   </h3>
                   <p className="text-sm text-gray-400 truncate">
-                    {season.episode_count} {t("episodes")}
+                    {t("episodeCount", { count: season.episode_count })}
                   </p>
                 </Link>
               ))}
@@ -287,15 +273,12 @@ export default async function TVPage({ params }: TVPageProps) {
                   className="flex-shrink-0 w-36 md:w-44 group"
                 >
                   <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden mb-4 bg-gray-800 relative flex items-center justify-center shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
-                    {person.profile_path ? (
-                      <img
-                        src={tmdbImage(person.profile_path, "w300")}
-                        alt={person.name}
+                    <img
+                      src={tmdbImage(person.profile_path, "w300", "person")}
+                      alt=""
+                      loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <FaUser className="text-4xl text-gray-600 group-hover:text-yellow-500 transition-colors" />
-                    )}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">

@@ -45,7 +45,27 @@ export async function tmdbFetch(
   return res.json();
 }
 
-export function tmdbImage(path: string | null, size: string = "w500") {
-  if (!path) return "/images/placeholders/poster-placeholder.svg";
+type Placeholder = "poster" | "person" | "still";
+
+export function tmdbImage(
+  path: string | null | undefined,
+  size: string = "w500",
+  placeholder: Placeholder = "poster"
+) {
+  if (!path) return `/images/placeholders/${placeholder}.svg`;
   return `https://image.tmdb.org/t/p/${size}${path}`;
+}
+
+// Text in the page's language, or the English one when TMDB has no translation
+export async function withEnglishOverview(
+  overview: string | undefined,
+  path: string,
+  locale: string,
+  revalidate: number = DAY
+) {
+  if (overview || locale === "en") {
+    return { text: overview ?? "", isEnglish: false };
+  }
+  const { overview: english } = await tmdbFetch(path, "en", revalidate);
+  return { text: (english as string) ?? "", isEnglish: Boolean(english) };
 }

@@ -56,7 +56,11 @@ export default function MovieCard({
         <div>
           <div className="relative w-full aspect-[2/3] rounded-2xl shadow overflow-hidden flex flex-col justify-end group-hover:scale-[1.02] transition-transform bg-gray-800">
             <Image
-              src={tmdbImage(movie.poster_path ?? movie.profile_path ?? null, "w500")}
+              src={tmdbImage(
+                movie.poster_path ?? movie.profile_path,
+                "w500",
+                media_type === "person" ? "person" : "poster"
+              )}
               alt=""
               fill
               className="object-cover"

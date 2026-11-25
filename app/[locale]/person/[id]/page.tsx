@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
 import BackLink from "@/components/layout/BackLink";
+import AmbientBackground from "@/components/media/AmbientBackground";
 import Filmography from "@/components/media/Filmography";
 import ScrollRow from "@/components/media/ScrollRow";
 import Biography from "@/components/widgets/Biography";
@@ -82,19 +83,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
-      <div
-        className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-20 blur-3xl scale-110"
-        style={{
-          backgroundImage: `url(${
-            person.profile_path
-              ? tmdbImage(person.profile_path, "w185")
-              : ""
-          })`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="fixed inset-0 z-0 bg-[#141414]/90 pointer-events-none" />
+      <AmbientBackground path={person.profile_path} />
 
       <div className="relative w-full z-10 pt-6 md:pt-8 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
@@ -108,7 +97,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
           <div className="grid grid-cols-[7rem_minmax(0,1fr)] md:grid-cols-[18rem_minmax(0,1fr)] lg:grid-cols-[24rem_minmax(0,1fr)] md:grid-rows-[auto_1fr] gap-x-5 md:gap-x-12 lg:gap-x-16 gap-y-6 md:gap-y-8 items-start">
             <div className="md:row-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/10 aspect-[2/3]">
               <img
-                src={tmdbImage(person.profile_path, "h632")}
+                src={tmdbImage(person.profile_path, "h632", "person")}
                 alt={person.name}
                 className="w-full h-full object-cover"
               />
@@ -147,16 +136,18 @@ export default async function PersonPage({ params }: PersonPageProps) {
                     </span>
                   </div>
                 )}
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                  <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
-                    {t("profession")}
-                  </span>
-                  <span className="font-medium text-white">
-                    {t.has(`departments.${person.known_for_department}`)
-                      ? t(`departments.${person.known_for_department}`)
-                      : person.known_for_department}
-                  </span>
-                </div>
+                {person.known_for_department && (
+                  <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
+                    <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
+                      {t("profession")}
+                    </span>
+                    <span className="font-medium text-white">
+                      {t.has(`departments.${person.known_for_department}`)
+                        ? t(`departments.${person.known_for_department}`)
+                        : person.known_for_department}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <SocialLinks
@@ -165,11 +156,10 @@ export default async function PersonPage({ params }: PersonPageProps) {
                 kind="name"
               />
 
-              {biography && (
-                <Biography
-                  text={biography}
-                  isEnglish={!person.biography}
-                />
+              {biography ? (
+                <Biography text={biography} isEnglish={!person.biography} />
+              ) : (
+                <p className="text-gray-300 italic">{t("noBiography")}</p>
               )}
             </div>
           </div>

@@ -16,7 +16,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
       {/* Image */}
       <div className="flex-shrink-0 w-full md:w-64 aspect-video rounded-xl overflow-hidden bg-gray-800 relative shadow-md border border-white/5">
         <img
-          src={tmdbImage(episode.still_path, "w500")}
+          src={tmdbImage(episode.still_path, "w500", "still")}
           alt={episode.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />

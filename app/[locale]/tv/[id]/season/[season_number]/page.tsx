@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
+import AmbientBackground from "@/components/media/AmbientBackground";
 import EpisodeCard from "@/components/media/EpisodeCard";
 import SeasonNav from "@/components/media/SeasonNav";
 import { Link } from "@/i18n/routing";
@@ -40,15 +41,7 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
-      <div
-        className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
-        style={{
-          backgroundImage: `url(${tmdbImage(show.backdrop_path, "w300")})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
+      <AmbientBackground path={show.backdrop_path ?? season.poster_path ?? show.poster_path} />
 
       <div className="relative w-full z-10 pt-8 md:pt-16 pb-12 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">
@@ -81,10 +74,12 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
                   <span>{season.air_date.slice(0, 4)}</span>
                 </div>
               )}
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
-                <FaStar className="text-yellow-400" />
-                <span>{season.episodes?.length || 0} {t("episodes")}</span>
-              </div>
+              {season.episodes?.length > 0 && (
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <FaStar className="text-yellow-400" />
+                  <span>{t("episodeCount", { count: season.episodes.length })}</span>
+                </div>
+              )}
             </div>
 
             {season.overview && (
@@ -104,6 +99,9 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
           {t("episodes")}
         </h2>
         <SeasonNav showId={id} {...neighbours} label={t("otherSeasons")} />
+        {!season.episodes?.length && (
+          <p className="text-gray-300 italic">{t("noEpisodes")}</p>
+        )}
         <div className="space-y-4">
           {season.episodes?.map((episode: any) => (
             <EpisodeCard key={episode.id} episode={episode} />

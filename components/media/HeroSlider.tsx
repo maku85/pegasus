@@ -12,9 +12,9 @@ import {
   FaPlay,
 } from "react-icons/fa";
 
+import Backdrop from "@/components/media/Backdrop";
 import { Link } from "@/i18n/routing";
 import { formatRating } from "@/lib/rating";
-import { tmdbImage } from "@/lib/tmdb";
 
 interface HeroSliderProps {
   items: any[];
@@ -68,16 +68,15 @@ export default function HeroSlider({ items }: HeroSliderProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${tmdbImage(
-              currentItem.backdrop_path,
-              "w1280"
-            )})`,
-          }}
+          className="absolute inset-0"
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
+          <Backdrop
+            backdrop={currentItem.backdrop_path}
+            poster={currentItem.poster_path}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
+          </Backdrop>
         </motion.div>
       </AnimatePresence>
 

@@ -119,7 +119,8 @@
         "profession": "Professione",
         "englishBiography": "Biografia disponibile solo in inglese.",
         "readMore": "Leggi tutto",
-        "readLess": "Mostra meno"
+        "readLess": "Mostra meno",
+        "noBiography": "Nessuna biografia disponibile."
     },
     "MediaPage": {
         "seasons": "Stagioni",
@@ -134,7 +135,12 @@
         "creator": "Creatore",
         "director": "Regia",
         "otherSeasons": "Altre stagioni",
-        "otherSeasonsEnd": "Altre stagioni, fine pagina"
+        "otherSeasonsEnd": "Altre stagioni, fine pagina",
+        "englishOverview": "Trama disponibile solo in inglese.",
+        "noOverview": "Trama non ancora disponibile.",
+        "noEpisodes": "Gli episodi non sono ancora stati annunciati.",
+        "seasonCount": "{count, plural, one {# Stagione} other {# Stagioni}}",
+        "episodeCount": "{count, plural, one {# Episodio} other {# Episodi}}"
     },
     "SearchPage": {
         "title": "Cosa vuoi <highlight>guardare</highlight> oggi?",

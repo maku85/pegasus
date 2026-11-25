@@ -91,7 +91,8 @@
         "profession": "Profession",
         "englishBiography": "Biography available in English only.",
         "readMore": "Read more",
-        "readLess": "Show less"
+        "readLess": "Show less",
+        "noBiography": "No biography available."
     },
     "MediaPage": {
         "seasons": "Seasons",
@@ -106,7 +107,12 @@
         "creator": "Creator",
         "director": "Director",
         "otherSeasons": "Other seasons",
-        "otherSeasonsEnd": "Other seasons, end of page"
+        "otherSeasonsEnd": "Other seasons, end of page",
+        "englishOverview": "Overview available in English only.",
+        "noOverview": "Overview not available yet.",
+        "noEpisodes": "The episodes have not been announced yet.",
+        "seasonCount": "{count, plural, one {# Season} other {# Seasons}}",
+        "episodeCount": "{count, plural, one {# Episode} other {# Episodes}}"
     },
     "SearchPage": {
         "title": "What do you want to <highlight>watch</highlight> today?",
