@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
 import { isId } from "./params";
 
@@ -10,18 +12,9 @@ export function requireIds(...values: string[]) {
   if (!values.every(isId)) notFound();
 }
 
-export async function tmdbFetch(
-  path: string,
-  locale: string = "it",
-  revalidate: number = DAY
-) {
-  if (process.env.DEMO === "1") {
-    const { demoResponse } = await import("./demo");
-    const data: any = demoResponse(path, locale);
-    if (data === null) notFound();
-    return data;
-  }
-
+// Null is "TMDB does not have it": returned, not thrown, so it is cached too
+// and made-up addresses cost one call only
+async function requestTmdb(path: string, locale: string) {
   const tmdbLocale = locale === "en" ? "en-US" : "it-IT";
 
   // Rimuovi language=... se presente nel path per evitare duplicati
@@ -41,10 +34,10 @@ export async function tmdbFetch(
         "Content-Type": "application/json",
         ...(isV4 && { Authorization: `Bearer ${token}` }),
       },
-      next: { revalidate },
+      cache: "no-store",
     }
   );
-  if (res.status === 404) notFound();
+  if (res.status === 404) return null;
   if (!res.ok) {
     throw new Error(`Errore TMDB: ${res.status} ${res.statusText}`);
   }
@@ -52,16 +45,28 @@ export async function tmdbFetch(
   return res.json();
 }
 
-type Placeholder = "poster" | "person" | "still";
+// `cache` shares the answer between a page and its metadata
+const cachedTmdb = cache((path: string, language: string, revalidate: number) =>
+  unstable_cache(() => requestTmdb(path, language), ["tmdb", path, language], {
+    revalidate,
+  })()
+);
 
-export function tmdbImage(
-  path: string | null | undefined,
-  size: string = "w500",
-  placeholder: Placeholder = "poster"
+export async function tmdbFetch(
+  path: string,
+  locale: string = "it",
+  revalidate: number = DAY
 ) {
-  if (!path) return `/images/placeholders/${placeholder}.svg`;
-  if (path.startsWith("/demo-")) return `/demo-image${path}`;
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+  const language = locale === "en" ? "en" : "it";
+  let data: any;
+  if (process.env.DEMO === "1") {
+    const { demoResponse } = await import("./demo");
+    data = demoResponse(path, language);
+  } else {
+    data = await cachedTmdb(path, language, revalidate);
+  }
+  if (data === null) notFound();
+  return data;
 }
 
 // Text in the page's language, or the English one when TMDB has no translation

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { FaCheck } from "react-icons/fa";
 
 import { PROVIDERS, type Region } from "@/lib/providers";
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface ProviderFilterProps {
   region: Region;

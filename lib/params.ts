@@ -3,11 +3,22 @@
 export const parsePage = (value: string | null) =>
   Math.min(Math.max(Number.parseInt(value ?? "", 10) || 1, 1), 500);
 
+// TMDB's movie and TV genres
+const GENRES = new Set([
+  12, 14, 16, 18, 27, 28, 35, 36, 37, 53, 80, 99, 878, 9648, 10402, 10749,
+  10751, 10752, 10759, 10762, 10763, 10764, 10765, 10766, 10767, 10768, 10770,
+]);
+
 export const parseGenre = (value: string | null) =>
-  value && /^\d{1,6}$/.test(value) ? value : null;
+  value && /^\d{2,5}$/.test(value) && GENRES.has(Number(value)) ? value : null;
 
 export const parseYear = (value: string | null) =>
-  value && /^\d{4}$/.test(value) ? value : null;
+  value &&
+  /^\d{4}$/.test(value) &&
+  Number(value) >= 1880 &&
+  Number(value) <= new Date().getFullYear() + 10
+    ? value
+    : null;
 
 export const normalizeQuery = (value: string | null) =>
   (value ?? "").trim().replace(/\s+/g, " ").toLowerCase().slice(0, 100);

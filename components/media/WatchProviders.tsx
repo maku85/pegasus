@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface Provider {
   provider_id: number;

@@ -7,7 +7,7 @@ import { FaStar } from "react-icons/fa";
 import { Link } from "@/i18n/routing";
 import { type Credit, type CreditSection, creditPeriod } from "@/lib/credits";
 import { formatRating } from "@/lib/rating";
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface FilmographyProps {
   sections: CreditSection[];

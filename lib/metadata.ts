@@ -1,4 +1,4 @@
-import { tmdbImage } from "./tmdb";
+import { tmdbImage } from "./image";
 
 export const pageTitle = (title: string) => `${title} – Row Seven`;
 

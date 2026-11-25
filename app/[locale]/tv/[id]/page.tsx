@@ -17,13 +17,8 @@ import WatchlistToggle from "@/components/widgets/WatchlistToggle";
 import { regionOf } from "@/lib/providers";
 import { formatRating } from "@/lib/rating";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
-import {
-  DAY,
-  requireIds,
-  tmdbFetch,
-  tmdbImage,
-  withEnglishOverview,
-} from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
+import { DAY, requireIds, tmdbFetch, withEnglishOverview } from "@/lib/tmdb";
 import { pickTrailer } from "@/lib/trailer";
 
 interface TVPageProps {

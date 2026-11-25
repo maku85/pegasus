@@ -4,7 +4,8 @@ import { FaStar } from "react-icons/fa";
 import AmbientBackground from "@/components/media/AmbientBackground";
 import MovieCard from "@/components/media/MovieCard";
 import { openGraph, pageTitle } from "@/lib/metadata";
-import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
+import { DAY, requireIds, tmdbFetch } from "@/lib/tmdb";
 
 interface CollectionPageProps {
   params: Promise<{ id: string; locale: string }>;

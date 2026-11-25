@@ -1,7 +1,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface EpisodeCardProps {
   episode: any;

@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import Parser from "rss-parser";
 
 const parser = new Parser();
@@ -9,6 +10,22 @@ export interface NewsItem {
   source: string;
   contentSnippet?: string;
 }
+
+// An error is thrown, not returned, so it is never cached
+const fetchFeed = unstable_cache(
+  async (feedUrl: string) => {
+    const feed = await parser.parseURL(feedUrl);
+    return feed.items.slice(0, 6).map((item) => ({
+      title: item.title,
+      source: item.source as string | undefined,
+      contentSnippet: item.contentSnippet,
+      link: item.link,
+      pubDate: item.pubDate,
+    }));
+  },
+  ["google-news"],
+  { revalidate: 3600 }
+);
 
 export async function getNews(
   query: string,
@@ -27,9 +44,9 @@ export async function getNews(
     const feedUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(
       query
     )}&hl=${hl}&gl=${gl}&ceid=${ceid}`;
-    const feed = await parser.parseURL(feedUrl);
+    const items = await fetchFeed(feedUrl);
 
-    return feed.items.slice(0, 6).map((item) => {
+    return items.map((item) => {
       let title = item.title || "Senza titolo";
       let source = item.source || "Google News";
       let contentSnippet = item.contentSnippet;

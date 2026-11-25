@@ -1,4 +1,4 @@
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 // Faint colours of the title behind the whole page
 export default function AmbientBackground({ path }: { path?: string | null }) {

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface BackdropProps {
   backdrop: string | null;

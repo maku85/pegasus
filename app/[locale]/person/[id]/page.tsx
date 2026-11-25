@@ -11,7 +11,8 @@ import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import { buildFilmography, mostVoted } from "@/lib/credits";
 import { openGraph, pageTitle } from "@/lib/metadata";
-import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
+import { DAY, requireIds, tmdbFetch } from "@/lib/tmdb";
 
 interface PersonPageProps {
   params: Promise<{ id: string; locale: string }>;

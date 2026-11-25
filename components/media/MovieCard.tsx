@@ -8,7 +8,7 @@ import { FaCheck, FaPlus, FaStar } from "react-icons/fa";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Link } from "@/i18n/routing";
 import { formatRating } from "@/lib/rating";
-import { tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
 
 interface MovieCardProps {
   className?: string;

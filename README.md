@@ -104,12 +104,17 @@ it to `lib/demo.ts`.
 Import the repository and set `TMDB_TOKEN`; no other setting is required.
 
 - `/api/*` allows 60 requests per minute per IP, detail pages 120.
-- TMDB responses are cached for 24 hours, and for 7 days on movie, series,
-  person and collection pages.
+- TMDB responses, "not found" included, are cached for 24 hours, and for 7 days
+  on movie, series, person and collection pages. All visitors share the cache; a
+  new deploy starts with an empty one.
+- API answers must not be cached by Netlify's CDN, which ignores the query: use
+  `lib/apiResponse.ts`.
+- Crawlers, AI agents and scripts are refused where TMDB calls can be spent; see
+  `netlify/lib/bots.ts`.
 - Links to detail pages are not prefetched on purpose: a list would otherwise
   send dozens of requests and hit the limit.
-- `public/robots.txt` keeps crawlers out of detail pages to save TMDB calls;
-  the bots that build link previews are let in.
+- `public/robots.txt` lets search engines read the home page only; the bots that
+  build link previews are let in.
 - Absolute URLs for link previews come from the address Netlify sets while
   building.
 - `public/sw.js` removes the service worker of an earlier version. Keep it.

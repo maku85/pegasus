@@ -7,7 +7,8 @@ import SeasonNav from "@/components/media/SeasonNav";
 import { Link } from "@/i18n/routing";
 import { openGraph, pageTitle } from "@/lib/metadata";
 import { adjacentSeasons } from "@/lib/seasons";
-import { requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
+import { requireIds, tmdbFetch } from "@/lib/tmdb";
 
 interface SeasonPageProps {
   params: Promise<{ id: string; season_number: string; locale: string }>;

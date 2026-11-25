@@ -8,13 +8,13 @@ User-agent: TelegramBot
 User-agent: WhatsApp
 Disallow: /api/
 
-# Everyone else: detail pages stay closed to save TMDB calls
+# Search engines: the home page only, every other page spends TMDB calls
 User-agent: *
-Disallow: /api/
-Disallow: /*/movies/
-Disallow: /*/tv/
-Disallow: /*/person/
-Disallow: /*/collection/
-Disallow: /*/keyword/
-Disallow: /*/search
-Disallow: /*/watchlist
+Allow: /$
+Allow: /it$
+Allow: /en$
+Allow: /_next/
+Allow: /images/
+Allow: /icon
+Allow: /favicon.ico
+Disallow: /

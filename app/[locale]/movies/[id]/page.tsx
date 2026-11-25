@@ -18,13 +18,8 @@ import { regionOf } from "@/lib/providers";
 import { formatRating } from "@/lib/rating";
 import { formatRuntime } from "@/lib/runtime";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
-import {
-  DAY,
-  requireIds,
-  tmdbFetch,
-  tmdbImage,
-  withEnglishOverview,
-} from "@/lib/tmdb";
+import { tmdbImage } from "@/lib/image";
+import { DAY, requireIds, tmdbFetch, withEnglishOverview } from "@/lib/tmdb";
 import { pickTrailer } from "@/lib/trailer";
 
 interface MoviePageProps {

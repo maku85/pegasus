@@ -1,5 +1,7 @@
-// Returning nothing lets the request continue: only the rate limit matters
-export default () => {};
+import { refuseBots } from "../lib/bots.ts";
+
+// These are the addresses that can spend TMDB calls
+export default refuseBots;
 
 export const config = {
   path: [
