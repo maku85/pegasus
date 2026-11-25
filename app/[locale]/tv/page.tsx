@@ -64,12 +64,12 @@ function TVListContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-[86rem] mx-auto px-6 md:px-12">
       <div className="text-center mb-6 pt-4 md:mb-10 md:pt-8">
-        <h1 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
           {t("tvTitle")}
         </h1>
-        <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+        <p className="md:text-lg text-gray-300 max-w-2xl mx-auto">
           {t("tvDescription")}
         </p>
       </div>

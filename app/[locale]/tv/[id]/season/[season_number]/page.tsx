@@ -98,7 +98,7 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-6 relative z-10">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12 space-y-6 relative z-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
           <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
           {t("episodes")}

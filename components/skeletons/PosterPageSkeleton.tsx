@@ -27,7 +27,7 @@ export default function PosterPageSkeleton({
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-6">
+        <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12 space-y-6">
           <div className="h-8 md:h-9 w-48 mb-8 rounded bg-white/15" />
           {children}
         </div>

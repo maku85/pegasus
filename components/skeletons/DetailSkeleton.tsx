@@ -39,7 +39,7 @@ export default function DetailSkeleton() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+        <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12">
           <div className="bg-white/5 border border-white/5 rounded-3xl p-6 md:p-10">
             <div className="h-8 md:h-9 w-48 mb-8 rounded bg-white/15" />
             <div className="flex gap-4 md:gap-6 overflow-hidden px-1 pt-1 pb-4">

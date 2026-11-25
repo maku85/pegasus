@@ -183,7 +183,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-16 relative z-10">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12 space-y-16 relative z-10">
         {cast.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
@@ -258,19 +258,19 @@ export default async function MoviePage({ params }: MoviePageProps) {
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <WatchProviders
             providers={movie["watch/providers"]?.results?.[region]}
           />
         </div>
 
         {movie.reviews?.results.length > 0 && (
-          <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+          <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
             <ReviewsSection reviews={movie.reviews?.results} />
           </div>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <NewsSection
             query={`${movie.title} ${locale === "it" ? "film" : "movie"}`}
             locale={locale}

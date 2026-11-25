@@ -18,7 +18,7 @@ export default async function NewsSection({
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-        <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>
+        <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
         {t("title")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

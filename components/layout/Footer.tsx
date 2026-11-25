@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto border-t border-white/5 bg-black/30 backdrop-blur-lg">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <h2 className="text-xl font-bold text-white mb-4">Row Seven</h2>

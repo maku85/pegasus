@@ -81,7 +81,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute inset-0 flex flex-col justify-end p-6 pb-20 md:p-16 z-10">
+      <div className="absolute inset-0 w-full max-w-[86rem] mx-auto px-6 md:px-12 flex flex-col justify-end pb-20 md:pb-16 z-10">
         <motion.div
           key={`content-${currentItem.id}`}
           initial={{ y: 20, opacity: 0 }}
@@ -126,7 +126,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-4 md:bottom-6 left-6 right-6 md:left-auto md:right-8 flex items-center gap-2 z-20">
+      <div className="absolute bottom-4 md:bottom-6 inset-x-0 w-full max-w-[86rem] mx-auto px-6 md:px-12 flex items-center md:justify-end gap-2 z-20 pointer-events-none *:pointer-events-auto">
         <button
           type="button"
           onClick={prevSlide}

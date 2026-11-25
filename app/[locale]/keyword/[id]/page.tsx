@@ -51,7 +51,7 @@ export default async function KeywordPage({ params }: KeywordPageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-16 relative z-10">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-8 space-y-16 relative z-10">
         {movies.results.length > 0 && (
           <Carousel title={t("movies")}>
             {movies.results.map((m: any) => (

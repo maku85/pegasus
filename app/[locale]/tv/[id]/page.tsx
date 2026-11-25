@@ -188,7 +188,7 @@ export default async function TVPage({ params }: TVPageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 space-y-16 relative z-10">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12 space-y-16 relative z-10">
         {cast.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
@@ -308,17 +308,17 @@ export default async function TVPage({ params }: TVPageProps) {
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <WatchProviders
             providers={tv["watch/providers"]?.results?.[region]}
           />
         </div>
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <ReviewsSection reviews={tv.reviews?.results} />
         </div>
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <NewsSection
             query={`${tv.name} ${locale === "it" ? "serie tv" : "tv series"}`}
             locale={locale}

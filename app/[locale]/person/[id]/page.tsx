@@ -176,7 +176,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 mt-16 space-y-16 relative z-10">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 mt-16 space-y-16 relative z-10">
         {knownFor.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
@@ -262,7 +262,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
           </section>
         )}
 
-        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl empty:hidden">
+        <div className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl empty:hidden">
           <NewsSection query={person.name} locale={locale} />
         </div>
 

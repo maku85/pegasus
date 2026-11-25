@@ -5,10 +5,10 @@ import LoadingStatus from "./LoadingStatus";
 export default function MediaListSkeleton() {
   return (
     <LoadingStatus>
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12">
         <div className="mb-6 pt-4 md:mb-10 md:pt-8 flex flex-col items-center">
-          <div className="h-10 md:h-12 w-64 md:w-96 mb-4 rounded bg-white/15" />
-          <div className="h-14 md:h-7 w-full max-w-2xl rounded bg-white/15" />
+          <div className="h-9 sm:h-10 md:h-12 w-64 md:w-96 mb-4 rounded bg-white/15" />
+          <div className="h-12 md:h-7 w-full max-w-2xl rounded bg-white/15" />
         </div>
         <div className="mb-8 space-y-6">
           <div className="flex justify-center gap-2 md:gap-4">

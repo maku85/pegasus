@@ -27,7 +27,7 @@ export default async function Home({
       <h1 className="sr-only">Row Seven – {tBrand("payoff")}</h1>
       <HeroSlider items={trending.results.filter((i: any) => i.media_type !== "person").slice(0, 10)} />
 
-      <div className="container mx-auto px-4 py-12 space-y-20">
+      <div className="max-w-[86rem] mx-auto px-6 md:px-12 py-12 space-y-20">
         <Carousel title={t("popularMovies")}>
           {popular.results.map((m: any) => (
             <MovieCard

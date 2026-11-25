@@ -18,7 +18,7 @@ export default async function HomeNewsWidget({
   if (news.length === 0) return null;
 
   return (
-    <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto">
+    <section className="py-12">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-white">
           <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>

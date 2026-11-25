@@ -4,7 +4,7 @@ import LoadingStatus from "@/components/skeletons/LoadingStatus";
 export default function Loading() {
   return (
     <LoadingStatus>
-      <div className="pt-8 pb-20 px-6">
+      <div className="pt-8 pb-20 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-12 flex flex-col items-center">
             <div className="h-[72px] md:h-12 w-4/5 mb-8 rounded bg-white/15" />

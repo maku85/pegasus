@@ -39,7 +39,7 @@ export default function MovieFilters({
             key={cat.id}
             aria-pressed={activeCategory === cat.id}
             onClick={() => onCategoryChange(cat.id as any)}
-            className={`px-4 md:px-6 py-2 text-sm md:text-base rounded-full font-semibold transition-all duration-300 ${
+            className={`px-3 md:px-6 py-2 text-sm md:text-base rounded-full font-semibold transition-all duration-300 ${
               activeCategory === cat.id
                 ? "bg-yellow-500 text-black shadow-lg scale-105"
                 : "bg-white/10 text-white hover:bg-white/20"
