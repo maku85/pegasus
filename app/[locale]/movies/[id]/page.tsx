@@ -12,6 +12,8 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
 import { regionOf } from "@/lib/providers";
+import { formatRating } from "@/lib/rating";
+import { formatRuntime } from "@/lib/runtime";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
@@ -43,6 +45,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const t = await getTranslations({ locale, namespace: "MediaPage" });
   const region = regionOf(locale);
   const movie = await getMovie(id, locale);
+  const rating = formatRating(movie.vote_average, movie.vote_count);
 
   const trailer = movie.videos?.results?.find(
     (v: any) =>
@@ -126,18 +129,16 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 {certification && (
                   <CertificationBadge certification={certification} />
                 )}
-                {movie.vote_average > 0 && (
+                {rating && (
                   <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
-                    <span>{movie.vote_average.toFixed(1)}</span>
+                    <span>{rating}</span>
                   </div>
                 )}
                 {movie.runtime > 0 && (
                   <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
-                    <span>
-                      {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
-                    </span>
+                    <span>{formatRuntime(movie.runtime)}</span>
                   </div>
                 )}
               </div>
@@ -166,7 +167,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   title={movie.title}
                   poster_path={movie.poster_path}
                   media_type="movie"
-                  vote_average={movie.vote_average}
+                  vote_average={rating ? movie.vote_average : undefined}
                   release_date={movie.release_date}
                 />
               </div>

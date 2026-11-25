@@ -12,6 +12,7 @@ import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
 import { regionOf } from "@/lib/providers";
+import { formatRating } from "@/lib/rating";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
@@ -43,6 +44,7 @@ export default async function TVPage({ params }: TVPageProps) {
   const t = await getTranslations({ locale, namespace: "MediaPage" });
   const region = regionOf(locale);
   const tv = await getTV(id, locale);
+  const rating = formatRating(tv.vote_average, tv.vote_count);
 
   const trailer = tv.videos?.results?.find(
     (v: any) =>
@@ -120,10 +122,10 @@ export default async function TVPage({ params }: TVPageProps) {
                 {certification && (
                   <CertificationBadge certification={certification} />
                 )}
-                {tv.vote_average > 0 && (
+                {rating && (
                   <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
-                    <span>{tv.vote_average.toFixed(1)}</span>
+                    <span>{rating}</span>
                   </div>
                 )}
                 {tv.number_of_seasons > 0 && (
@@ -170,7 +172,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   title={tv.name}
                   poster_path={tv.poster_path}
                   media_type="tv"
-                  vote_average={tv.vote_average}
+                  vote_average={rating ? tv.vote_average : undefined}
                   release_date={tv.first_air_date}
                 />
               </div>
