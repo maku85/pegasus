@@ -6,6 +6,7 @@ import { FaStar } from "react-icons/fa";
 
 import { Link } from "@/i18n/routing";
 import { type Credit, type CreditSection, creditPeriod } from "@/lib/credits";
+import { formatRating } from "@/lib/rating";
 import { tmdbImage } from "@/lib/tmdb";
 
 interface FilmographyProps {
@@ -123,10 +124,10 @@ export default function Filmography({ sections, today }: FilmographyProps) {
                         )}
                         {credit.date.slice(0, 4)}
                       </span>
-                      {credit.vote_average > 0 && (
+                      {formatRating(credit.vote_average, credit.vote_count) && (
                         <span className="mt-1 flex items-center justify-end gap-1">
                           <FaStar className="text-orange-200" />
-                          {credit.vote_average.toFixed(1)}
+                          {formatRating(credit.vote_average, credit.vote_count)}
                         </span>
                       )}
                     </span>

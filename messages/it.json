@@ -74,7 +74,6 @@
         "years": "anni",
         "knownFor": "Conosciuto per",
         "biography": "Biografia",
-        "noBiography": "Nessuna biografia disponibile.",
         "gallery": "Galleria",
         "fullFilmography": "Filmografia Completa",
         "unknownRole": "Ruolo sconosciuto",
@@ -116,7 +115,11 @@
         },
         "upcoming": "In arrivo",
         "undated": "Data non disponibile",
-        "decade": "Anni {year}"
+        "decade": "Anni {year}",
+        "profession": "Professione",
+        "englishBiography": "Biografia disponibile solo in inglese.",
+        "readMore": "Leggi tutto",
+        "readLess": "Mostra meno"
     },
     "MediaPage": {
         "seasons": "Stagioni",

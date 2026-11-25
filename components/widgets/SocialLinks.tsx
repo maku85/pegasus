@@ -15,21 +15,27 @@ interface SocialLinksProps {
     twitter_id?: string;
   };
   homepage?: string;
+  // IMDb has separate addresses for titles and people
+  kind?: "title" | "name";
 }
 
 export default function SocialLinks({
   external_ids,
   homepage,
+  kind = "title",
 }: SocialLinksProps) {
   const t = useTranslations("SocialLinks");
 
-  if (!external_ids && !homepage) return null;
+  const { imdb_id, facebook_id, instagram_id, twitter_id } = external_ids ?? {};
+  if (!(imdb_id || facebook_id || instagram_id || twitter_id || homepage)) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/5 rounded-xl p-4 shadow-lg w-fit">
       {external_ids?.imdb_id && (
         <a
-          href={`https://www.imdb.com/title/${external_ids.imdb_id}`}
+          href={`https://www.imdb.com/${kind}/${external_ids.imdb_id}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-yellow-500 transition-colors text-2xl"

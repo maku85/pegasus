@@ -5,7 +5,9 @@ import { FaChevronLeft } from "react-icons/fa";
 import BackLink from "@/components/layout/BackLink";
 import Filmography from "@/components/media/Filmography";
 import ScrollRow from "@/components/media/ScrollRow";
+import Biography from "@/components/widgets/Biography";
 import NewsSection from "@/components/widgets/NewsSection";
+import SocialLinks from "@/components/widgets/SocialLinks";
 import { buildFilmography, mostVoted } from "@/lib/credits";
 import { openGraph, pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
@@ -17,11 +19,15 @@ interface PersonPageProps {
 function getPerson(id: string, locale: string) {
   requireIds(id);
   return tmdbFetch(
-    `/person/${id}?append_to_response=combined_credits,images,external_ids`,
+    `/person/${id}?append_to_response=combined_credits,images,external_ids,translations`,
     locale,
     7 * DAY
   );
 }
+
+const englishBiography = (person: any): string | undefined =>
+  person.translations?.translations?.find((x: any) => x.iso_639_1 === "en")
+    ?.data?.biography;
 
 export async function generateMetadata({ params }: PersonPageProps) {
   const { id, locale } = await params;
@@ -43,6 +49,9 @@ export default async function PersonPage({ params }: PersonPageProps) {
     person.known_for_department
   );
   const knownFor = mostVoted(filmography, 10);
+
+  const biography =
+    person.biography || (locale === "it" && englishBiography(person));
 
   const images = person.images || {};
 
@@ -87,11 +96,17 @@ export default async function PersonPage({ params }: PersonPageProps) {
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/90 pointer-events-none" />
 
-      <div className="relative w-full z-10 pt-8 md:pt-16 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16 items-start">
-          <div className="w-full md:w-80 lg:w-96 flex-shrink-0 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-yellow-500/20 blur-2xl rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 aspect-[2/3]">
+      <div className="relative w-full z-10 pt-6 md:pt-8 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <BackLink
+            fallback="/movies"
+            className="inline-flex items-center gap-2 mb-6 text-white/90 hover:text-white transition-colors bg-black/30 px-4 py-2 rounded-full border border-white/10 hover:bg-black/50"
+          >
+            <FaChevronLeft /> {t("back")}
+          </BackLink>
+
+          <div className="grid grid-cols-[7rem_minmax(0,1fr)] md:grid-cols-[18rem_minmax(0,1fr)] lg:grid-cols-[24rem_minmax(0,1fr)] md:grid-rows-[auto_1fr] gap-x-5 md:gap-x-12 lg:gap-x-16 gap-y-6 md:gap-y-8 items-start">
+            <div className="md:row-span-2 relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/10 aspect-[2/3]">
               <img
                 src={tmdbImage(person.profile_path, "h632")}
                 alt={person.name}
@@ -99,72 +114,64 @@ export default async function PersonPage({ params }: PersonPageProps) {
               />
             </div>
 
-            <div className="absolute top-0 left-0 p-6 z-50">
-              <BackLink
-                fallback="/movies"
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-black/50"
-              >
-                <FaChevronLeft /> {t("back")}
-              </BackLink>
-            </div>
-          </div>
-
-          <div className="flex-1 text-center md:text-left space-y-8">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl">
+            <h1 className="self-center text-3xl sm:text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl break-words">
               {person.name}
             </h1>
 
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-300">
-              {person.birthday && (
+            <div className="col-span-2 md:col-span-1 space-y-6 md:space-y-8">
+              <div className="flex flex-wrap gap-4 text-gray-300">
+                {person.birthday && (
+                  <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
+                    <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
+                      {t("birth")}
+                    </span>
+                    <span className="font-medium text-white">
+                      {formatDate(person.birthday)}
+                      {person.place_of_birth && ` ${t("bornIn")} ${person.place_of_birth}`}
+                      {!person.deathday &&
+                        ` (${getAge(person.birthday)} ${t("years")})`}
+                    </span>
+                  </div>
+                )}
+                {person.deathday && (
+                  <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
+                    <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
+                      {t("death")}
+                    </span>
+                    <span className="font-medium text-white">
+                      {formatDate(person.deathday)}
+                      {person.birthday &&
+                        ` (${getAge(person.birthday, person.deathday)} ${t(
+                          "years"
+                        )})`}
+                    </span>
+                  </div>
+                )}
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
                   <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
-                    {t("birth")}
+                    {t("profession")}
                   </span>
                   <span className="font-medium text-white">
-                    {formatDate(person.birthday)}
-                    {person.place_of_birth && ` ${t("bornIn")} ${person.place_of_birth}`}
-                    {!person.deathday &&
-                      ` (${getAge(person.birthday)} ${t("years")})`}
+                    {t.has(`departments.${person.known_for_department}`)
+                      ? t(`departments.${person.known_for_department}`)
+                      : person.known_for_department}
                   </span>
                 </div>
-              )}
-              {person.deathday && (
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                  <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
-                    {t("death")}
-                  </span>
-                  <span className="font-medium text-white">
-                    {formatDate(person.deathday)}
-                    {person.birthday &&
-                      ` (${getAge(person.birthday, person.deathday)} ${t(
-                        "years"
-                      )})`}
-                  </span>
-                </div>
-              )}
-              <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
-                  {t("knownFor")}
-                </span>
-                <span className="font-medium text-white">
-                  {t.has(`departments.${person.known_for_department}`)
-                    ? t(`departments.${person.known_for_department}`)
-                    : person.known_for_department}
-                </span>
               </div>
-            </div>
 
-            {person.biography && (
-              <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl text-left">
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-yellow-500 rounded-full"></span>
-                  {t("biography")}
-                </h2>
-                <p className="text-gray-200 leading-relaxed whitespace-pre-line max-w-3xl">
-                  {person.biography || t("noBiography")}
-                </p>
-              </div>
-            )}
+              <SocialLinks
+                external_ids={person.external_ids}
+                homepage={person.homepage}
+                kind="name"
+              />
+
+              {biography && (
+                <Biography
+                  text={biography}
+                  isEnglish={!person.biography}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -219,6 +226,19 @@ export default async function PersonPage({ params }: PersonPageProps) {
           </section>
         )}
 
+        {filmography.length > 0 && (
+          <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
+              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
+              {t("fullFilmography")}
+            </h2>
+            <Filmography
+              sections={filmography}
+              today={new Date().toISOString().slice(0, 10)}
+            />
+          </section>
+        )}
+
         {images.profiles && images.profiles.length > 1 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
@@ -246,18 +266,6 @@ export default async function PersonPage({ params }: PersonPageProps) {
           <NewsSection query={person.name} locale={locale} />
         </div>
 
-        {filmography.length > 0 && (
-          <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-              {t("fullFilmography")}
-            </h2>
-            <Filmography
-              sections={filmography}
-              today={new Date().toISOString().slice(0, 10)}
-            />
-          </section>
-        )}
       </div>
     </div>
   );

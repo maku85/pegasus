@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 
 import { Link } from "@/i18n/routing";
+import { formatRating } from "@/lib/rating";
 import { tmdbImage } from "@/lib/tmdb";
 
 interface HeroSliderProps {
@@ -46,6 +47,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
   if (!items || items.length === 0) return null;
 
   const currentItem = items[currentIndex];
+  const rating = formatRating(currentItem.vote_average, currentItem.vote_count);
   const isMovie = currentItem.media_type === "movie" || currentItem.title;
   const controlClass =
     "w-11 h-11 flex items-center justify-center bg-black/50 border border-white/20 text-white rounded-full hover:bg-white/20 transition-colors";
@@ -88,9 +90,9 @@ export default function HeroSlider({ items }: HeroSliderProps) {
           className="max-w-3xl"
         >
           <div className="flex items-center gap-3 mb-4">
-            {currentItem.vote_average > 0 && (
+            {rating && (
               <span className="px-3 py-1 bg-black/60 border border-yellow-500/40 text-yellow-300 rounded-lg text-sm font-bold flex items-center gap-2">
-                <FaStar /> {currentItem.vote_average.toFixed(1)}
+                <FaStar /> {rating}
               </span>
             )}
             <span className="px-3 py-1 bg-black/60 border border-white/20 text-white rounded-lg text-sm font-medium">

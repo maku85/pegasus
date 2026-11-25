@@ -7,6 +7,7 @@ import { FaCheck, FaPlus, FaStar } from "react-icons/fa";
 
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Link } from "@/i18n/routing";
+import { formatRating } from "@/lib/rating";
 import { tmdbImage } from "@/lib/tmdb";
 
 interface MovieCardProps {
@@ -37,8 +38,7 @@ export default function MovieCard({
   const link = `/${media_type === "movie" ? "movies" : media_type}/${movie.id}`;
   const title = movie.title || movie.name || t("untitled");
   const date = (movie.release_date || movie.first_air_date)?.slice(0, 4);
-  // TMDB uses 0 for titles nobody has voted yet
-  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : null;
+  const rating = formatRating(movie.vote_average, movie.vote_count);
 
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
   const inList =
@@ -109,7 +109,7 @@ export default function MovieCard({
               title,
               poster_path: movie.poster_path ?? null,
               media_type,
-              vote_average: movie.vote_average,
+              vote_average: rating ? movie.vote_average : undefined,
               release_date: date,
             })
           }

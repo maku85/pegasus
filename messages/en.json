@@ -74,7 +74,6 @@
         "years": "years",
         "knownFor": "Known For",
         "biography": "Biography",
-        "noBiography": "No biography available.",
         "gallery": "Gallery",
         "fullFilmography": "Full Filmography",
         "unknownRole": "Unknown Role",
@@ -88,7 +87,11 @@
         },
         "upcoming": "Upcoming",
         "undated": "Date not available",
-        "decade": "{year}s"
+        "decade": "{year}s",
+        "profession": "Profession",
+        "englishBiography": "Biography available in English only.",
+        "readMore": "Read more",
+        "readLess": "Show less"
     },
     "MediaPage": {
         "seasons": "Seasons",
