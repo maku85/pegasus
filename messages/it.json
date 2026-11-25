@@ -168,7 +168,8 @@
         "moviesDescription": "Scopri i film più popolari, le ultime uscite e i capolavori acclamati dalla critica.",
         "tvTitle": "Serie TV",
         "tvDescription": "Esplora le serie TV del momento, le novità e le più amate dal pubblico.",
-        "error": "Impossibile caricare i contenuti. Riprova tra poco."
+        "error": "Impossibile caricare i contenuti. Riprova tra poco.",
+        "empty": "Nessun titolo con questi filtri."
     },
     "RandomPage": {
         "ready": "Pronto?",
@@ -224,5 +225,10 @@
     "ScrollRow": {
         "back": "Scorri indietro",
         "forward": "Scorri avanti"
+    },
+    "ProviderFilter": {
+        "title": "In streaming in Italia",
+        "clear": "Togli il filtro",
+        "justWatch": "Dati forniti da JustWatch"
     }
 }

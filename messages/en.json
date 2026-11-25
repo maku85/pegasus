@@ -153,7 +153,8 @@
         "moviesDescription": "Discover the most popular movies, the latest releases and critically acclaimed masterpieces.",
         "tvTitle": "TV Series",
         "tvDescription": "Explore the TV series of the moment, the newest ones and the audience favorites.",
-        "error": "Could not load the content. Try again in a moment."
+        "error": "Could not load the content. Try again in a moment.",
+        "empty": "No titles match these filters."
     },
     "RandomPage": {
         "ready": "Ready?",
@@ -209,5 +210,10 @@
     "ScrollRow": {
         "back": "Scroll back",
         "forward": "Scroll forward"
+    },
+    "ProviderFilter": {
+        "title": "Streaming in the United States",
+        "clear": "Clear filter",
+        "justWatch": "Data provided by JustWatch"
     }
 }

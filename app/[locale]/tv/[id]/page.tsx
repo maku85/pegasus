@@ -11,6 +11,7 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { regionOf } from "@/lib/providers";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: TVPageProps) {
 export default async function TVPage({ params }: TVPageProps) {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const region = locale === "en" ? "US" : "IT";
+  const region = regionOf(locale);
   const tv = await getTV(id, locale);
 
   const trailer = tv.videos?.results?.find(

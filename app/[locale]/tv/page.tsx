@@ -7,9 +7,11 @@ import { Suspense, useEffect, useState } from "react";
 
 import MovieCard from "@/components/media/MovieCard";
 import MovieFilters from "@/components/media/MovieFilters";
+import ProviderFilter from "@/components/media/ProviderFilter";
 import LoadingStatus from "@/components/skeletons/LoadingStatus";
 import MovieCardSkeleton from "@/components/skeletons/MovieCardSkeleton";
 import { useInfiniteList } from "@/hooks/useInfiniteList";
+import { useProviderFilter } from "@/hooks/useProviderFilter";
 
 type Category = "popular" | "trending" | "top_rated";
 
@@ -25,8 +27,10 @@ function TVListContent() {
   const searchParams = useSearchParams();
   const filter = (searchParams.get("category") as Category) || "popular";
   const genre = searchParams.get("genre") || "";
+  const { region, selected, toggle, clear } = useProviderFilter();
   const { items, loading, error } = useInfiniteList(
-    `/api/tv-list?lang=${locale}&type=${filter}&genre=${encodeURIComponent(genre)}`
+    selected &&
+      `/api/tv-list?lang=${locale}&type=${filter}&genre=${encodeURIComponent(genre)}&providers=${selected.join(",")}`
   );
   const [genres, setGenres] = useState<Genre[] | null>(null);
 
@@ -59,7 +63,7 @@ function TVListContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <div className="text-center mb-10 pt-8">
+      <div className="text-center mb-6 pt-4 md:mb-10 md:pt-8">
         <h1 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-lg">
           {t("tvTitle")}
         </h1>
@@ -74,6 +78,13 @@ function TVListContent() {
         genres={genres}
         onCategoryChange={handleCategoryChange}
         onGenreChange={handleGenreChange}
+      />
+
+      <ProviderFilter
+        region={region}
+        selected={selected ?? []}
+        onToggle={toggle}
+        onClear={clear}
       />
 
       <motion.div
@@ -100,6 +111,12 @@ function TVListContent() {
       </motion.div>
 
       {loading && <LoadingStatus />}
+
+      {!loading && !error && items.length === 0 && (
+        <p role="status" className="text-center text-gray-300 py-10">
+          {t("empty")}
+        </p>
+      )}
 
       {error && (
         <p role="alert" className="text-center text-red-400 py-10">

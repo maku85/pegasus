@@ -9,7 +9,8 @@ in the visitor's browser.
 
 ## Features
 
-- Popular, trending and top-rated lists, with genre filters
+- Popular, trending and top-rated lists, filtered by genre and by streaming
+  service (Italy for Italian, United States for English)
 - Search by title or person, with type, year and rating filters
 - Details with cast, trailers, reviews and streaming providers
 - Random pick by genre and year

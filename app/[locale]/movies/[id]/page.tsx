@@ -11,6 +11,7 @@ import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
+import { regionOf } from "@/lib/providers";
 import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: MoviePageProps) {
 export default async function MoviePage({ params }: MoviePageProps) {
   const { id, locale } = await params;
   const t = await getTranslations({ locale, namespace: "MediaPage" });
-  const region = locale === "en" ? "US" : "IT";
+  const region = regionOf(locale);
   const movie = await getMovie(id, locale);
 
   const trailer = movie.videos?.results?.find(

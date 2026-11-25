@@ -6,18 +6,19 @@ export default function MediaListSkeleton() {
   return (
     <LoadingStatus>
       <div className="max-w-7xl mx-auto px-4">
-        <div className="mb-10 pt-8 flex flex-col items-center">
+        <div className="mb-6 pt-4 md:mb-10 md:pt-8 flex flex-col items-center">
           <div className="h-10 md:h-12 w-64 md:w-96 mb-4 rounded bg-white/15" />
           <div className="h-14 md:h-7 w-full max-w-2xl rounded bg-white/15" />
         </div>
         <div className="mb-8 space-y-6">
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex justify-center gap-2 md:gap-4">
             {[...Array(3).keys()].map((i) => (
-              <div key={i} className="h-10 w-32 rounded-full bg-white/15" />
+              <div key={i} className="h-9 md:h-10 w-28 md:w-32 rounded-full bg-white/15" />
             ))}
           </div>
           <div className="h-[66px] lg:h-[110px] rounded-2xl bg-white/5" />
         </div>
+        <div className="mb-8 h-[126px] rounded-2xl bg-white/5" />
         <CardGridSkeleton />
       </div>
     </LoadingStatus>

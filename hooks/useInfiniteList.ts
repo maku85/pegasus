@@ -40,13 +40,16 @@ const cameFromHistory = () => performance.now() - lastPopState < 3000;
 
 const itemKey = (item: Item) => `${item.media_type}-${item.id}`;
 
-// `url` must already have a query string: the page number is appended to it
-export function useInfiniteList(url: string) {
+// `url` must already have a query string: the page number is appended to it.
+// null means it is not known yet
+export function useInfiniteList(url: string | null) {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!url) return;
+
     // Local to this url, so a late response can never reach another list
     const entry = historyEntry();
     const href = window.location.href;
