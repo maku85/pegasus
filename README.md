@@ -25,7 +25,7 @@ invented.*
   browsed one after the other
 - People with their filmography by kind of work, biography and links
 - English trailers, overviews and biographies when the Italian ones are missing
-- Random pick by genre and year
+- Random pick by genre, decade, length and streaming service
 - Watchlist with file export and import
 - News from Google News
 - Previews with title and image when a page is shared

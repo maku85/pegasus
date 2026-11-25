@@ -3,19 +3,13 @@ import type { Region } from "./providers";
 export type MediaType = "movie" | "tv";
 export type Category = "popular" | "trending" | "top_rated";
 
-interface Filters {
+export interface Filters {
   genre: string | null;
   providers: number[];
   region: Region;
 }
 
-// TMDB lists take no filters, so each category becomes a discover query
-export function discoverPath(
-  media: MediaType,
-  category: Category,
-  { genre, providers, region }: Filters,
-  today: Date
-) {
+export function filterParams({ genre, providers, region }: Filters) {
   const params: string[] = [];
   if (genre) params.push(`with_genres=${genre}`);
   if (providers.length > 0) {
@@ -26,6 +20,17 @@ export function discoverPath(
       "with_watch_monetization_types=flatrate"
     );
   }
+  return params;
+}
+
+// TMDB lists take no filters, so each category becomes a discover query
+export function discoverPath(
+  media: MediaType,
+  category: Category,
+  filters: Filters,
+  today: Date
+) {
+  const params = filterParams(filters);
 
   if (category === "top_rated") {
     params.push("sort_by=vote_average.desc", "vote_count.gte=300");

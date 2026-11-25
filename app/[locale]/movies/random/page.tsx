@@ -1,32 +1,56 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import { FaDice, FaFilter, FaTimes } from "react-icons/fa";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { FaDice } from "react-icons/fa";
 
-import { useRouter } from "@/i18n/routing";
+import ProviderFilter from "@/components/media/ProviderFilter";
+import RandomResult, { type RandomItem } from "@/components/media/RandomResult";
+import { useProviderFilter } from "@/hooks/useProviderFilter";
+import { getNavigation } from "@/lib/navigation";
+import { decades } from "@/lib/params";
 
 interface Genre {
   id: number;
   name: string;
 }
 
-export default function RandomMoviePage() {
-  const router = useRouter();
+interface Draw {
+  item: RandomItem;
+  total: number;
+}
+
+type Status = "ready" | "searching" | "found" | "noResults" | "error";
+
+// The last draw, to bring it back with the browser's back button
+let lastDraw: { entry: string; draw: Draw } | null = null;
+
+const historyEntry = () => getNavigation()?.currentEntry?.key;
+
+const SELECT_CLASS =
+  "w-full h-11 bg-[#1c1c1c] border border-white/10 rounded-lg px-4 text-sm";
+const LABEL_CLASS = "block text-xs text-gray-300 mb-1 uppercase font-bold";
+
+function RandomContent() {
   const locale = useLocale();
   const t = useTranslations("RandomPage");
-  const [currentText, setCurrentText] = useState(t("ready"));
-  const [isFound, setIsFound] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-
-  // Filters
-  const [type, setType] = useState<"movie" | "tv">("movie");
-  const [selectedGenre, setSelectedGenre] = useState<string>("");
-  const [year, setYear] = useState<string>("");
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type") === "tv" ? "tv" : "movie";
+  const genre = searchParams.get("genre") ?? "";
+  const decade = searchParams.get("decade") ?? "";
+  const isShort = searchParams.get("short") === "1";
+  const { region, selected, toggle, clear } = useProviderFilter();
 
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [draw, setDraw] = useState<Draw | null>(() =>
+    typeof window !== "undefined" && lastDraw?.entry === historyEntry()
+      ? (lastDraw?.draw ?? null)
+      : null
+  );
+  const [status, setStatus] = useState<Status>("ready");
+  const [shuffled, setShuffled] = useState("");
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -41,200 +65,224 @@ export default function RandomMoviePage() {
     };
   }, [type, locale]);
 
-  const startSearch = async () => {
-    setIsSearching(true);
-    setIsFound(false);
-    setShowFilters(false);
+  // Changing a filter makes a new history entry: the draw follows it
+  // biome-ignore lint/correctness/useExhaustiveDependencies: searchParams is the trigger
+  useEffect(() => {
+    const entry = historyEntry();
+    if (draw && entry) lastDraw = { entry, draw };
+  }, [draw, searchParams]);
 
-    // Shuffle effect
+  // Messages are about the filters of the draw
+  // biome-ignore lint/correctness/useExhaustiveDependencies: searchParams is the trigger
+  useEffect(() => {
+    setStatus((current) => (current === "searching" ? current : "ready"));
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (status !== "searching") return;
     const interval = setInterval(() => {
-      const randomGenre =
-        genres[Math.floor(Math.random() * genres.length)]?.name ?? "";
-      setCurrentText(t("searching", { genre: randomGenre }));
+      setShuffled(genres[Math.floor(Math.random() * genres.length)]?.name ?? "");
     }, 100);
+    return () => clearInterval(interval);
+  }, [status, genres]);
+
+  const setFilters = (changes: Record<string, string>) => {
+    const params = new URLSearchParams(window.location.search);
+    for (const [name, value] of Object.entries(changes)) {
+      if (value) params.set(name, value);
+      else params.delete(name);
+    }
+    // Only this page reads them: no need to ask the server
+    window.history.pushState(null, "", `?${params.toString()}`);
+  };
+
+  const spin = async () => {
+    if (status === "searching") return;
+    setStatus("searching");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const params = new URLSearchParams({
+      lang: locale,
+      type,
+      genre,
+      decade,
+      short: isShort ? "1" : "",
+      providers: (selected ?? []).join(","),
+    });
 
     try {
-      // Build query params
-      const params = new URLSearchParams();
-      params.append("type", type);
-      if (selectedGenre) params.append("genre", selectedGenre);
-      if (year) params.append("year", year);
-
-      // Artificial delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const res = await fetch(`/api/random-movie?${params.toString()}`);
+      const [res] = await Promise.all([
+        fetch(`/api/random-movie?${params.toString()}`, { cache: "no-store" }),
+        new Promise((resolve) => setTimeout(resolve, reduce ? 0 : 800)),
+      ]);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-
-      clearInterval(interval);
-
-      if (data.id) {
-        setIsFound(true);
-        setCurrentText(t("found"));
-        setTimeout(() => {
-          router.replace(
-            data.type === "tv" ? `/tv/${data.id}` : `/movies/${data.id}`
-          );
-        }, 500);
-      } else {
-        setIsSearching(false);
-        setCurrentText(t("noResults"));
+      const data: { item: RandomItem | null; total: number } = await res.json();
+      setDraw(data.item ? { item: data.item, total: data.total } : null);
+      setStatus(data.item ? "found" : "noResults");
+      if (data.item) {
+        buttonRef.current?.scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+        });
       }
     } catch (error) {
-      console.error("Error fetching random movie:", error);
-      clearInterval(interval);
-      setIsSearching(false);
-      setCurrentText(t("error"));
+      console.error("Error fetching random title:", error);
+      setStatus("error");
     }
   };
 
+  const isSearching = status === "searching";
+  let message = "";
+  if (status === "found" && draw) {
+    message = t("found", { title: draw.item.title ?? "" });
+  } else if (status === "noResults" || status === "error") {
+    message = t(status);
+  } else if (status === "ready" && !draw) {
+    message = t("ready");
+  }
+
   return (
-    <div className="min-h-[70vh] bg-[#141414] flex flex-col items-center justify-center text-white p-4 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
+    <div className="max-w-4xl mx-auto px-6 md:px-12 pb-20 text-white">
+      <div className="text-center mb-6 pt-4 md:mb-8 md:pt-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black drop-shadow-lg">
+          {t("title")}
+        </h1>
       </div>
 
-      <div className="z-10 w-full max-w-md">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center bg-black/40 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl"
+      <section
+        aria-label={t("filters")}
+        className="mb-4 grid grid-cols-2 md:grid-cols-4 gap-4 items-end bg-white/5 p-4 rounded-2xl border border-white/10"
+      >
+        <fieldset className="col-span-2 md:col-span-1 min-w-0">
+          <legend className={LABEL_CLASS}>{t("type")}</legend>
+          <div className="flex h-11 bg-[#1c1c1c] border border-white/10 rounded-lg p-1">
+            {(["movie", "tv"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={type === value}
+                // Movies and TV series have different genres
+                onClick={() =>
+                  type !== value &&
+                  setFilters({
+                    type: value === "tv" ? "tv" : "",
+                    genre: "",
+                    short: "",
+                  })
+                }
+                className={`flex-1 rounded-md text-sm font-bold transition-colors ${
+                  type === value
+                    ? "bg-yellow-500 text-black"
+                    : "text-gray-300 hover:text-white"
+                }`}
+              >
+                {t(value)}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <div className="min-w-0">
+          <label htmlFor="random-genre" className={LABEL_CLASS}>
+            {t("genre")}
+          </label>
+          <select
+            id="random-genre"
+            value={genre}
+            onChange={(e) => setFilters({ genre: e.target.value })}
+            className={SELECT_CLASS}
+          >
+            <option value="">{t("any")}</option>
+            {genres.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="min-w-0">
+          <label htmlFor="random-decade" className={LABEL_CLASS}>
+            {t("decade")}
+          </label>
+          <select
+            id="random-decade"
+            value={decade}
+            onChange={(e) => setFilters({ decade: e.target.value })}
+            className={SELECT_CLASS}
+          >
+            <option value="">{t("any")}</option>
+            {decades().map((value) => (
+              <option key={value} value={value}>
+                {t("decadeOption", { decade: String(value) })}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Kept in place for TV series too, so the page does not move */}
+        <label
+          className={`col-span-2 md:col-span-1 min-h-11 flex items-center gap-3 text-sm text-gray-200 ${
+            type === "tv" ? "invisible" : ""
+          }`}
         >
-          <div className="mb-8 relative inline-block">
-            <FaDice
-              className={`text-7xl mx-auto ${
-                isFound ? "text-green-500" : "text-yellow-500"
-              } ${isSearching ? "animate-spin-slow" : ""}`}
-            />
-          </div>
+          <input
+            type="checkbox"
+            checked={isShort}
+            onChange={(e) => setFilters({ short: e.target.checked ? "1" : "" })}
+            className="w-5 h-5 shrink-0 accent-yellow-500"
+          />
+          {t("short")}
+        </label>
+      </section>
 
-          <h1 className="text-3xl font-black mb-2 tracking-tight">
-            {isFound ? t("found") : t("title")}
-          </h1>
+      <ProviderFilter
+        region={region}
+        selected={selected ?? []}
+        onToggle={toggle}
+        onClear={clear}
+      />
 
-          <div className="h-8 mb-8 text-gray-400 font-medium">
-            {currentText}
-          </div>
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-disabled={isSearching}
+        onClick={spin}
+        className="scroll-mt-28 w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-black font-bold py-4 rounded-xl text-lg shadow-lg aria-disabled:opacity-60 aria-disabled:cursor-default"
+      >
+        <FaDice
+          className={`text-2xl ${
+            isSearching ? "animate-spin motion-reduce:animate-none" : ""
+          }`}
+        />
+        {draw ? t("another") : t("spin")}
+      </button>
 
-          {!isSearching && (
-            <div className="flex flex-col gap-4">
-              <button
-                type="button"
-                onClick={startSearch}
-                className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-black font-bold py-4 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg"
-              >
-                {t("spin")} 🎲
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
-              >
-                <FaFilter /> {showFilters ? t("closeFilters") : t("openFilters")}
-              </button>
-            </div>
-          )}
-        </motion.div>
-
-        <AnimatePresence>
-          {showFilters && !isSearching && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="mt-4 bg-gray-900/90 backdrop-blur-md p-6 rounded-2xl border border-white/10"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="font-bold text-lg">{t("filters")}</h2>
-                <button
-                  type="button"
-                  aria-label={t("closeFilters")}
-                  onClick={() => setShowFilters(false)}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <fieldset>
-                  <legend className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    {t("type")}
-                  </legend>
-                  <div className="flex bg-black/50 rounded-lg p-1">
-                    <button
-                      type="button"
-                      aria-pressed={type === "movie"}
-                      onClick={() => {
-                        setType("movie");
-                        setSelectedGenre("");
-                      }}
-                      className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
-                        type === "movie"
-                          ? "bg-gray-700 text-white"
-                          : "text-gray-400 hover:text-white"
-                      }`}
-                    >
-                      {t("movie")}
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={type === "tv"}
-                      onClick={() => {
-                        setType("tv");
-                        setSelectedGenre("");
-                      }}
-                      className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
-                        type === "tv"
-                          ? "bg-gray-700 text-white"
-                          : "text-gray-400 hover:text-white"
-                      }`}
-                    >
-                      {t("tv")}
-                    </button>
-                  </div>
-                </fieldset>
-
-                <div>
-                  <label htmlFor="random-genre" className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    {t("genre")}
-                  </label>
-                  <select
-                    id="random-genre"
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-yellow-500"
-                  >
-                    <option value="">{t("any")}</option>
-                    {genres.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="random-year" className="block text-xs text-gray-400 mb-1 uppercase font-bold">
-                    {t("year")}
-                  </label>
-                  <input
-                    id="random-year"
-                    type="number"
-                    placeholder={t("yearExample")}
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-yellow-500"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className="min-h-6 my-2 text-center text-gray-300">
+        <p role="status" className={status === "found" ? "sr-only" : ""}>
+          {message}
+        </p>
+        {isSearching && (
+          <p aria-hidden="true">{t("searching", { genre: shuffled })}</p>
+        )}
+        {status === "found" && draw?.total === 1 && <p>{t("only")}</p>}
       </div>
+
+      {draw && (
+        <div
+          className={`transition-opacity motion-reduce:transition-none ${
+            isSearching ? "opacity-40" : ""
+          }`}
+        >
+          <RandomResult item={draw.item} />
+        </div>
+      )}
     </div>
+  );
+}
+
+export default function RandomMoviePage() {
+  return (
+    <Suspense>
+      <RandomContent />
+    </Suspense>
   );
 }

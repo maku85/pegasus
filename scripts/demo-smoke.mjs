@@ -15,7 +15,8 @@ const APIS = [
   "/api/movie-list?lang=it&type=trending&page=1",
   "/api/movie-list?lang=en&type=top_rated&genre=28&providers=1,2&page=1",
   "/api/tv-list?lang=it&type=popular&page=1",
-  "/api/search?lang=en&query=orchard&page=1", "/api/random-movie?type=movie",
+  "/api/search?lang=en&query=orchard&page=1", "/api/random-movie?lang=it&type=movie&short=1",
+  "/api/random-movie?lang=en&type=tv&decade=2010",
 ];
 
 const failures = [];
@@ -56,11 +57,9 @@ try {
     const res = await fetch(BASE + path);
     const data = await res.json().catch(() => null);
     // The CDN ignores the query: a cached answer would replace all the others
-    if (!path.startsWith("/api/random")) {
-      check(res.headers.get("netlify-cdn-cache-control") === "no-store", `${path}: cached by the CDN`);
-      check(!/public|s-maxage/.test(res.headers.get("cache-control") ?? ""), `${path}: publicly cached`);
-    }
-    check(res.ok && (data?.results?.length || data?.genres?.length || data?.id), `${path}: no data`);
+    check(res.headers.get("netlify-cdn-cache-control") === "no-store", `${path}: cached by the CDN`);
+    check(!/public|s-maxage/.test(res.headers.get("cache-control") ?? ""), `${path}: publicly cached`);
+    check(res.ok && (data?.results?.length || data?.genres?.length || data?.item), `${path}: no data`);
   }
   for (const image of images) {
     const res = await fetch(BASE + image);

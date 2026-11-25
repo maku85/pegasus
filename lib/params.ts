@@ -20,6 +20,17 @@ export const parseYear = (value: string | null) =>
     ? value
     : null;
 
+// Newest first. Decades rather than years: fewer distinct queries
+export function decades() {
+  const list: number[] = [];
+  const current = Math.floor(new Date().getFullYear() / 10) * 10;
+  for (let decade = current; decade >= 1950; decade -= 10) list.push(decade);
+  return list;
+}
+
+export const parseDecade = (value: string | null) =>
+  decades().find((decade) => String(decade) === value) ?? null;
+
 export const normalizeQuery = (value: string | null) =>
   (value ?? "").trim().replace(/\s+/g, " ").toLowerCase().slice(0, 100);
 

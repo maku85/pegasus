@@ -54,21 +54,25 @@ const byPopularity = (a: DemoTitle, b: DemoTitle) => b.popularity - a.popularity
 const byRating = (a: DemoTitle, b: DemoTitle) => b.average - a.average;
 const byDate = (a: DemoTitle, b: DemoTitle) => b.date.localeCompare(a.date);
 
-// Date ranges are ignored: the catalogue does not move with the calendar
+// Date ranges are ignored, except whole decades: the catalogue does not move
+// with the calendar
 function discover(list: DemoTitle[], params: URLSearchParams) {
   const genre = Number(params.get("with_genres"));
   const providers = params.get("with_watch_providers")?.split("|").map(Number);
   const keyword = Number(params.get("with_keywords"));
   const minVotes = Number(params.get("vote_count.gte"));
-  const year =
-    params.get("primary_release_year") ?? params.get("first_air_date_year");
+  const until =
+    params.get("primary_release_date.lte") ?? params.get("first_air_date.lte");
+  const decade = until?.match(/^(\d{3})9-12-31$/)?.[1];
+  const maxRuntime = Number(params.get("with_runtime.lte"));
 
   return list
     .filter((t) => !genre || t.genres.includes(genre))
     .filter((t) => !providers || t.providers.some((p) => providers.includes(p)))
     .filter((t) => !keyword || t.index % keywords.length === keyword - 5001)
     .filter((t) => t.votes >= minVotes)
-    .filter((t) => !year || t.date.startsWith(year))
+    .filter((t) => !decade || t.date.startsWith(decade))
+    .filter((t) => !maxRuntime || t.runtime <= maxRuntime)
     .sort(
       params.get("sort_by") === "vote_average.desc" ? byRating : byPopularity
     );
