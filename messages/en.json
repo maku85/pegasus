@@ -80,7 +80,15 @@
         "unknownRole": "Unknown Role",
         "bornIn": "in",
         "showAll": "Show {count} more titles",
-        "showLess": "Show less"
+        "departments": {
+            "Self": "As themselves"
+        },
+        "jobs": {
+            "Director": "Director"
+        },
+        "upcoming": "Upcoming",
+        "undated": "Date not available",
+        "decade": "{year}s"
     },
     "MediaPage": {
         "seasons": "Seasons",

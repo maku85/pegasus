@@ -80,7 +80,6 @@
         "unknownRole": "Ruolo sconosciuto",
         "bornIn": "a",
         "showAll": "Mostra altri {count} titoli",
-        "showLess": "Mostra meno",
         "departments": {
             "Acting": "Recitazione",
             "Directing": "Regia",
@@ -94,8 +93,30 @@
             "Visual Effects": "Effetti visivi",
             "Crew": "Troupe",
             "Lighting": "Luci",
+            "Creator": "Creazione",
+            "Self": "Nei panni di sé"
+        },
+        "jobs": {
+            "Director": "Regia",
+            "Co-Director": "Co-regia",
+            "Writer": "Sceneggiatura",
+            "Screenplay": "Sceneggiatura",
+            "Story": "Soggetto",
+            "Novel": "Romanzo",
+            "Characters": "Personaggi",
+            "Producer": "Produzione",
+            "Executive Producer": "Produzione esecutiva",
+            "Co-Producer": "Coproduzione",
+            "Associate Producer": "Produzione associata",
+            "Editor": "Montaggio",
+            "Director of Photography": "Fotografia",
+            "Original Music Composer": "Colonna sonora",
+            "Music": "Musiche",
             "Creator": "Creazione"
-        }
+        },
+        "upcoming": "In arrivo",
+        "undated": "Data non disponibile",
+        "decade": "Anni {year}"
     },
     "MediaPage": {
         "seasons": "Stagioni",

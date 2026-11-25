@@ -3,8 +3,10 @@ import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
 import BackLink from "@/components/layout/BackLink";
+import Filmography from "@/components/media/Filmography";
 import ScrollRow from "@/components/media/ScrollRow";
 import NewsSection from "@/components/widgets/NewsSection";
+import { buildFilmography, mostVoted } from "@/lib/credits";
 import { openGraph, pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
@@ -21,8 +23,6 @@ function getPerson(id: string, locale: string) {
   );
 }
 
-const FILMOGRAPHY_PREVIEW = 15;
-
 export async function generateMetadata({ params }: PersonPageProps) {
   const { id, locale } = await params;
   const person = await getPerson(id, locale);
@@ -38,19 +38,13 @@ export default async function PersonPage({ params }: PersonPageProps) {
   const tCommon = await getTranslations({ locale, namespace: "Common" });
   const person = await getPerson(id, locale);
 
-  const knownFor =
-    person.combined_credits?.cast
-      ?.sort((a: any, b: any) => b.vote_count - a.vote_count)
-      ?.slice(0, 10) || [];
+  const filmography = buildFilmography(
+    person.combined_credits,
+    person.known_for_department
+  );
+  const knownFor = mostVoted(filmography, 10);
 
   const images = person.images || {};
-
-  const filmography =
-    person.combined_credits?.cast?.sort((a: any, b: any) => {
-      const dateA = a.release_date || a.first_air_date || "0000-00-00";
-      const dateB = b.release_date || b.first_air_date || "0000-00-00";
-      return dateB.localeCompare(dateA);
-    }) || [];
 
   // Helper to format date
   const formatDate = (dateString: string) => {
@@ -76,46 +70,6 @@ export default async function PersonPage({ params }: PersonPageProps) {
     }
     return age;
   };
-
-  const renderCredit = (item: any) => (
-        <Link
-          prefetch={false}
-          href={
-            item.media_type === "tv"
-              ? `/tv/${item.id}`
-              : `/movies/${item.id}`
-          }
-          key={item.credit_id}
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/10 transition-colors group border border-transparent hover:border-white/5"
-        >
-          <div className="w-14 h-14 flex-shrink-0 text-gray-400 font-mono text-sm flex items-center justify-center bg-white/5 rounded-lg border border-white/5 group-hover:border-yellow-500/30 group-hover:text-yellow-400 transition-colors">
-            {item.release_date
-              ? item.release_date.split("-")[0]
-              : item.first_air_date
-              ? item.first_air_date.split("-")[0]
-              : "-"}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-lg truncate group-hover:text-yellow-400 transition-colors">
-              {item.title || item.name}
-            </h3>
-            <p className="text-sm text-gray-400 truncate">
-              {item.character ? (
-                <span className="text-gray-300">{item.character}</span>
-              ) : (
-                <span className="italic text-gray-300">
-                  {t("unknownRole")}
-                </span>
-              )}
-            </p>
-          </div>
-          <div className="text-xs font-bold uppercase px-3 py-1.5 rounded-lg bg-white/10 text-gray-400 border border-white/5">
-            {item.media_type === "movie"
-              ? tCommon("movie")
-              : tCommon("tv")}
-          </div>
-        </Link>
-  );
 
   return (
     <div className="text-white pb-20 relative overflow-hidden">
@@ -223,7 +177,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
               {t("knownFor")}
             </h2>
             <ScrollRow label={t("knownFor")}>
-              {knownFor.map((item: any) => (
+              {knownFor.map((item) => (
                 <Link
                   prefetch={false}
                   href={
@@ -231,26 +185,33 @@ export default async function PersonPage({ params }: PersonPageProps) {
                       ? `/tv/${item.id}`
                       : `/movies/${item.id}`
                   }
-                  key={item.id}
+                  key={`${item.media_type}-${item.id}`}
                   className="flex-shrink-0 w-40 group"
                 >
                   <div className="w-40 h-60 rounded-2xl overflow-hidden mb-4 relative shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
                     <img
                       src={tmdbImage(item.poster_path, "w342")}
-                      alt={item.title || item.name}
+                      alt=""
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                   <h3 className="font-bold text-sm truncate group-hover:text-yellow-400 transition-colors">
-                    {item.title || item.name}
+                    {item.title}
                   </h3>
                   <p className="text-xs text-gray-400">
                     {item.media_type === "movie"
                       ? tCommon("movie")
                       : tCommon("tvSeries")}{" "}
-                    • {item.character ? item.character : "Cast"}
+                    {item.roles.length > 0 &&
+                      `• ${[
+                        ...new Set(
+                          item.roles.map((role) =>
+                            t.has(`jobs.${role}`) ? t(`jobs.${role}`) : role
+                          )
+                        ),
+                      ].join(", ")}`}
                   </p>
                 </Link>
               ))}
@@ -285,34 +246,18 @@ export default async function PersonPage({ params }: PersonPageProps) {
           <NewsSection query={person.name} locale={locale} />
         </div>
 
-        <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-            <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
-            {t("fullFilmography")}
-          </h2>
-          <div className="bg-black/20 rounded-2xl p-2 backdrop-blur-sm border border-white/5">
-            <div className="space-y-1">
-              {filmography.slice(0, FILMOGRAPHY_PREVIEW).map(renderCredit)}
-            </div>
-            {filmography.length > FILMOGRAPHY_PREVIEW && (
-              <details className="group">
-                <summary className="list-none cursor-pointer text-center p-4 font-bold text-yellow-400 hover:text-yellow-300">
-                  <span className="group-open:hidden">
-                    {t("showAll", {
-                      count: filmography.length - FILMOGRAPHY_PREVIEW,
-                    })}
-                  </span>
-                  <span className="hidden group-open:inline">
-                    {t("showLess")}
-                  </span>
-                </summary>
-                <div className="space-y-1">
-                  {filmography.slice(FILMOGRAPHY_PREVIEW).map(renderCredit)}
-                </div>
-              </details>
-            )}
-          </div>
-        </section>
+        {filmography.length > 0 && (
+          <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
+              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
+              {t("fullFilmography")}
+            </h2>
+            <Filmography
+              sections={filmography}
+              today={new Date().toISOString().slice(0, 10)}
+            />
+          </section>
+        )}
       </div>
     </div>
   );
