@@ -265,5 +265,8 @@
         "title": "In streaming in Italia",
         "clear": "Togli il filtro",
         "justWatch": "Dati forniti da JustWatch"
+    },
+    "Demo": {
+        "badge": "Demo: contenuti inventati"
     }
 }

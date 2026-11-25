@@ -1,3 +1,5 @@
+import { tmdbImage } from "./tmdb";
+
 export const pageTitle = (title: string) => `${title} – Row Seven`;
 
 export const yearSuffix = (date?: string) =>
@@ -11,7 +13,7 @@ export function openGraph(locale: string, tmdbPath?: string | null) {
     locale: locale === "en" ? "en_US" : "it_IT",
     images: [
       tmdbPath
-        ? { url: `https://image.tmdb.org/t/p/w1280${tmdbPath}` }
+        ? { url: tmdbImage(tmdbPath, "w1280") }
         : {
             url: `/images/og-${locale === "en" ? "en" : "it"}.png`,
             width: 1200,

@@ -9,8 +9,21 @@ const siteUrl =
     ? process.env.URL
     : process.env.DEPLOY_PRIME_URL;
 
+// Invented contents instead of TMDB. Fixed while building, so the normal site
+// carries no demo code
+const isDemo = process.env.DEMO === "1";
+if (
+  isDemo &&
+  process.env.CONTEXT === "production" &&
+  process.env.DEMO_IN_PRODUCTION !== "1"
+) {
+  throw new Error(
+    "DEMO=1 in a production deploy: remove it, or set DEMO_IN_PRODUCTION=1"
+  );
+}
+
 const nextConfig: NextConfig = {
-  env: { SITE_URL: siteUrl ?? "" },
+  env: { SITE_URL: siteUrl ?? "", DEMO: isDemo ? "1" : "" },
   reactStrictMode: true,
   redirects: async () => [
     {

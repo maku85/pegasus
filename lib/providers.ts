@@ -16,9 +16,19 @@ const APPLE = { id: 350, name: "Apple TV", logo: "/v9SnyvYt0U3KGgBH3Sbh3z4yODe.p
 const HBO = { id: 1899, name: "HBO Max", logo: "/skypuy7SXuugIQeYg0IglmzoKaS.png" };
 const PRIME_LOGO = "/gMZdpavHmxFNnLpMHwVxfqeux2g.png";
 
+// Plain objects, so the normal build can drop them
+export const DEMO_PROVIDERS: Provider[] = [
+  { id: 1, name: "Lumen", logo: "/demo-logo-1.svg" },
+  { id: 2, name: "Nove", logo: "/demo-logo-2.svg" },
+  { id: 3, name: "Orbita", logo: "/demo-logo-3.svg" },
+  { id: 4, name: "Sipario", logo: "/demo-logo-4.svg" },
+  { id: 5, name: "Marea", logo: "/demo-logo-5.svg" },
+  { id: 6, name: "Prisma", logo: "/demo-logo-6.svg" },
+];
+
 // shortcut: main subscriptions picked by hand, review when services change
 // (the full list is TMDB's /watch/providers/movie?watch_region=...)
-export const PROVIDERS: Record<Region, Provider[]> = {
+const REAL_PROVIDERS: Record<Region, Provider[]> = {
   IT: [
     NETFLIX,
     { id: 119, name: "Prime Video", logo: PRIME_LOGO },
@@ -40,6 +50,11 @@ export const PROVIDERS: Record<Region, Provider[]> = {
     { id: 386, name: "Peacock", logo: "/a1UIdq5BrkcAxnxcUhFsNbXnxeu.png" },
   ],
 };
+
+export const PROVIDERS: Record<Region, Provider[]> =
+  process.env.DEMO === "1"
+    ? { IT: DEMO_PROVIDERS, US: DEMO_PROVIDERS }
+    : REAL_PROVIDERS;
 
 // One spelling per selection (known ids, in list order): it is a cache key
 export function parseProviders(value: string | null, region: Region) {

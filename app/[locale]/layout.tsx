@@ -54,6 +54,7 @@ export default async function RootLayout({
   }
 
   const messages = await getMessages();
+  const tDemo = await getTranslations({ locale, namespace: "Demo" });
 
   return (
     <html lang={locale}>
@@ -75,6 +76,14 @@ export default async function RootLayout({
           {/* Full height, so the footer never jumps while a page loads */}
           <main className="flex-1 min-h-screen pt-24">{children}</main>
           <Footer />
+          {process.env.DEMO === "1" && (
+            <aside
+              aria-label={tDemo("badge")}
+              className="fixed bottom-4 left-4 z-40 px-3 py-1.5 rounded-full bg-black/90 border border-yellow-500/60 text-xs font-bold text-yellow-300"
+            >
+              {tDemo("badge")}
+            </aside>
+          )}
         </NextIntlClientProvider>
       </body>
     </html>

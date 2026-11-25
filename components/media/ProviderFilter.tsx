@@ -29,14 +29,16 @@ export default function ProviderFilter({
           <span aria-hidden="true" className="font-medium">
             {t("title")}
           </span>
-          <a
-            href="https://www.justwatch.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="py-1 text-xs underline underline-offset-2 hover:text-white"
-          >
-            {t("justWatch")}
-          </a>
+          {process.env.DEMO !== "1" && (
+            <a
+              href="https://www.justwatch.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-1 text-xs underline underline-offset-2 hover:text-white"
+            >
+              {t("justWatch")}
+            </a>
+          )}
         </p>
         {selected.length > 0 && (
           <button

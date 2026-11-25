@@ -25,9 +25,9 @@ export default function WatchlistPage() {
             <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6">
               <FaFilm className="text-4xl text-gray-500" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {t("emptyTitle")}
-            </h2>
+            </h1>
             <p className="text-gray-400 text-lg max-w-md mb-8">
               {t("emptyDescription")}
             </p>

@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome lint",
-    "test": "node --test lib/*.test.mjs"
+    "test": "node --test lib/*.test.mjs",
+    "test:demo": "DEMO=1 next build && node scripts/demo-smoke.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.43.0",

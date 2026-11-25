@@ -15,6 +15,13 @@ export async function tmdbFetch(
   locale: string = "it",
   revalidate: number = DAY
 ) {
+  if (process.env.DEMO === "1") {
+    const { demoResponse } = await import("./demo");
+    const data: any = demoResponse(path, locale);
+    if (data === null) notFound();
+    return data;
+  }
+
   const tmdbLocale = locale === "en" ? "en-US" : "it-IT";
 
   // Rimuovi language=... se presente nel path per evitare duplicati
@@ -53,6 +60,7 @@ export function tmdbImage(
   placeholder: Placeholder = "poster"
 ) {
   if (!path) return `/images/placeholders/${placeholder}.svg`;
+  if (path.startsWith("/demo-")) return `/demo-image${path}`;
   return `https://image.tmdb.org/t/p/${size}${path}`;
 }
 

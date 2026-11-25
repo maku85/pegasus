@@ -14,6 +14,11 @@ export async function getNews(
   query: string,
   locale: string = "it"
 ): Promise<NewsItem[]> {
+  if (process.env.DEMO === "1") {
+    const { demoNews } = await import("./demo");
+    return demoNews(locale);
+  }
+
   try {
     const hl = locale === "en" ? "en-US" : "it";
     const gl = locale === "en" ? "US" : "IT";

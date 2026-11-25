@@ -237,5 +237,8 @@
         "title": "Streaming in the United States",
         "clear": "Clear filter",
         "justWatch": "Data provided by JustWatch"
+    },
+    "Demo": {
+        "badge": "Demo: invented contents"
     }
 }
