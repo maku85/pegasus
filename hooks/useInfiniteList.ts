@@ -3,6 +3,7 @@
 import { type ComponentProps, useEffect, useState } from "react";
 
 import type MovieCard from "@/components/media/MovieCard";
+import { getNavigation } from "@/lib/navigation";
 
 type Item = ComponentProps<typeof MovieCard>["movie"] & {
   media_type?: "movie" | "tv" | "person";
@@ -22,10 +23,7 @@ const MAX_AUTO_LOADS = 5;
 const savedLists = new Map<string, SavedList>();
 
 // Identifies one visit in the history: going back finds the same entry
-const historyEntry = () =>
-  (
-    window as Window & { navigation?: { currentEntry?: { key: string } | null } }
-  ).navigation?.currentEntry?.key;
+const historyEntry = () => getNavigation()?.currentEntry?.key;
 
 // Browsers without the Navigation API: a recent popstate means back or forward
 let lastPopState = Number.NEGATIVE_INFINITY;

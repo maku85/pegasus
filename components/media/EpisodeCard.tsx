@@ -41,10 +41,12 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-1.5">
-                <FaStar className="text-yellow-500" />
-                <span>{episode.vote_average.toFixed(1)}</span>
-              </div>
+              {episode.vote_average > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <FaStar className="text-yellow-500" />
+                  <span>{episode.vote_average.toFixed(1)}</span>
+                </div>
+              )}
               <span className="px-2 py-0.5 rounded bg-white/10 text-xs font-mono">
                 {episode.runtime} min
               </span>

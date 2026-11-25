@@ -32,7 +32,8 @@ export default function MovieCard({
   const link = `/${media_type === "movie" ? "movies" : media_type}/${movie.id}`;
   const title = movie.title || movie.name || t("untitled");
   const date = (movie.release_date || movie.first_air_date)?.slice(0, 4);
-  const rating = movie.vote_average?.toFixed(1);
+  // TMDB uses 0 for titles nobody has voted yet
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : null;
 
   const { isInWatchlist, toggleWatchlist } = useWatchlist();
   const inList =

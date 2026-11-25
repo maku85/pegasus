@@ -2,6 +2,7 @@ import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
+import BackLink from "@/components/layout/BackLink";
 import ScrollRow from "@/components/media/ScrollRow";
 import NewsSection from "@/components/widgets/NewsSection";
 import { pageTitle } from "@/lib/metadata";
@@ -142,12 +143,12 @@ export default async function PersonPage({ params }: PersonPageProps) {
             </div>
 
             <div className="absolute top-0 left-0 p-6 z-50">
-              <Link
-                href="/movies"
+              <BackLink
+                fallback="/movies"
                 className="flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-black/50"
               >
                 <FaChevronLeft /> {t("back")}
-              </Link>
+              </BackLink>
             </div>
           </div>
 

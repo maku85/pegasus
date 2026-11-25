@@ -88,9 +88,11 @@ export default function HeroSlider({ items }: HeroSliderProps) {
           className="max-w-3xl"
         >
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 bg-black/60 border border-yellow-500/40 text-yellow-300 rounded-lg text-sm font-bold flex items-center gap-2">
-              <FaStar /> {currentItem.vote_average?.toFixed(1)}
-            </span>
+            {currentItem.vote_average > 0 && (
+              <span className="px-3 py-1 bg-black/60 border border-yellow-500/40 text-yellow-300 rounded-lg text-sm font-bold flex items-center gap-2">
+                <FaStar /> {currentItem.vote_average.toFixed(1)}
+              </span>
+            )}
             <span className="px-3 py-1 bg-black/60 border border-white/20 text-white rounded-lg text-sm font-medium">
               {isMovie ? t("movie") : t("tvSeries")}
             </span>
