@@ -55,6 +55,11 @@ try {
   for (const path of APIS) {
     const res = await fetch(BASE + path);
     const data = await res.json().catch(() => null);
+    // The CDN ignores the query: a cached answer would replace all the others
+    if (!path.startsWith("/api/random")) {
+      check(res.headers.get("netlify-cdn-cache-control") === "no-store", `${path}: cached by the CDN`);
+      check(!/public|s-maxage/.test(res.headers.get("cache-control") ?? ""), `${path}: publicly cached`);
+    }
     check(res.ok && (data?.results?.length || data?.genres?.length || data?.id), `${path}: no data`);
   }
   for (const image of images) {

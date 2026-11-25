@@ -1,3 +1,4 @@
+import { apiResponse } from "./apiResponse";
 import { type Category, discoverPath, type MediaType } from "./discover";
 import { parseGenre, parsePage } from "./params";
 import { parseProviders, regionOf } from "./providers";
@@ -27,11 +28,5 @@ export async function getMediaList(media: MediaType, params: URLSearchParams) {
   );
   // TMDB rejects pages above 500
   data.total_pages = Math.min(data.total_pages, 500);
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: {
-      "Cache-Control": "public, max-age=3600",
-      "Content-Type": "application/json",
-    },
-  });
+  return apiResponse(data, 3600);
 }

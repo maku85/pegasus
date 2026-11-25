@@ -1,3 +1,4 @@
+import { apiResponse } from "@/lib/apiResponse";
 import { normalizeQuery, parsePage, parseYear } from "@/lib/params";
 import { tmdbFetch } from "@/lib/tmdb";
 
@@ -10,7 +11,7 @@ export async function GET(req: Request) {
   const minRating = searchParams.get("minRating");
   const lang = searchParams.get("lang") || "it";
   if (!query) {
-    return new Response(JSON.stringify({ results: [], total_pages: 0 }), { status: 200 });
+    return apiResponse({ results: [], total_pages: 0 }, 600);
   }
 
   const page = parsePage(searchParams.get("page"));
@@ -39,15 +40,8 @@ export async function GET(req: Request) {
     });
   }
 
-  return new Response(JSON.stringify({
-      ...data,
-      results,
-      total_pages: Math.min(data.total_pages, 500),
-    }), {
-    status: 200,
-    headers: {
-      "Cache-Control": "public, max-age=600",
-      "Content-Type": "application/json",
-    },
-  });
+  return apiResponse(
+    { ...data, results, total_pages: Math.min(data.total_pages, 500) },
+    600
+  );
 }
