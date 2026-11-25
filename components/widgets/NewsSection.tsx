@@ -18,7 +18,7 @@ export default async function NewsSection({
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-        <span className="w-1 h-8 bg-red-500 rounded-full"></span>
+        <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>
         {t("title")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -31,7 +31,7 @@ export default async function NewsSection({
             className="group block bg-[#1a1a1a] rounded-2xl overflow-hidden transition-all duration-300 shadow hover:scale-[1.02] h-full flex flex-col"
           >
             <div className="p-6 flex-1 flex flex-col">
-              <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-red-500 transition-colors text-lg">
+              <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-yellow-500 transition-colors text-lg">
                 {item.title}
               </h3>
               {item.contentSnippet && (
@@ -39,7 +39,7 @@ export default async function NewsSection({
                   {item.contentSnippet}
                 </p>
               )}
-              <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+              <div className="text-xs text-gray-300 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
                 <span>
                   {new Date(item.pubDate).toLocaleDateString(locale, {
                     day: "numeric",
@@ -47,7 +47,7 @@ export default async function NewsSection({
                     year: "numeric",
                   })}
                 </span>
-                <span className="text-red-500 font-medium text-[10px] uppercase tracking-wider">
+                <span className="text-yellow-400 font-medium text-[10px] uppercase tracking-wider">
                   {item.source}
                 </span>
               </div>

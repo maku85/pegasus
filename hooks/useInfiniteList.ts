@@ -4,7 +4,43 @@ import { type ComponentProps, useEffect, useState } from "react";
 
 import type MovieCard from "@/components/media/MovieCard";
 
-type Item = ComponentProps<typeof MovieCard>["movie"];
+type Item = ComponentProps<typeof MovieCard>["movie"] & {
+  media_type?: "movie" | "tv" | "person";
+};
+
+interface SavedList {
+  items: Item[];
+  page: number;
+  hasMore: boolean;
+  scrollY: number;
+}
+
+// Filters can empty a whole page: try a few more before waiting for a scroll
+const MAX_AUTO_LOADS = 5;
+
+// Lists left by the user, to bring them back with the browser's back button
+const savedLists = new Map<string, SavedList>();
+
+// Identifies one visit in the history: going back finds the same entry
+const historyEntry = () =>
+  (
+    window as Window & { navigation?: { currentEntry?: { key: string } | null } }
+  ).navigation?.currentEntry?.key;
+
+// Browsers without the Navigation API: a recent popstate means back or forward
+let lastPopState = Number.NEGATIVE_INFINITY;
+if (typeof window !== "undefined") {
+  window.addEventListener(
+    "popstate",
+    () => {
+      lastPopState = performance.now();
+    },
+    true
+  );
+}
+const cameFromHistory = () => performance.now() - lastPopState < 3000;
+
+const itemKey = (item: Item) => `${item.media_type}-${item.id}`;
 
 // `url` must already have a query string: the page number is appended to it
 export function useInfiniteList(url: string) {
@@ -14,16 +50,28 @@ export function useInfiniteList(url: string) {
 
   useEffect(() => {
     // Local to this url, so a late response can never reach another list
+    const entry = historyEntry();
+    const href = window.location.href;
+    const savedKey = `${entry ?? ""} ${url}`;
+    const saved =
+      entry || cameFromHistory() ? savedLists.get(savedKey) : undefined;
     let ignore = false;
     let busy = false;
-    let page = 0;
-    let hasMore = true;
+    let autoLoads = 0;
+    let list = saved?.items ?? [];
+    let page = saved?.page ?? 0;
+    let hasMore = saved?.hasMore ?? true;
+    let scrollY = saved?.scrollY ?? 0;
+
+    const isNearBottom = () =>
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
 
     async function loadMore() {
       if (busy || !hasMore) return;
       busy = true;
       setLoading(true);
       setError(false);
+      let failed = false;
       try {
         const res = await fetch(`${url}&page=${page + 1}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -32,31 +80,55 @@ export function useInfiniteList(url: string) {
         page += 1;
         hasMore = page < data.total_pages;
         // TMDB can repeat an item on the next page when rankings shift
-        setItems((prev) => {
-          const seen = new Set(prev.map((item) => item.id));
-          return [...prev, ...data.results.filter(({ id }) => !seen.has(id))];
-        });
+        const seen = new Set(list.map(itemKey));
+        list = [...list, ...data.results.filter((i) => !seen.has(itemKey(i)))];
+        setItems(list);
       } catch (err) {
         if (ignore) return;
         console.error("Error loading list:", err);
         setError(true);
+        failed = true;
       }
       busy = false;
       setLoading(false);
+
+      if (!failed && hasMore && autoLoads < MAX_AUTO_LOADS) {
+        requestAnimationFrame(() => {
+          if (ignore || !isNearBottom()) return;
+          autoLoads += 1;
+          loadMore();
+        });
+      }
     }
 
     const handleScroll = () => {
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const threshold = document.body.offsetHeight - 500;
-      if (scrollPosition >= threshold) loadMore();
+      // Leaving the page scrolls to the top after the address has changed
+      if (window.location.href === href) scrollY = window.scrollY;
+      autoLoads = 0;
+      if (isNearBottom()) loadMore();
     };
 
-    setItems([]);
-    loadMore();
+    setItems(list);
+    if (saved) {
+      setLoading(false);
+      setError(false);
+      // Wait for the restored cards to be laid out
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          if (!ignore) window.scrollTo(0, saved.scrollY);
+        })
+      );
+    } else {
+      loadMore();
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       ignore = true;
       window.removeEventListener("scroll", handleScroll);
+      if (page > 0) {
+        savedLists.set(savedKey, { items: list, page, hasMore, scrollY });
+      }
     };
   }, [url]);
 

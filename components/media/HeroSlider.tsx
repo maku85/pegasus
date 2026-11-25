@@ -1,33 +1,39 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "@/i18n/routing";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import {
   FaStar,
   FaInfoCircle,
   FaChevronLeft,
   FaChevronRight,
+  FaPause,
+  FaPlay,
 } from "react-icons/fa";
 
+import { Link } from "@/i18n/routing";
 import { tmdbImage } from "@/lib/tmdb";
 
 interface HeroSliderProps {
   items: any[];
 }
 
-import { useTranslations } from "next-intl";
-
 export default function HeroSlider({ items }: HeroSliderProps) {
   const t = useTranslations("HeroSlider");
+  const reduceMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isInUse, setIsInUse] = useState(false);
+  const isPlaying = !isPaused && !reduceMotion;
 
   useEffect(() => {
+    if (!isPlaying || isInUse) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % items.length);
     }, 8000);
     return () => clearInterval(timer);
-  }, [items.length]);
+  }, [items.length, isPlaying, isInUse]);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
@@ -41,9 +47,18 @@ export default function HeroSlider({ items }: HeroSliderProps) {
 
   const currentItem = items[currentIndex];
   const isMovie = currentItem.media_type === "movie" || currentItem.title;
+  const controlClass =
+    "w-11 h-11 flex items-center justify-center bg-black/50 border border-white/20 text-white rounded-full hover:bg-white/20 transition-colors";
 
   return (
-    <div className="relative w-full h-[500px] md:h-[700px] rounded-3xl overflow-hidden mb-12 shadow-2xl group">
+    <section
+      aria-label={t("label")}
+      onMouseEnter={() => setIsInUse(true)}
+      onMouseLeave={() => setIsInUse(false)}
+      onFocus={() => setIsInUse(true)}
+      onBlur={() => setIsInUse(false)}
+      className="relative w-full h-[500px] md:h-[700px] rounded-3xl overflow-hidden mb-12 shadow-2xl"
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={currentItem.id}
@@ -55,7 +70,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
           style={{
             backgroundImage: `url(${tmdbImage(
               currentItem.backdrop_path,
-              "original"
+              "w1280"
             )})`,
           }}
         >
@@ -64,7 +79,7 @@ export default function HeroSlider({ items }: HeroSliderProps) {
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-16 z-10">
+      <div className="absolute inset-0 flex flex-col justify-end p-6 pb-20 md:p-16 z-10">
         <motion.div
           key={`content-${currentItem.id}`}
           initial={{ y: 20, opacity: 0 }}
@@ -73,13 +88,13 @@ export default function HeroSlider({ items }: HeroSliderProps) {
           className="max-w-3xl"
         >
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 rounded-lg text-sm font-bold backdrop-blur-md flex items-center gap-2">
+            <span className="px-3 py-1 bg-black/60 border border-yellow-500/40 text-yellow-300 rounded-lg text-sm font-bold flex items-center gap-2">
               <FaStar /> {currentItem.vote_average?.toFixed(1)}
             </span>
-            <span className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-md">
+            <span className="px-3 py-1 bg-black/60 border border-white/20 text-white rounded-lg text-sm font-medium">
               {isMovie ? t("movie") : t("tvSeries")}
             </span>
-            <span className="px-3 py-1 bg-white/10 border border-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-md">
+            <span className="px-3 py-1 bg-black/60 border border-white/20 text-white rounded-lg text-sm font-medium">
               {(currentItem.release_date || currentItem.first_air_date)?.slice(
                 0,
                 4
@@ -87,9 +102,9 @@ export default function HeroSlider({ items }: HeroSliderProps) {
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-6xl font-black text-white mb-4 drop-shadow-lg leading-tight">
+          <h2 className="text-3xl md:text-6xl font-black text-white mb-4 drop-shadow-lg leading-tight">
             {currentItem.title || currentItem.name}
-          </h1>
+          </h2>
 
           <p className="text-base md:text-lg text-gray-200 mb-8 line-clamp-3 max-w-2xl drop-shadow-md">
             {currentItem.overview}
@@ -107,38 +122,37 @@ export default function HeroSlider({ items }: HeroSliderProps) {
         </motion.div>
       </div>
 
-      <button
-        type="button"
-        onClick={prevSlide}
-        aria-label="Previous slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/30 border border-white/10 text-white rounded-full hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-20"
-      >
-        <FaChevronLeft size={24} />
-      </button>
-      <button
-        type="button"
-        onClick={nextSlide}
-        aria-label="Next slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/30 border border-white/10 text-white rounded-full hover:bg-white/20 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-20"
-      >
-        <FaChevronRight size={24} />
-      </button>
-
-      <div className="absolute bottom-0 md:bottom-6 right-8 flex gap-2 z-20">
-        {items.map((item, idx) => (
+      <div className="absolute bottom-4 md:bottom-6 left-6 right-6 md:left-auto md:right-8 flex items-center gap-2 z-20">
+        <button
+          type="button"
+          onClick={prevSlide}
+          aria-label={t("previous")}
+          className={controlClass}
+        >
+          <FaChevronLeft />
+        </button>
+        <span className="min-w-14 text-center text-sm font-bold text-white tabular-nums">
+          {currentIndex + 1} / {items.length}
+        </span>
+        <button
+          type="button"
+          onClick={nextSlide}
+          aria-label={t("next")}
+          className={controlClass}
+        >
+          <FaChevronRight />
+        </button>
+        {!reduceMotion && (
           <button
             type="button"
-            key={`${item.media_type}-${item.id}`}
-            onClick={() => setCurrentIndex(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              idx === currentIndex
-                ? "w-8 bg-white"
-                : "w-2 bg-white/40 hover:bg-white/60"
-            }`}
-          />
-        ))}
+            onClick={() => setIsPaused(!isPaused)}
+            aria-label={isPaused ? t("play") : t("pause")}
+            className={controlClass}
+          >
+            {isPaused ? <FaPlay /> : <FaPause />}
+          </button>
+        )}
       </div>
-    </div>
+    </section>
   );
 }

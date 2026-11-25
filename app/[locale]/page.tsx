@@ -13,6 +13,7 @@ export default async function Home({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
+  const tBrand = await getTranslations({ locale, namespace: "Brand" });
 
   const [popular, trending, popularTV, upcoming] = await Promise.all([
     tmdbFetch("/movie/popular?page=1", locale),
@@ -23,10 +24,11 @@ export default async function Home({
 
   return (
     <div>
+      <h1 className="sr-only">Row Seven – {tBrand("payoff")}</h1>
       <HeroSlider items={trending.results.filter((i: any) => i.media_type !== "person").slice(0, 10)} />
 
       <div className="container mx-auto px-4 py-12 space-y-20">
-        <Carousel title={t("popularMovies")} accentColor="yellow">
+        <Carousel title={t("popularMovies")}>
           {popular.results.map((m: any) => (
             <MovieCard
               key={m.id}
@@ -37,7 +39,7 @@ export default async function Home({
           ))}
         </Carousel>
 
-        <Carousel title={t("popularTV")} accentColor="purple">
+        <Carousel title={t("popularTV")}>
           {popularTV.results.map((tv: any) => (
             <MovieCard
               key={tv.id}
@@ -50,7 +52,7 @@ export default async function Home({
 
         <HomeNewsWidget locale={locale} />
 
-        <Carousel title={t("upcoming")} accentColor="blue">
+        <Carousel title={t("upcoming")}>
           {upcoming.results.map((m: any) => (
             <MovieCard
               key={m.id}

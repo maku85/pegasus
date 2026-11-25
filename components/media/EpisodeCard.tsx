@@ -35,7 +35,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
               {episode.air_date && (
                 <div className="flex items-center gap-1.5">
-                  <FaCalendar className="text-gray-500" />
+                  <FaCalendar className="text-gray-400" />
                   <span>
                     {new Date(episode.air_date).toLocaleDateString(locale)}
                   </span>

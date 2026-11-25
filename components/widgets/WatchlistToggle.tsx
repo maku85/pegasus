@@ -17,7 +17,7 @@ export default function WatchlistToggle(item: WatchlistItem) {
       onClick={() => toggleWatchlist(item)}
       className={`flex items-center gap-3 px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg ${
         inList
-          ? "bg-green-600 hover:bg-green-500 text-white shadow-green-600/20"
+          ? "bg-green-700 hover:bg-green-600 text-white shadow-green-600/20"
           : "bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10"
       }`}
     >

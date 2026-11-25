@@ -25,7 +25,7 @@ export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-        <span className="w-1 h-8 bg-green-500 rounded-full"></span>
+        <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>
         {t("title")}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -39,7 +39,7 @@ export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
                 <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                   {review.author_details?.avatar_path ? (
                     <img
-                      src={`https://image.tmdb.org/t/p/w200${review.author_details.avatar_path}`}
+                      src={`https://image.tmdb.org/t/p/w185${review.author_details.avatar_path}`}
                       alt={review.author}
                       className="w-full h-full object-cover"
                     />

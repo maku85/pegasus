@@ -28,7 +28,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
   return (
     <section>
       <h2 className="text-2xl md:text-3xl font-bold mb-6 flex items-center gap-3">
-        <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+        <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>
         {t("title")}
       </h2>
 
@@ -43,7 +43,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
                 <div key={provider.provider_id} className="group relative">
                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src={tmdbImage(provider.logo_path, "original")}
+                      src={tmdbImage(provider.logo_path, "w92")}
                       alt={provider.provider_name}
                       className="w-full h-full object-cover"
                       title={provider.provider_name}
@@ -68,7 +68,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
                 <div key={provider.provider_id} className="group relative">
                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src={tmdbImage(provider.logo_path, "original")}
+                      src={tmdbImage(provider.logo_path, "w92")}
                       alt={provider.provider_name}
                       className="w-full h-full object-cover"
                       title={provider.provider_name}
@@ -93,7 +93,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
                 <div key={provider.provider_id} className="group relative">
                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src={tmdbImage(provider.logo_path, "original")}
+                      src={tmdbImage(provider.logo_path, "w92")}
                       alt={provider.provider_name}
                       className="w-full h-full object-cover"
                       title={provider.provider_name}
@@ -114,7 +114,7 @@ export default function WatchProviders({ providers }: WatchProvidersProps) {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-gray-500 hover:text-white transition-colors"
+              className="text-xs text-gray-300 hover:text-white transition-colors"
             >
               {t("justWatch")}
             </a>

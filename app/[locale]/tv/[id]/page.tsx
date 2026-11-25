@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 import MovieCard from "@/components/media/MovieCard";
 import ReviewsSection from "@/components/media/ReviewsSection";
+import ScrollRow from "@/components/media/ScrollRow";
 import TrailerButton from "@/components/media/TrailerButton";
 import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
@@ -59,7 +60,7 @@ export default async function TVPage({ params }: TVPageProps) {
       <div
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
-          backgroundImage: `url(${tmdbImage(tv.backdrop_path, "original")})`,
+          backgroundImage: `url(${tmdbImage(tv.backdrop_path, "w300")})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -70,21 +71,22 @@ export default async function TVPage({ params }: TVPageProps) {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${tmdbImage(tv.backdrop_path, "original")})`,
+            backgroundImage: `url(${tmdbImage(tv.backdrop_path, "w1280")})`,
           }}
         >
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/20 to-transparent" />
         </div>
 
-        <div className="md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
+        <div className="relative md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
             <div className="hidden md:flex flex-col items-center gap-4">
               <div className="md:block w-64 lg:w-80 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group">
                 <img
                   src={tmdbImage(tv.poster_path, "w780")}
                   alt={tv.name}
-                  className="w-full h-auto object-cover"
+                  className="w-full aspect-[2/3] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
@@ -94,14 +96,21 @@ export default async function TVPage({ params }: TVPageProps) {
               />
             </div>
 
-            <div className="flex-1 space-y-6">
-              <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
-                {tv.name}
-              </h1>
+            <div className="flex-1 w-full py-8 flex flex-col gap-6">
+              <div className="flex items-end gap-4">
+                <img
+                  src={tmdbImage(tv.poster_path, "w342")}
+                  alt=""
+                  className="md:hidden w-24 shrink-0 aspect-[2/3] object-cover rounded-xl border-2 border-white/10"
+                />
+                <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
+                  {tv.name}
+                </h1>
+              </div>
 
               <div className="flex flex-wrap items-center gap-4 text-sm md:text-base font-medium text-gray-200">
                 {tv.first_air_date && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaCalendar className="text-yellow-400" />
                     <span>{tv.first_air_date.slice(0, 4)}</span>
                   </div>
@@ -110,13 +119,13 @@ export default async function TVPage({ params }: TVPageProps) {
                   <CertificationBadge certification={certification} />
                 )}
                 {tv.vote_average > 0 && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
                     <span>{tv.vote_average.toFixed(1)}</span>
                   </div>
                 )}
                 {tv.number_of_seasons > 0 && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
                     <span>
                       {tv.number_of_seasons} {t("seasons")}
@@ -129,7 +138,7 @@ export default async function TVPage({ params }: TVPageProps) {
                 {tv.genres?.map((g: any) => (
                   <span
                     key={g.id}
-                    className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
+                    className="px-4 py-1.5 rounded-full bg-black/60 border border-white/20 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
                   >
                     {g.name}
                   </span>
@@ -139,14 +148,14 @@ export default async function TVPage({ params }: TVPageProps) {
                     prefetch={false}
                     key={k.id}
                     href={`/keyword/${k.id}`}
-                    className="px-4 py-1.5 rounded-full bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 text-blue-400 text-xs md:text-sm hover:bg-blue-500/20 transition-all"
+                    className="px-4 py-1.5 rounded-full bg-black/60 border border-yellow-500/40 text-yellow-300 text-xs md:text-sm hover:bg-yellow-500/20 transition-all"
                   >
                     #{k.name}
                   </Link>
                 ))}
               </div>
 
-              <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
+              <div className="order-last md:order-none bg-black/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
                 <p className="text-lg md:text-xl text-gray-200 leading-relaxed line-clamp-4 md:line-clamp-none">
                   {tv.overview}
                 </p>
@@ -163,6 +172,13 @@ export default async function TVPage({ params }: TVPageProps) {
                   release_date={tv.first_air_date}
                 />
               </div>
+
+              <div className="md:hidden">
+                <SocialLinks
+                  external_ids={tv.external_ids}
+                  homepage={tv.homepage}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -175,7 +191,7 @@ export default async function TVPage({ params }: TVPageProps) {
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("mainCast")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <ScrollRow label={t("mainCast")}>
               {cast.map((person: any) => (
                 <Link
                   prefetch={false}
@@ -203,17 +219,17 @@ export default async function TVPage({ params }: TVPageProps) {
                   </p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
         {tv.seasons && tv.seasons.length > 0 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-8 bg-green-500 rounded-full shadow-[0_0_15px_rgba(34,197,94,0.5)]"></span>
+              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("seasons")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <ScrollRow label={t("seasons")}>
               {tv.seasons.map((season: any) => (
                 <Link
                   prefetch={false}
@@ -221,7 +237,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   href={`/tv/${tv.id}/season/${season.season_number}`}
                   className="flex-shrink-0 w-40 md:w-48 group"
                 >
-                  <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden mb-4 bg-gray-800 relative flex items-center justify-center shadow-lg border border-white/5 group-hover:border-green-500/50 transition-all duration-300">
+                  <div className="w-full aspect-[2/3] rounded-2xl overflow-hidden mb-4 bg-gray-800 relative flex items-center justify-center shadow-lg border border-white/5 group-hover:border-yellow-500/50 transition-all duration-300">
                     {season.poster_path ? (
                       <img
                         src={tmdbImage(season.poster_path, "w300")}
@@ -229,8 +245,8 @@ export default async function TVPage({ params }: TVPageProps) {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-gray-500">
-                        <span className="text-4xl font-bold text-gray-700 mb-2">
+                      <div className="flex flex-col items-center justify-center text-gray-400">
+                        <span className="text-4xl font-bold text-gray-400 mb-2">
                           {season.season_number}
                         </span>
                         <span className="text-xs uppercase tracking-widest">
@@ -240,7 +256,7 @@ export default async function TVPage({ params }: TVPageProps) {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
-                  <h3 className="font-bold text-white truncate group-hover:text-green-400 transition-colors text-lg">
+                  <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
                     {season.name}
                   </h3>
                   <p className="text-sm text-gray-400 truncate">
@@ -248,7 +264,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   </p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
@@ -258,7 +274,7 @@ export default async function TVPage({ params }: TVPageProps) {
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("creators")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <ScrollRow label={t("creators")}>
               {creators.map((person: any) => (
                 <Link
                   prefetch={false}
@@ -284,7 +300,7 @@ export default async function TVPage({ params }: TVPageProps) {
                   <p className="text-sm text-gray-400 truncate">{t("creator")}</p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 

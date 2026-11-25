@@ -45,7 +45,7 @@ export default function MovieCard({
           <div className="relative w-full aspect-[2/3] rounded-2xl shadow overflow-hidden flex flex-col justify-end group-hover:scale-[1.02] transition-transform bg-gray-800">
             <Image
               src={tmdbImage(movie.poster_path ?? movie.profile_path ?? null, "w500")}
-              alt={title}
+              alt=""
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -88,7 +88,7 @@ export default function MovieCard({
           aria-label={inList ? t("removeFromList") : t("addToList")}
           className={`absolute top-2 right-2 p-2 rounded-full text-white transition-colors z-10 ${
             inList
-              ? "bg-green-600 hover:bg-green-500"
+              ? "bg-green-700 hover:bg-green-600"
               : "bg-black/50 hover:bg-black/80"
           }`}
         >

@@ -11,7 +11,7 @@ export default function ErrorPage({ error }: { error: Error }) {
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 py-32 px-6 text-center text-white">
+    <div className="flex flex-col items-center justify-center gap-6 min-h-[70vh] px-6 text-center text-white">
       <h1 className="text-3xl font-bold">{t("title")}</h1>
       <button
         type="button"

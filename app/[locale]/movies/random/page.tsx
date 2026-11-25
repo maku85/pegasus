@@ -90,9 +90,9 @@ export default function RandomMoviePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#141414] flex flex-col items-center justify-center text-white p-4 relative overflow-hidden">
+    <div className="min-h-[70vh] bg-[#141414] flex flex-col items-center justify-center text-white p-4 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-yellow-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
@@ -148,9 +148,10 @@ export default function RandomMoviePage() {
               className="mt-4 bg-gray-900/90 backdrop-blur-md p-6 rounded-2xl border border-white/10"
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-lg">{t("filters")}</h3>
+                <h2 className="font-bold text-lg">{t("filters")}</h2>
                 <button
                   type="button"
+                  aria-label={t("closeFilters")}
                   onClick={() => setShowFilters(false)}
                   className="text-gray-400 hover:text-white"
                 >

@@ -68,7 +68,8 @@ export default async function RootLayout({
           />
           <div className="fixed inset-0 z-[-1] bg-black/70 backdrop-blur-[8px] pointer-events-none" />
           <Navbar />
-          <main className="flex-1 pt-24">{children}</main>
+          {/* Full height, so the footer never jumps while a page loads */}
+          <main className="flex-1 min-h-screen pt-24">{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>

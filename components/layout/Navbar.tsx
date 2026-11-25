@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   RiSearchLine,
   RiMenu4Line,
@@ -16,6 +16,19 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("Navbar");
   const tBrand = useTranslations("Brand");
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const menuVariants = {
     closed: {
@@ -71,9 +84,9 @@ export default function Navbar() {
               className="w-10 h-10 rounded-xl ring-1 ring-white/10 shadow-lg group-hover:scale-110 transition-transform duration-300"
             />
             <div>
-              <h1 className="text-2xl leading-none font-black tracking-tight text-white drop-shadow-md">
+              <p className="text-2xl leading-none font-black tracking-tight text-white drop-shadow-md">
                 Row<span className="text-yellow-400">Seven</span>
-              </h1>
+              </p>
               <p className="text-[11px] mt-1 text-gray-300">
                 {tBrand("payoff")}
               </p>
@@ -109,7 +122,8 @@ export default function Navbar() {
               type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="lg:hidden p-2 text-gray-200 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
-              aria-label="Menu"
+              aria-label={isOpen ? t("closeMenu") : t("openMenu")}
+              aria-expanded={isOpen}
             >
               {isOpen ? (
                 <RiCloseLine className="text-2xl" />

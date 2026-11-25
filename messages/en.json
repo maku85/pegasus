@@ -8,7 +8,10 @@
         "movies": "Movies",
         "tvSeries": "TV Series",
         "search": "Search",
-        "watchlist": "Watchlist"
+        "watchlist": "Watchlist",
+        "changeLanguage": "Change language",
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu"
     },
     "Footer": {
         "rights": "© {year} Row Seven. All rights reserved.",
@@ -41,7 +44,8 @@
         "movie": "Movie",
         "tvSeries": "TV Series",
         "movies": "Movies",
-        "tv": "TV"
+        "tv": "TV",
+        "loading": "Loading"
     },
     "NotFound": {
         "title": "Content not found",
@@ -55,7 +59,12 @@
     "HeroSlider": {
         "movie": "Movie",
         "tvSeries": "TV Series",
-        "moreInfo": "More Info"
+        "moreInfo": "More Info",
+        "label": "Featured",
+        "previous": "Previous title",
+        "next": "Next title",
+        "pause": "Pause",
+        "play": "Play"
     },
     "PersonPage": {
         "back": "Go Back",
@@ -68,7 +77,9 @@
         "gallery": "Gallery",
         "fullFilmography": "Full Filmography",
         "unknownRole": "Unknown Role",
-        "bornIn": "in"
+        "bornIn": "in",
+        "showAll": "Show {count} more titles",
+        "showLess": "Show less"
     },
     "MediaPage": {
         "seasons": "Seasons",
@@ -80,7 +91,8 @@
         "recommended": "Recommended for you",
         "partOfCollection": "Part of the collection",
         "viewCollection": "View Collection",
-        "creator": "Creator"
+        "creator": "Creator",
+        "director": "Director"
     },
     "SearchPage": {
         "title": "What do you want to <highlight>watch</highlight> today?",
@@ -97,9 +109,9 @@
         "resultsFor": "Results for",
         "noResults": "No results found for",
         "tryAgain": "Try searching for something else.",
-        "startTyping": "Start typing to search...",
         "yearExample": "E.g. 2023",
-        "error": "Could not load the content. Try again in a moment."
+        "error": "Could not load the content. Try again in a moment.",
+        "suggestions": "Trending this week"
     },
     "WatchlistPage": {
         "emptyTitle": "Your Watchlist is empty",
@@ -127,7 +139,8 @@
         "all": "All"
     },
     "TrailerButton": {
-        "watchTrailer": "Watch Trailer"
+        "watchTrailer": "Watch Trailer",
+        "close": "Close"
     },
     "WatchlistToggle": {
         "add": "Add to Watchlist",
@@ -190,5 +203,9 @@
         "import": "Import a list",
         "imported": "{count, plural, =0 {No new titles: you already had them all} one {# title added} other {# titles added}}",
         "invalid": "No valid titles in this file."
+    },
+    "ScrollRow": {
+        "back": "Scroll back",
+        "forward": "Scroll forward"
     }
 }

@@ -8,7 +8,10 @@
         "movies": "Film",
         "tvSeries": "Serie TV",
         "search": "Cerca",
-        "watchlist": "Da vedere"
+        "watchlist": "Watchlist",
+        "changeLanguage": "Cambia lingua",
+        "openMenu": "Apri il menu",
+        "closeMenu": "Chiudi il menu"
     },
     "Footer": {
         "rights": "© {year} Row Seven. Tutti i diritti riservati.",
@@ -41,7 +44,8 @@
         "movie": "Film",
         "tvSeries": "Serie TV",
         "movies": "Film",
-        "tv": "TV"
+        "tv": "TV",
+        "loading": "Caricamento in corso"
     },
     "NotFound": {
         "title": "Contenuto non trovato",
@@ -55,7 +59,12 @@
     "HeroSlider": {
         "movie": "Film",
         "tvSeries": "Serie TV",
-        "moreInfo": "Altre info"
+        "moreInfo": "Altre info",
+        "label": "In evidenza",
+        "previous": "Titolo precedente",
+        "next": "Titolo successivo",
+        "pause": "Metti in pausa",
+        "play": "Riprendi"
     },
     "PersonPage": {
         "back": "Torna indietro",
@@ -68,7 +77,24 @@
         "gallery": "Galleria",
         "fullFilmography": "Filmografia Completa",
         "unknownRole": "Ruolo sconosciuto",
-        "bornIn": "a"
+        "bornIn": "a",
+        "showAll": "Mostra altri {count} titoli",
+        "showLess": "Mostra meno",
+        "departments": {
+            "Acting": "Recitazione",
+            "Directing": "Regia",
+            "Writing": "Sceneggiatura",
+            "Production": "Produzione",
+            "Sound": "Suono",
+            "Camera": "Fotografia",
+            "Editing": "Montaggio",
+            "Art": "Scenografia",
+            "Costume & Make-Up": "Costumi e trucco",
+            "Visual Effects": "Effetti visivi",
+            "Crew": "Troupe",
+            "Lighting": "Luci",
+            "Creator": "Creazione"
+        }
     },
     "MediaPage": {
         "seasons": "Stagioni",
@@ -80,7 +106,8 @@
         "recommended": "Raccomandati per te",
         "partOfCollection": "Parte della saga",
         "viewCollection": "Visualizza Collezione",
-        "creator": "Creatore"
+        "creator": "Creatore",
+        "director": "Regia"
     },
     "SearchPage": {
         "title": "Cosa vuoi <highlight>guardare</highlight> oggi?",
@@ -97,9 +124,9 @@
         "resultsFor": "Risultati per",
         "noResults": "Nessun risultato trovato per",
         "tryAgain": "Prova a cercare qualcos'altro.",
-        "startTyping": "Inizia a digitare per cercare...",
         "yearExample": "Es. 2023",
-        "error": "Impossibile caricare i contenuti. Riprova tra poco."
+        "error": "Impossibile caricare i contenuti. Riprova tra poco.",
+        "suggestions": "Di tendenza questa settimana"
     },
     "WatchlistPage": {
         "emptyTitle": "La tua Watchlist è vuota",
@@ -127,7 +154,8 @@
         "all": "Tutti"
     },
     "TrailerButton": {
-        "watchTrailer": "Guarda Trailer"
+        "watchTrailer": "Guarda Trailer",
+        "close": "Chiudi"
     },
     "WatchlistToggle": {
         "add": "Aggiungi alla Watchlist",
@@ -190,5 +218,9 @@
         "import": "Importa una lista",
         "imported": "{count, plural, =0 {Nessun titolo nuovo: li avevi già tutti} one {Aggiunto # titolo} other {Aggiunti # titoli}}",
         "invalid": "Nessun titolo valido in questo file."
+    },
+    "ScrollRow": {
+        "back": "Scorri indietro",
+        "forward": "Scorri avanti"
     }
 }

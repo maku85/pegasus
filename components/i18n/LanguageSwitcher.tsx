@@ -1,23 +1,45 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocale } from "next-intl";
-import { useState, useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { RiGlobalLine, RiArrowDownSLine } from "react-icons/ri";
 
 import { usePathname, useRouter } from "@/i18n/routing";
 
 export default function LanguageSwitcher() {
+  const t = useTranslations("Navbar");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const closeOnEscape = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setIsOpen(false);
+      rootRef.current?.querySelector("button")?.focus();
+    };
+    const closeOutside = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setIsOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOutside);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOutside);
+    };
+  }, [isOpen]);
 
   const onSelectChange = (nextLocale: string) => {
     setIsOpen(false);
     startTransition(() => {
-      router.replace(pathname, { locale: nextLocale });
+      router.replace(`${pathname}${window.location.search}`, {
+        locale: nextLocale,
+      });
     });
   };
 
@@ -27,12 +49,13 @@ export default function LanguageSwitcher() {
   ];
 
   return (
-    <div className="relative">
+    <div className="relative" ref={rootRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-bold text-gray-200 hover:bg-white/10 hover:text-white transition-all duration-300"
-        aria-label="Change language"
+        aria-label={t("changeLanguage")}
+        aria-expanded={isOpen}
       >
         <RiGlobalLine className="text-lg" />
         <span className="uppercase">{locale}</span>
@@ -55,6 +78,7 @@ export default function LanguageSwitcher() {
               <button
                 type="button"
                 key={lang.code}
+                lang={lang.code}
                 onClick={() => onSelectChange(lang.code)}
                 disabled={isPending}
                 className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors hover:bg-white/10 ${

@@ -7,6 +7,8 @@ import { Suspense, useEffect, useState } from "react";
 
 import MovieCard from "@/components/media/MovieCard";
 import MovieFilters from "@/components/media/MovieFilters";
+import LoadingStatus from "@/components/skeletons/LoadingStatus";
+import MovieCardSkeleton from "@/components/skeletons/MovieCardSkeleton";
 import { useInfiniteList } from "@/hooks/useInfiniteList";
 
 type Category = "popular" | "trending" | "top_rated";
@@ -26,13 +28,16 @@ function MoviesListContent() {
   const { items, loading, error } = useInfiniteList(
     `/api/movie-list?lang=${locale}&type=${filter}&genre=${encodeURIComponent(genre)}`
   );
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const [genres, setGenres] = useState<Genre[] | null>(null);
 
   useEffect(() => {
     fetch(`/api/genres?lang=${locale}`)
       .then((res) => res.json())
       .then((data) => setGenres(data.genres || []))
-      .catch((err) => console.error("Error loading genres:", err));
+      .catch((err) => {
+        console.error("Error loading genres:", err);
+        setGenres([]);
+      });
   }, [locale]);
 
   const handleCategoryChange = (newCategory: Category) => {
@@ -89,13 +94,12 @@ function MoviesListContent() {
         ))}
 
         {loading &&
-          [...Array(6).keys()].map((i) => (
-            <div
-              key={i}
-              className="min-w-[150px] h-[300px] bg-gray-800/50 animate-pulse rounded-2xl"
-            ></div>
+          [...Array(items.length > 0 ? 5 : 20).keys()].map((i) => (
+            <MovieCardSkeleton key={i} />
           ))}
       </motion.div>
+
+      {loading && <LoadingStatus />}
 
       {error && (
         <p role="alert" className="text-center text-red-400 py-10">

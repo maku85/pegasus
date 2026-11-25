@@ -1,39 +1,21 @@
-import MovieCardSkeleton from "@/components/media/MovieCardSkeleton";
+import CarouselSkeleton from "@/components/skeletons/CarouselSkeleton";
+import LoadingStatus from "@/components/skeletons/LoadingStatus";
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-[#141414] text-white">
-      <div className="w-full h-[50vh] md:h-[70vh] bg-gray-800 animate-pulse relative">
-        <div className="absolute bottom-0 left-0 p-8 w-full">
-          <div className="h-8 md:h-12 w-2/3 bg-gray-700 rounded mb-4"></div>
-          <div className="h-4 md:h-6 w-1/2 bg-gray-700 rounded mb-2"></div>
-          <div className="h-4 md:h-6 w-1/3 bg-gray-700 rounded"></div>
+    <LoadingStatus>
+      <div className="w-full h-[500px] md:h-[700px] rounded-3xl mb-12 bg-white/5 flex flex-col justify-end p-6 pb-20 md:p-16">
+        <div className="max-w-3xl">
+          <div className="h-8 w-56 mb-4 rounded-lg bg-white/15" />
+          <div className="h-10 md:h-[75px] w-4/5 mb-4 rounded bg-white/15" />
+          <div className="h-[72px] md:h-[84px] max-w-2xl mb-8 rounded bg-white/15" />
+          <div className="h-12 w-40 rounded-xl bg-white/15" />
         </div>
       </div>
-
       <div className="container mx-auto px-4 py-12 space-y-20">
-        <div className="space-y-4">
-          <div className="h-8 w-48 bg-gray-800 rounded animate-pulse"></div>
-          <div className="flex gap-4 overflow-hidden">
-            {[...Array(6).keys()].map((i) => (
-              <div key={i} className="min-w-[160px] md:min-w-[200px]">
-                <MovieCardSkeleton />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="h-8 w-48 bg-gray-800 rounded animate-pulse"></div>
-          <div className="flex gap-4 overflow-hidden">
-            {[...Array(6).keys()].map((i) => (
-              <div key={i} className="min-w-[160px] md:min-w-[200px]">
-                <MovieCardSkeleton />
-              </div>
-            ))}
-          </div>
-        </div>
+        <CarouselSkeleton />
+        <CarouselSkeleton />
       </div>
-    </div>
+    </LoadingStatus>
   );
 }

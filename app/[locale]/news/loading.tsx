@@ -1,30 +1,31 @@
-import NewsCardSkeleton from "@/components/widgets/NewsCardSkeleton";
+import LoadingStatus from "@/components/skeletons/LoadingStatus";
+import NewsCardSkeleton from "@/components/skeletons/NewsCardSkeleton";
 
 export default function Loading() {
   return (
-    <div className="text-white pt-8 pb-20 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto space-y-16">
-        <header className="text-center mb-16 animate-pulse">
-          <div className="h-10 md:h-16 bg-gray-800 rounded w-3/4 md:w-1/2 mx-auto mb-4"></div>
-          <div className="h-6 bg-gray-800 rounded w-full md:w-2/3 mx-auto"></div>
-        </header>
-
-        {[1, 2, 3].map((section) => (
-          <section key={section}>
-            <div className="flex items-center gap-4 mb-8 animate-pulse">
-              <div className="h-8 w-48 bg-gray-800 rounded"></div>
-              <div className="h-px bg-white/10 flex-1"></div>
+    <LoadingStatus>
+      <div className="pt-8 pb-20 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto space-y-16">
+          <div className="mb-16 flex flex-col items-center">
+            <div className="h-20 md:h-[60px] w-4/5 md:w-1/2 mb-4 rounded bg-white/15" />
+            <div className="h-[84px] md:h-14 w-full max-w-2xl rounded bg-white/15" />
+          </div>
+          {[...Array(3).keys()].map((section) => (
+            <div key={section}>
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-9 w-40 rounded bg-white/15" />
+                <div className="h-px bg-white/15 flex-1" />
+              </div>
+              <div className="h-8 md:h-9 w-48 mb-6 rounded bg-white/15" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6).keys()].map((item) => (
+                  <NewsCardSkeleton key={item} />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="h-[250px]">
-                  <NewsCardSkeleton />
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </LoadingStatus>
   );
 }

@@ -21,7 +21,7 @@ export default async function HomeNewsWidget({
     <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3 text-white">
-          <span className="w-1 h-8 bg-red-500 rounded-full"></span>
+          <span className="w-1 h-8 bg-yellow-500 rounded-full"></span>
           {tWidget("title")}
         </h2>
         <Link
@@ -42,7 +42,7 @@ export default async function HomeNewsWidget({
             className="group block bg-[#1a1a1a] rounded-2xl overflow-hidden transition-all duration-300 shadow hover:scale-[1.02] h-full flex flex-col"
           >
             <div className="p-6 flex-1 flex flex-col">
-              <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-red-500 transition-colors text-lg">
+              <h3 className="font-bold text-white mb-3 line-clamp-2 group-hover:text-yellow-500 transition-colors text-lg">
                 {item.title}
               </h3>
               {item.contentSnippet && (
@@ -50,7 +50,7 @@ export default async function HomeNewsWidget({
                   {item.contentSnippet}
                 </p>
               )}
-              <div className="text-xs text-gray-500 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+              <div className="text-xs text-gray-300 mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
                 <span>
                   {new Date(item.pubDate).toLocaleDateString(locale, {
                     day: "numeric",
@@ -58,7 +58,7 @@ export default async function HomeNewsWidget({
                     year: "numeric",
                   })}
                 </span>
-                <span className="text-red-500 font-medium text-[10px] uppercase tracking-wider">
+                <span className="text-yellow-400 font-medium text-[10px] uppercase tracking-wider">
                   {item.source}
                 </span>
               </div>

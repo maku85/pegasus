@@ -2,6 +2,7 @@ import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { FaChevronLeft } from "react-icons/fa";
 
+import ScrollRow from "@/components/media/ScrollRow";
 import NewsSection from "@/components/widgets/NewsSection";
 import { pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
@@ -18,6 +19,8 @@ function getPerson(id: string, locale: string) {
     7 * DAY
   );
 }
+
+const FILMOGRAPHY_PREVIEW = 15;
 
 export async function generateMetadata({ params }: PersonPageProps) {
   const { id, locale } = await params;
@@ -70,6 +73,46 @@ export default async function PersonPage({ params }: PersonPageProps) {
     return age;
   };
 
+  const renderCredit = (item: any) => (
+        <Link
+          prefetch={false}
+          href={
+            item.media_type === "tv"
+              ? `/tv/${item.id}`
+              : `/movies/${item.id}`
+          }
+          key={item.credit_id}
+          className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/10 transition-colors group border border-transparent hover:border-white/5"
+        >
+          <div className="w-14 h-14 flex-shrink-0 text-gray-400 font-mono text-sm flex items-center justify-center bg-white/5 rounded-lg border border-white/5 group-hover:border-yellow-500/30 group-hover:text-yellow-400 transition-colors">
+            {item.release_date
+              ? item.release_date.split("-")[0]
+              : item.first_air_date
+              ? item.first_air_date.split("-")[0]
+              : "-"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-lg truncate group-hover:text-yellow-400 transition-colors">
+              {item.title || item.name}
+            </h3>
+            <p className="text-sm text-gray-400 truncate">
+              {item.character ? (
+                <span className="text-gray-300">{item.character}</span>
+              ) : (
+                <span className="italic text-gray-300">
+                  {t("unknownRole")}
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="text-xs font-bold uppercase px-3 py-1.5 rounded-lg bg-white/10 text-gray-400 border border-white/5">
+            {item.media_type === "movie"
+              ? tCommon("movie")
+              : tCommon("tv")}
+          </div>
+        </Link>
+  );
+
   return (
     <div className="text-white pb-20 relative overflow-hidden">
       <div
@@ -77,7 +120,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
         style={{
           backgroundImage: `url(${
             person.profile_path
-              ? tmdbImage(person.profile_path, "original")
+              ? tmdbImage(person.profile_path, "w185")
               : ""
           })`,
           backgroundSize: "cover",
@@ -86,10 +129,10 @@ export default async function PersonPage({ params }: PersonPageProps) {
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/90 pointer-events-none" />
 
-      <div className="relative w-full z-10 pt-24 md:pt-32 px-6 md:px-12">
+      <div className="relative w-full z-10 pt-8 md:pt-16 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16 items-start">
           <div className="w-full md:w-80 lg:w-96 flex-shrink-0 relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-purple-500/20 blur-2xl rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-yellow-500/20 blur-2xl rounded-3xl transform group-hover:scale-105 transition-transform duration-500" />
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 aspect-[2/3]">
               <img
                 src={tmdbImage(person.profile_path, "h632")}
@@ -116,7 +159,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
             <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-300">
               {person.birthday && (
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                  <span className="block text-xs text-gray-500 uppercase font-bold mb-1">
+                  <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
                     {t("birth")}
                   </span>
                   <span className="font-medium text-white">
@@ -129,7 +172,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
               )}
               {person.deathday && (
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                  <span className="block text-xs text-gray-500 uppercase font-bold mb-1">
+                  <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
                     {t("death")}
                   </span>
                   <span className="font-medium text-white">
@@ -142,21 +185,23 @@ export default async function PersonPage({ params }: PersonPageProps) {
                 </div>
               )}
               <div className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-3 rounded-xl shadow-lg">
-                <span className="block text-xs text-gray-500 uppercase font-bold mb-1">
+                <span className="block text-xs text-gray-300 uppercase font-bold mb-1">
                   {t("knownFor")}
                 </span>
                 <span className="font-medium text-white">
-                  {person.known_for_department}
+                  {t.has(`departments.${person.known_for_department}`)
+                    ? t(`departments.${person.known_for_department}`)
+                    : person.known_for_department}
                 </span>
               </div>
             </div>
 
             {person.biography && (
               <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl text-left">
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <span className="w-1 h-6 bg-yellow-500 rounded-full"></span>
                   {t("biography")}
-                </h3>
+                </h2>
                 <p className="text-gray-200 leading-relaxed whitespace-pre-line max-w-3xl">
                   {person.biography || t("noBiography")}
                 </p>
@@ -173,7 +218,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("knownFor")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <ScrollRow label={t("knownFor")}>
               {knownFor.map((item: any) => (
                 <Link
                   prefetch={false}
@@ -205,21 +250,21 @@ export default async function PersonPage({ params }: PersonPageProps) {
                   </p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
         {images.profiles && images.profiles.length > 1 && (
           <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-8 bg-purple-500 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.5)]"></span>
+              <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("gallery")}
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0 hide-scrollbar">
+            <ScrollRow label={t("gallery")}>
               {images.profiles.slice(1, 15).map((img: any, index: number) => (
                 <div
                   key={img.file_path}
-                  className="flex-shrink-0 w-48 h-72 rounded-2xl overflow-hidden bg-gray-800 shadow-lg border border-white/5 hover:border-purple-500/50 transition-all duration-300"
+                  className="flex-shrink-0 w-48 h-72 rounded-2xl overflow-hidden bg-gray-800 shadow-lg border border-white/5 hover:border-yellow-500/50 transition-all duration-300"
                 >
                   <img
                     src={tmdbImage(img.file_path, "w500")}
@@ -228,7 +273,7 @@ export default async function PersonPage({ params }: PersonPageProps) {
                   />
                 </div>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
@@ -238,51 +283,30 @@ export default async function PersonPage({ params }: PersonPageProps) {
 
         <section className="bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-10 shadow-2xl">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
-            <span className="w-1.5 h-8 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></span>
+            <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
             {t("fullFilmography")}
           </h2>
           <div className="bg-black/20 rounded-2xl p-2 backdrop-blur-sm border border-white/5">
             <div className="space-y-1">
-              {filmography.map((item: any) => (
-                <Link
-                  prefetch={false}
-                  href={
-                    item.media_type === "tv"
-                      ? `/tv/${item.id}`
-                      : `/movies/${item.id}`
-                  }
-                  key={item.credit_id}
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/10 transition-colors group border border-transparent hover:border-white/5"
-                >
-                  <div className="w-14 h-14 flex-shrink-0 text-gray-400 font-mono text-sm flex items-center justify-center bg-white/5 rounded-lg border border-white/5 group-hover:border-blue-500/30 group-hover:text-blue-400 transition-colors">
-                    {item.release_date
-                      ? item.release_date.split("-")[0]
-                      : item.first_air_date
-                      ? item.first_air_date.split("-")[0]
-                      : "-"}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-lg truncate group-hover:text-blue-400 transition-colors">
-                      {item.title || item.name}
-                    </h3>
-                    <p className="text-sm text-gray-400 truncate">
-                      {item.character ? (
-                        <span className="text-gray-300">{item.character}</span>
-                      ) : (
-                        <span className="italic text-gray-500">
-                          {t("unknownRole")}
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                  <div className="text-xs font-bold uppercase px-3 py-1.5 rounded-lg bg-white/10 text-gray-400 border border-white/5">
-                    {item.media_type === "movie"
-                      ? tCommon("movie")
-                      : tCommon("tv")}
-                  </div>
-                </Link>
-              ))}
+              {filmography.slice(0, FILMOGRAPHY_PREVIEW).map(renderCredit)}
             </div>
+            {filmography.length > FILMOGRAPHY_PREVIEW && (
+              <details className="group">
+                <summary className="list-none cursor-pointer text-center p-4 font-bold text-yellow-400 hover:text-yellow-300">
+                  <span className="group-open:hidden">
+                    {t("showAll", {
+                      count: filmography.length - FILMOGRAPHY_PREVIEW,
+                    })}
+                  </span>
+                  <span className="hidden group-open:inline">
+                    {t("showLess")}
+                  </span>
+                </summary>
+                <div className="space-y-1">
+                  {filmography.slice(FILMOGRAPHY_PREVIEW).map(renderCredit)}
+                </div>
+              </details>
+            )}
           </div>
         </section>
       </div>

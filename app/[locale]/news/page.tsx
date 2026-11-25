@@ -24,7 +24,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
           <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight">
             {t.rich("title", {
               highlight: (chunks) => (
-                <span className="text-red-500">{chunks}</span>
+                <span className="text-yellow-400">{chunks}</span>
               ),
             })}
           </h1>

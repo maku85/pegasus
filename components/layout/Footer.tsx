@@ -14,18 +14,18 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">Row Seven</h3>
+            <h2 className="text-xl font-bold text-white mb-4">Row Seven</h2>
             <p className="text-gray-300 text-sm leading-relaxed">
               {tBrand("description")}
             </p>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-white mb-4">{t("quickLinks")}</h4>
-            <ul className="space-y-2 text-sm text-gray-300">
+            <h2 className="text-lg font-bold text-white mb-4">{t("quickLinks")}</h2>
+            <ul className="space-y-1 text-sm text-gray-300">
               <li>
                 <Link
                   href="/movies"
-                  className="hover:text-yellow-400 transition-colors"
+                  className="inline-block py-1 hover:text-yellow-400 transition-colors"
                 >
                   {tNav("movies")}
                 </Link>
@@ -33,7 +33,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/tv"
-                  className="hover:text-yellow-400 transition-colors"
+                  className="inline-block py-1 hover:text-yellow-400 transition-colors"
                 >
                   {tNav("tvSeries")}
                 </Link>
@@ -41,7 +41,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/news"
-                  className="hover:text-yellow-400 transition-colors"
+                  className="inline-block py-1 hover:text-yellow-400 transition-colors"
                 >
                   News
                 </Link>
@@ -49,7 +49,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/watchlist"
-                  className="hover:text-yellow-400 transition-colors"
+                  className="inline-block py-1 hover:text-yellow-400 transition-colors"
                 >
                   {tNav("watchlist")}
                 </Link>
@@ -57,7 +57,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-bold text-white mb-4">{t("legal")}</h4>
+            <h2 className="text-lg font-bold text-white mb-4">{t("legal")}</h2>
             <a
               href="https://www.themoviedb.org"
               target="_blank"

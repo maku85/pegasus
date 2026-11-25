@@ -1,6 +1,5 @@
-import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
-import { FaChevronLeft, FaHashtag } from "react-icons/fa";
+import { FaHashtag } from "react-icons/fa";
 
 import Carousel from "@/components/media/Carousel";
 import MovieCard from "@/components/media/MovieCard";
@@ -54,23 +53,23 @@ export default async function KeywordPage({ params }: KeywordPageProps) {
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-16 relative z-10">
         {movies.results.length > 0 && (
-          <Carousel title={t("movies")} accentColor="blue">
+          <Carousel title={t("movies")}>
             {movies.results.map((m: any) => (
-              <MovieCard key={m.id} movie={m} media_type="movie" />
+              <MovieCard key={m.id} movie={m} media_type="movie" className="min-w-[160px] md:min-w-[200px]" />
             ))}
           </Carousel>
         )}
 
         {tvShows.results.length > 0 && (
-          <Carousel title={t("tv")} accentColor="purple">
+          <Carousel title={t("tv")}>
             {tvShows.results.map((tv: any) => (
-              <MovieCard key={tv.id} movie={tv} media_type="tv" />
+              <MovieCard key={tv.id} movie={tv} media_type="tv" className="min-w-[160px] md:min-w-[200px]" />
             ))}
           </Carousel>
         )}
 
         {movies.results.length === 0 && tvShows.results.length === 0 && (
-          <div className="text-center py-20 text-gray-500">
+          <div className="text-center py-20 text-gray-400">
             {t("empty")}
           </div>
         )}

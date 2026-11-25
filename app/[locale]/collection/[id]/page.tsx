@@ -45,7 +45,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
         style={{
           backgroundImage: `url(${tmdbImage(
             collection.backdrop_path,
-            "original"
+            "w300"
           )})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -53,20 +53,20 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
 
-      <div className="relative w-full z-10 pt-32 pb-12 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
+      <div className="relative w-full z-10 pt-8 md:pt-16 pb-12 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">
           <div className="flex-shrink-0 w-48 md:w-64 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group mx-auto md:mx-0">
             <img
               src={tmdbImage(collection.poster_path, "w500")}
               alt={collection.name}
-              className="w-full h-auto object-cover"
+              className="w-full aspect-[2/3] object-cover"
             />
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
-            <h2 className="text-xl text-yellow-500 font-medium uppercase tracking-widest">
+            <p className="text-xl text-yellow-500 font-medium uppercase tracking-widest">
               {t("label")}
-            </h2>
+            </p>
             <h1 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl leading-tight">
               {collection.name}
             </h1>

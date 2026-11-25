@@ -5,6 +5,7 @@ import { FaCalendar, FaClock, FaStar, FaUser } from "react-icons/fa";
 import MovieCard from "@/components/media/MovieCard";
 import NewsSection from "@/components/widgets/NewsSection";
 import ReviewsSection from "@/components/media/ReviewsSection";
+import ScrollRow from "@/components/media/ScrollRow";
 import TrailerButton from "@/components/media/TrailerButton";
 import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
@@ -62,7 +63,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       <div
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
-          backgroundImage: `url(${tmdbImage(movie.backdrop_path, "original")})`,
+          backgroundImage: `url(${tmdbImage(movie.backdrop_path, "w300")})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -75,22 +76,23 @@ export default async function MoviePage({ params }: MoviePageProps) {
           style={{
             backgroundImage: `url(${tmdbImage(
               movie.backdrop_path,
-              "original"
+              "w1280"
             )})`,
           }}
         >
+          <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/20 to-transparent" />
         </div>
 
-        <div className="md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
+        <div className="relative md:absolute bottom-0 left-0 w-full px-6 md:px-12 pb-12 md:pb-20">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
             <div className="hidden md:flex flex-col items-center gap-4">
               <div className="md:block w-64 lg:w-80 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group">
                 <img
                   src={tmdbImage(movie.poster_path, "w780")}
                   alt={movie.title}
-                  className="w-full h-auto object-cover"
+                  className="w-full aspect-[2/3] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
@@ -100,14 +102,21 @@ export default async function MoviePage({ params }: MoviePageProps) {
               />
             </div>
 
-            <div className="flex-1 py-8 space-y-6">
-              <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
-                {movie.title}
-              </h1>
+            <div className="flex-1 w-full py-8 flex flex-col gap-6">
+              <div className="flex items-end gap-4">
+                <img
+                  src={tmdbImage(movie.poster_path, "w342")}
+                  alt=""
+                  className="md:hidden w-24 shrink-0 aspect-[2/3] object-cover rounded-xl border-2 border-white/10"
+                />
+                <h1 className="text-3xl md:text-6xl lg:text-7xl font-black tracking-tight drop-shadow-2xl leading-tight">
+                  {movie.title}
+                </h1>
+              </div>
 
               <div className="flex flex-wrap items-center gap-4 text-sm md:text-base font-medium text-gray-200">
                 {movie.release_date && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaCalendar className="text-yellow-400" />
                     <span>{movie.release_date.slice(0, 4)}</span>
                   </div>
@@ -116,13 +125,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   <CertificationBadge certification={certification} />
                 )}
                 {movie.vote_average > 0 && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaStar className="text-yellow-400" />
                     <span>{movie.vote_average.toFixed(1)}</span>
                   </div>
                 )}
                 {movie.runtime > 0 && (
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl shadow-lg">
+                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl shadow-lg">
                     <FaClock className="text-yellow-400" />
                     <span>
                       {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
@@ -135,14 +144,14 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 {movie.genres?.map((g: any) => (
                   <span
                     key={g.id}
-                    className="px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
+                    className="px-4 py-1.5 rounded-full bg-black/60 border border-white/20 text-xs md:text-sm hover:bg-white/20 transition-all cursor-default"
                   >
                     {g.name}
                   </span>
                 ))}
               </div>
 
-              <div className="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
+              <div className="order-last md:order-none bg-black/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
                 <p className="md:text-lg text-gray-200 leading-relaxed line-clamp-4 md:line-clamp-none">
                   {movie.overview}
                 </p>
@@ -159,6 +168,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   release_date={movie.release_date}
                 />
               </div>
+
+              <div className="md:hidden">
+                <SocialLinks
+                  external_ids={movie.external_ids}
+                  homepage={movie.homepage}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +187,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("mainCast")}
             </h2>
-            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+            <ScrollRow label={t("mainCast")}>
               {cast.map((person: any) => (
                 <Link
                   prefetch={false}
@@ -199,7 +215,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   </p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
@@ -209,7 +225,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
               <span className="w-1.5 h-8 bg-yellow-500 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.5)]"></span>
               {t("crew")}
             </h2>
-            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+            <ScrollRow label={t("crew")}>
               {directors.map((person: any) => (
                 <Link
                   prefetch={false}
@@ -232,10 +248,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   <h3 className="font-bold text-white truncate group-hover:text-yellow-400 transition-colors text-lg">
                     {person.name}
                   </h3>
-                  <p className="text-sm text-gray-400 truncate">{person.job}</p>
+                  <p className="text-sm text-gray-400 truncate">{t("director")}</p>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
         )}
 
@@ -259,8 +275,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
         </div>
 
         {movie.belongs_to_collection && (
-          <section className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 backdrop-blur-md border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden group">
-            <div className="absolute -right-20 -top-20 w-96 h-96 bg-blue-500/20 blur-[100px] rounded-full group-hover:bg-blue-500/30 transition-colors duration-500" />
+          <section className="bg-gradient-to-r from-yellow-900/40 to-orange-900/30 backdrop-blur-md border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden group">
+            <div className="absolute -right-20 -top-20 w-96 h-96 bg-yellow-500/10 blur-[100px] rounded-full group-hover:bg-yellow-500/20 transition-colors duration-500" />
 
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
               <div className="w-48 md:w-64 flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
@@ -270,14 +286,14 @@ export default async function MoviePage({ params }: MoviePageProps) {
                     "w500"
                   )}
                   alt={movie.belongs_to_collection.name}
-                  className="w-full h-auto"
+                  className="w-full aspect-[2/3] object-cover"
                 />
               </div>
 
               <div className="flex-1 text-center md:text-left space-y-4">
-                <h3 className="text-xl text-gray-300 font-medium uppercase tracking-widest">
+                <p className="text-xl text-gray-300 font-medium uppercase tracking-widest">
                   {t("partOfCollection")}
-                </h3>
+                </p>
                 <h2 className="text-3xl md:text-4xl font-black text-white drop-shadow-lg">
                   {movie.belongs_to_collection.name}
                 </h2>

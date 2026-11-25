@@ -33,25 +33,25 @@ export default async function SeasonPage({ params }: SeasonPageProps) {
       <div
         className="fixed inset-0 w-full h-full z-0 pointer-events-none opacity-30 blur-3xl scale-110"
         style={{
-          backgroundImage: `url(${tmdbImage(show.backdrop_path, "original")})`,
+          backgroundImage: `url(${tmdbImage(show.backdrop_path, "w300")})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       />
       <div className="fixed inset-0 z-0 bg-[#141414]/80 pointer-events-none" />
 
-      <div className="relative w-full z-10 pt-32 pb-12 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-end">
+      <div className="relative w-full z-10 pt-8 md:pt-16 pb-12 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-12 items-center md:items-start">
           <div className="flex-shrink-0 w-48 md:w-64 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 relative group mx-auto md:mx-0">
             <img
               src={tmdbImage(season.poster_path || show.poster_path, "w500")}
               alt={season.name}
-              className="w-full h-auto object-cover"
+              className="w-full aspect-[2/3] object-cover"
             />
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
-            <h2 className="text-xl text-gray-400 font-medium">{show.name}</h2>
+            <p className="text-xl text-gray-300 font-medium">{show.name}</p>
             <h1 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-2xl leading-tight">
               {season.name}
             </h1>
