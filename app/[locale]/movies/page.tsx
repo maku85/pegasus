@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useEffect, useState } from "react";
 
+import BackToTop from "@/components/media/BackToTop";
+import LoadMore from "@/components/media/LoadMore";
 import MovieCard from "@/components/media/MovieCard";
 import MovieFilters from "@/components/media/MovieFilters";
 import ProviderFilter from "@/components/media/ProviderFilter";
 import LoadingStatus from "@/components/skeletons/LoadingStatus";
 import MovieCardSkeleton from "@/components/skeletons/MovieCardSkeleton";
-import { useInfiniteList } from "@/hooks/useInfiniteList";
+import { usePagedList } from "@/hooks/usePagedList";
 import { useProviderFilter } from "@/hooks/useProviderFilter";
 
 type Category = "popular" | "trending" | "top_rated";
@@ -28,7 +30,7 @@ function MoviesListContent() {
   const filter = (searchParams.get("category") as Category) || "popular";
   const genre = searchParams.get("genre") || "";
   const { region, selected, toggle, clear } = useProviderFilter();
-  const { items, loading, error } = useInfiniteList(
+  const { items, loading, error, hasMore, loadMore } = usePagedList(
     selected &&
       `/api/movie-list?lang=${locale}&type=${filter}&genre=${encodeURIComponent(genre)}&providers=${selected.join(",")}`
   );
@@ -88,7 +90,8 @@ function MoviesListContent() {
       />
 
       <motion.div
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+        id="media-list"
+        className="scroll-mt-28 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -123,6 +126,17 @@ function MoviesListContent() {
           {t("error")}
         </p>
       )}
+
+      {hasMore && (
+        <LoadMore
+          gridId="media-list"
+          count={items.length}
+          loading={loading}
+          failed={error}
+          onLoadMore={loadMore}
+        />
+      )}
+      <BackToTop gridId="media-list" />
     </div>
   );
 }

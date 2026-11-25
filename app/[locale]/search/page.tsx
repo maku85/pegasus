@@ -5,10 +5,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
+import BackToTop from "@/components/media/BackToTop";
+import LoadMore from "@/components/media/LoadMore";
 import MovieCard from "@/components/media/MovieCard";
 import LoadingStatus from "@/components/skeletons/LoadingStatus";
 import MovieCardSkeleton from "@/components/skeletons/MovieCardSkeleton";
-import { useInfiniteList } from "@/hooks/useInfiniteList";
+import { usePagedList } from "@/hooks/usePagedList";
 import { useRouter } from "@/i18n/routing";
 
 function SearchForm() {
@@ -155,7 +157,7 @@ function SearchContent() {
     if (value) params.set(key, value);
   }
   // Nothing searched yet: suggest what is trending
-  const { items, loading, error } = useInfiniteList(
+  const { items, loading, error, hasMore, loadMore } = usePagedList(
     query
       ? `/api/search?${params.toString()}`
       : `/api/movie-list?lang=${locale}&type=trending`
@@ -189,7 +191,10 @@ function SearchContent() {
           </h2>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div
+          id="media-list"
+          className="scroll-mt-28 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+        >
           {items.map((item) => (
             <MovieCard
               key={`${item.media_type}-${item.id}`}
@@ -210,6 +215,17 @@ function SearchContent() {
             {t("error")}
           </p>
         )}
+
+        {hasMore && (
+          <LoadMore
+            gridId="media-list"
+            count={items.length}
+            loading={loading}
+            failed={error}
+            onLoadMore={loadMore}
+          />
+        )}
+        <BackToTop gridId="media-list" />
 
         {query && !loading && !error && items.length === 0 && (
           <div className="text-center py-20">

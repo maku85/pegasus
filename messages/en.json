@@ -155,7 +155,11 @@
         "tvTitle": "TV Series",
         "tvDescription": "Explore the TV series of the moment, the newest ones and the audience favorites.",
         "error": "Could not load the content. Try again in a moment.",
-        "empty": "No titles match these filters."
+        "empty": "No titles match these filters.",
+        "loadMore": "Load more",
+        "loadingMore": "Loading...",
+        "backToTop": "Back to the top of the list",
+        "retry": "Try again"
     },
     "RandomPage": {
         "ready": "Ready?",

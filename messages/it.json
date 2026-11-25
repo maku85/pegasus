@@ -170,7 +170,11 @@
         "tvTitle": "Serie TV",
         "tvDescription": "Esplora le serie TV del momento, le novità e le più amate dal pubblico.",
         "error": "Impossibile caricare i contenuti. Riprova tra poco.",
-        "empty": "Nessun titolo con questi filtri."
+        "empty": "Nessun titolo con questi filtri.",
+        "loadMore": "Carica altri",
+        "loadingMore": "Caricamento...",
+        "backToTop": "Torna in cima alla lista",
+        "retry": "Riprova"
     },
     "RandomPage": {
         "ready": "Pronto?",
