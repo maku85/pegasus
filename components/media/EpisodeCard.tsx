@@ -47,9 +47,11 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
                   <span>{episode.vote_average.toFixed(1)}</span>
                 </div>
               )}
-              <span className="px-2 py-0.5 rounded bg-white/10 text-xs font-mono">
-                {episode.runtime} min
-              </span>
+              {episode.runtime > 0 && (
+                <span className="px-2 py-0.5 rounded bg-white/10 text-xs font-mono">
+                  {episode.runtime} min
+                </span>
+              )}
             </div>
           </div>
         </div>
