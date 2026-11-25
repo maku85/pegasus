@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { FaStar } from "react-icons/fa";
 
 import MovieCard from "@/components/media/MovieCard";
-import { pageTitle } from "@/lib/metadata";
+import { openGraph, pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface CollectionPageProps {
@@ -19,7 +19,8 @@ export async function generateMetadata({ params }: CollectionPageProps) {
   const collection = await getCollection(id, locale);
   return {
     title: pageTitle(collection.name),
-    description: collection.overview || undefined,
+    ...(collection.overview && { description: collection.overview }),
+    openGraph: openGraph(locale, collection.backdrop_path ?? collection.poster_path),
   };
 }
 

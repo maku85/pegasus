@@ -1,5 +1,15 @@
+# Link previews: these bots open a page only when somebody shares it
+User-agent: Twitterbot
+User-agent: facebookexternalhit
+User-agent: LinkedInBot
+User-agent: Slackbot
+User-agent: Discordbot
+User-agent: TelegramBot
+User-agent: WhatsApp
+Disallow: /api/
+
+# Everyone else: detail pages stay closed to save TMDB calls
 User-agent: *
-Allow: /
 Disallow: /api/
 Disallow: /*/movies/
 Disallow: /*/tv/

@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { FaCalendar, FaStar } from "react-icons/fa";
 
 import EpisodeCard from "@/components/media/EpisodeCard";
-import { pageTitle } from "@/lib/metadata";
+import { openGraph, pageTitle } from "@/lib/metadata";
 import { requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface SeasonPageProps {
@@ -20,7 +20,10 @@ function getSeason(id: string, seasonNumber: string, locale: string) {
 export async function generateMetadata({ params }: SeasonPageProps) {
   const { id, season_number, locale } = await params;
   const [season, show] = await getSeason(id, season_number, locale);
-  return { title: pageTitle(`${show.name}: ${season.name}`) };
+  return {
+    title: pageTitle(`${show.name}: ${season.name}`),
+    openGraph: openGraph(locale, show.backdrop_path ?? season.poster_path),
+  };
 }
 
 export default async function SeasonPage({ params }: SeasonPageProps) {

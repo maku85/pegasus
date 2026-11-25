@@ -9,6 +9,7 @@ import { ReactNode } from "react";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import { openGraph } from "@/lib/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,11 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Brand" });
 
   return {
+    metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
     title: `Row Seven – ${t("payoff")}`,
     description: t("description"),
+    openGraph: openGraph(locale),
+    twitter: { card: "summary_large_image" as const },
     appleWebApp: {
       capable: true,
       statusBarStyle: "black-translucent" as const,

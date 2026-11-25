@@ -5,7 +5,7 @@ import { FaChevronLeft } from "react-icons/fa";
 import BackLink from "@/components/layout/BackLink";
 import ScrollRow from "@/components/media/ScrollRow";
 import NewsSection from "@/components/widgets/NewsSection";
-import { pageTitle } from "@/lib/metadata";
+import { openGraph, pageTitle } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface PersonPageProps {
@@ -26,7 +26,10 @@ const FILMOGRAPHY_PREVIEW = 15;
 export async function generateMetadata({ params }: PersonPageProps) {
   const { id, locale } = await params;
   const person = await getPerson(id, locale);
-  return { title: pageTitle(person.name) };
+  return {
+    title: pageTitle(person.name),
+    openGraph: openGraph(locale, person.profile_path),
+  };
 }
 
 export default async function PersonPage({ params }: PersonPageProps) {

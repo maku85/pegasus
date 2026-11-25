@@ -11,7 +11,7 @@ import WatchProviders from "@/components/media/WatchProviders";
 import CertificationBadge from "@/components/widgets/CertificationBadge";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import { pageTitle, yearSuffix } from "@/lib/metadata";
+import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface MoviePageProps {
@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: MoviePageProps) {
   const movie = await getMovie(id, locale);
   return {
     title: pageTitle(movie.title + yearSuffix(movie.release_date)),
-    description: movie.overview || undefined,
+    ...(movie.overview && { description: movie.overview }),
+    openGraph: openGraph(locale, movie.backdrop_path ?? movie.poster_path),
   };
 }
 

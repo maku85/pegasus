@@ -11,7 +11,7 @@ import CertificationBadge from "@/components/widgets/CertificationBadge";
 import NewsSection from "@/components/widgets/NewsSection";
 import SocialLinks from "@/components/widgets/SocialLinks";
 import WatchlistToggle from "@/components/widgets/WatchlistToggle";
-import { pageTitle, yearSuffix } from "@/lib/metadata";
+import { openGraph, pageTitle, yearSuffix } from "@/lib/metadata";
 import { DAY, requireIds, tmdbFetch, tmdbImage } from "@/lib/tmdb";
 
 interface TVPageProps {
@@ -32,7 +32,8 @@ export async function generateMetadata({ params }: TVPageProps) {
   const tv = await getTV(id, locale);
   return {
     title: pageTitle(tv.name + yearSuffix(tv.first_air_date)),
-    description: tv.overview || undefined,
+    ...(tv.overview && { description: tv.overview }),
+    openGraph: openGraph(locale, tv.backdrop_path ?? tv.poster_path),
   };
 }
 
